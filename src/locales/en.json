@@ -1,0 +1,50 @@
+{
+    "zad-elealm": "Zad Elealm",
+    "zad-desc": "The platform provides an interactive, competitive way to learn Islamic sciences in various fields, to make seeking knowledge an enjoyable experience.",
+    "zad-hadith": "On the authority of Abu Hurairah, may God be pleased with him, that the Messenger of God, may God bless him and grant him peace, said: “Whoever takes a path in search of knowledge, God will make easy for him a path to Paradise.” Narrated by Muslim.",
+    "get-started": "Get Started",
+    "auth": {
+        "login": "Login",
+        "register": "Register",
+        "fullName": "Full Name",
+        "email": "Email",
+        "password": "Password",
+        "input-fullName": "Enter your Name",
+        "input-email": "Enter your email",
+        "input-password": "Enter your password",
+        "don't-have-account": "Don't have an account?",
+        "have-account": "Have an account?",
+        "sign-up": "Sign Up",
+        "remember-me": "Remember Me",
+        "forgot-password": "Forgot Password?",
+        "reset-password": "Reset Password",
+        "enter-email-reset": "Enter your email to reset your password",
+        "send-reset-link": "Send Reset Link",
+        "back-to-login": "Back to Login"
+    },
+    "navbar": {
+        "home": "Home",
+        "about": "About",
+        "contact": "Contact",
+        "login": "Login",
+        "register": "Register",
+        "logout": "Logout",
+        "notifications": "Notifications",
+        "profile": "Profile",
+        "courses": "Courses",
+        "students": "Students",
+        "teachers": "Teachers",
+        "favorites": "Favorites",
+        "search": "Search",
+        "certificates": "Certificates",
+        "settings": "Settings"
+    },
+    "home": {
+        "categories": "Categories",
+        "courses": "Courses"
+    },
+    "certificates": {
+        "certificates": "Certificates",
+        "no-certificates": "You don't have any certificates yet."
+    }
+}
