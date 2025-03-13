@@ -86,49 +86,54 @@ const Navbar = () => {
                         <img src={logo} className="w-full h-full" alt="Logo" />
                     </Link>
                 </div>
-                <div className="links hidden md:flex gap-4">
-                    {links.map((link, index) => (
-                        <Link to={link.url} key={index} className={`${activeLink === link.url ? "bg-primary text-white p-3 rounded-lg" : "p-3"} text-lg text-dark dark:text-light font-semibold`}>
-                            {link.name}
-                        </Link>
-                    ))}
-                </div>
-
-                <div className="buttons flex gap-4 justify-center items-center">
-                    <Link to="/notifications" className="relative text-info">
-                        <Notification size="32" variant='Bulk' color="currentColor" />
-                    </Link>
-                    <ThemeButton />
-                    <div className="relative" ref={profileDropdownRef}>
-                        <button
-                            onClick={toggleProfile}
-                            className="flex justify-center items-center gap-2 bg-primary dark:bg-primary-light hover:bg-primary-dark text-white dark:text-light font-bold py-2 px-4 rounded-lg"
-                        >
-                            <ProfileCircle
-                                size="32"
-                                color="currentColor"
-                            />
-                            {isProfileDropdownOpen ?
-                                <ArrowUp2
-                                    size="20"
-                                    color="currentColor"
-                                />
-                                :
-                                <ArrowDown2
-                                    size="20"
-                                    color="currentColor"
-                                />
-                            }
-                        </button>
-                        {isProfileDropdownOpen && (
-                            <div className="absolute border border-primary py-1 -end-0 mt-2 w-60 bg-white dark:bg-dark shadow-lg rounded-lg overflow-hidden z-10">
-                                <Link to="/profile" className="w-full flex items-center gap-2 px-4 py-2 text-dark dark:text-light hover:bg-gray dark:hover:bg-muted transition-colors duration-200">
-                                    {t("navbar.profile")}
-                                </Link>
-                                <button onClick={handleLogout} className="w-full flex items-center gap-2 px-4 py-2 text-danger dark:text-light hover:bg-gray dark:hover:bg-muted transition-colors duration-200">{t("navbar.logout")}</button>
-                            </div>
-                        )}
+                {state.token &&
+                    <div className="links hidden md:flex gap-4">
+                        {links.map((link, index) => (
+                            <Link to={link.url} key={index} className={`${activeLink === link.url ? "bg-primary text-white p-3 rounded-lg" : "p-3"} text-lg text-dark dark:text-light font-semibold`}>
+                                {link.name}
+                            </Link>
+                        ))}
                     </div>
+                }
+                <div className="buttons flex gap-4 justify-center items-center">
+                    {state.token &&
+                        <Link to="/notifications" className="relative text-info">
+                            <Notification size="32" variant='Bulk' color="currentColor" />
+                        </Link>
+                    }
+                    <ThemeButton />
+                    {state.token &&
+                        <div className="relative" ref={profileDropdownRef}>
+                            <button
+                                onClick={toggleProfile}
+                                className="flex justify-center items-center gap-2 bg-primary dark:bg-primary-light hover:bg-primary-dark text-white dark:text-light font-bold py-2 px-4 rounded-lg"
+                            >
+                                <ProfileCircle
+                                    size="32"
+                                    color="currentColor"
+                                />
+                                {isProfileDropdownOpen ?
+                                    <ArrowUp2
+                                        size="20"
+                                        color="currentColor"
+                                    />
+                                    :
+                                    <ArrowDown2
+                                        size="20"
+                                        color="currentColor"
+                                    />
+                                }
+                            </button>
+                            {isProfileDropdownOpen && (
+                                <div className="absolute border border-primary py-1 -end-0 mt-2 w-60 bg-white dark:bg-dark shadow-lg rounded-lg overflow-hidden z-10">
+                                    <Link to="/profile" className="w-full flex items-center gap-2 px-4 py-2 text-dark dark:text-light hover:bg-gray dark:hover:bg-muted transition-colors duration-200">
+                                        {t("navbar.profile")}
+                                    </Link>
+                                    <button onClick={handleLogout} className="w-full flex items-center gap-2 px-4 py-2 text-danger dark:text-light hover:bg-gray dark:hover:bg-muted transition-colors duration-200">{t("navbar.logout")}</button>
+                                </div>
+                            )}
+                        </div>
+                    }
                     {state.token ? null :
                         <Link to={'/login'} className="hidden md:block bg-primary dark:bg-primary-light hover:bg-primary-dark text-white dark:text-light font-bold py-3 px-4 rounded-lg">
                             {t("navbar.login")}
@@ -149,13 +154,15 @@ const Navbar = () => {
                     </button>
 
                     <div className="flex flex-col items-start gap-4 p-6">
-                        {links.map((link, index) => (
-                            <Link key={index} to={link.url} className="text-lg font-semibold text-dark dark:text-light w-full p-2 hover:bg-gray dark:hover:bg-muted rounded-lg">
-                                {link.name}
-                            </Link>
-                        ))}
+                        {state.token && <>
+                            {links.map((link, index) => (
+                                <Link key={index} to={link.url} className="text-lg font-semibold text-dark dark:text-light w-full p-2 hover:bg-gray dark:hover:bg-muted rounded-lg">
+                                    {link.name}
+                                </Link>
+                            ))}
+                        </>}
                         {state.token ? null :
-                            <Link to="/login" className="w-full text-center bg-primary text-white py-2 rounded-lg">
+                            <Link to="/login" className="w-full mt-8 text-center bg-primary text-white py-2 rounded-lg">
                                 {t("navbar.login")}
                             </Link>
                         }
