@@ -14,6 +14,11 @@ import Course from "../pages/Course";
 import CertificationsPage from "../pages/Certifications";
 import UserCourses from "../pages/UserCourses";
 import ForgetPassword from "../pages/ForgetPassword";
+import RouterGuard from "../utils/RouterGuard";
+import VerifyOTP from "../pages/VerifyOTP";
+import ResetPassword from "../pages/ResetPassword";
+import Profile from "../pages/Profile";
+import EditProfile from "../pages/EditProfile";
 
 const routes = createBrowserRouter(
     [
@@ -23,35 +28,43 @@ const routes = createBrowserRouter(
             children: [
                 {
                     index: true,
-                    element: <Welcome />
+                    element: <RouterGuard><Welcome /></RouterGuard>,
                 },
                 {
                     path: "/home",
-                    element: <Home />
+                    element: <RouterGuard><Home /></RouterGuard>,
                 },
                 {
                     path: "/notifications",
-                    element: <Notifications />
+                    element: <RouterGuard><Notifications /></RouterGuard>,
                 },
                 {
                     path: "/favorites",
-                    element: <Favorites />
+                    element: <RouterGuard><Favorites /></RouterGuard>,
                 },
                 {
                     path: "/certifications",
-                    element: <CertificationsPage />
+                    element: <RouterGuard><CertificationsPage /></RouterGuard>,
                 },
                 {
                     path: "/my-courses",
-                    element: <UserCourses />
+                    element: <RouterGuard><UserCourses /></RouterGuard>,
                 },
                 {
                     path: "/courses/:id",
-                    element: <Course />
+                    element: <RouterGuard><Course /></RouterGuard>,
                 },
                 {
                     path: "/materials/:id",
-                    element: <Material />
+                    element: <RouterGuard><Material /></RouterGuard>,
+                },
+                {
+                    path: "/profile",
+                    element: <RouterGuard><Profile /></RouterGuard>,
+                },
+                {
+                    path: "/edit-profile",
+                    element: <RouterGuard><EditProfile /></RouterGuard>,
                 },
             ]
         },
@@ -62,6 +75,14 @@ const routes = createBrowserRouter(
         {
             path: "/forgot-password",
             element: <ForgetPassword />
+        },
+        {
+            path: "/reset-password/:email",
+            element: <ResetPassword />
+        },
+        {
+            path: "/verify-otp/:email",
+            element: <VerifyOTP />
         },
         {
             path: "/register",

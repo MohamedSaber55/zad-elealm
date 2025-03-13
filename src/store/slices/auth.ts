@@ -1,10 +1,9 @@
 import { createAsyncThunk, createSlice, PayloadAction } from "@reduxjs/toolkit";
 import axios from "axios";
 // import { RootState } from "../store";
-import { baseUrl } from "../../utils/constants";
+import { baseUrl, getAuthToken } from "../../utils/constants";
 import { User } from "../../interfaces";
-
-
+import Cookies from "js-cookie";
 interface LoginResponse {
     data: {
         displayName: string;
@@ -15,9 +14,6 @@ interface LoginResponse {
     statusCode: number;
     message: string;
 }
-interface LogoutResponse {
-    message: string;
-}
 
 interface RegisterResponse {
     message: string;
@@ -25,9 +21,9 @@ interface RegisterResponse {
 }
 interface RegisterRequest {
     body: {
-        DisplayName: string;
-        Email: string;
-        Password: string;
+        displayName: string;
+        email: string;
+        password: string;
     }
 }
 interface VerifyOTPRequest {
@@ -51,9 +47,9 @@ interface ForgetPasswordResponse {
 }
 interface ResetPasswordRequest {
     body: {
-        Email: string;
-        NewPassword: string;
-        ConfirmPassword: string;
+        email: string;
+        newPassword: string;
+        confirmPassword: string;
     }
 }
 interface ResetPasswordResponse {
@@ -70,9 +66,7 @@ interface LoginRequest {
 interface GetCurrentUserRequest {
     token: string | null;
 }
-interface LogoutRequest {
-    token: string | null;
-}
+
 export const loginAsync = createAsyncThunk<LoginResponse, LoginRequest>(
     'auth/login',
     async ({ body }, { rejectWithValue }) => {
@@ -81,36 +75,21 @@ export const loginAsync = createAsyncThunk<LoginResponse, LoginRequest>(
             const result = response.data;
             return result;
         } catch (err) {
-            return rejectWithValue(err);
-        }
-    }
-);
-export const logoutAsync = createAsyncThunk<LogoutResponse, LogoutRequest>(
-    'auth/logout',
-    async ({ token }, { rejectWithValue }) => {
-        try {
-            const response = await axios.post<LogoutResponse>(`${baseUrl}/Account/logout`, null, {
-                headers: {
-                    Authorization: `Bearer ${token}`
-                }
-            });
-            const result = response.data;
-            return result;
-        } catch (err) {
+            // return rejectWithValue(err.response.data);
             return rejectWithValue(err);
         }
     }
 );
 
-export const registerAsync = createAsyncThunk<RegisterResponse, RegisterRequest>(
+export const registerAsync = createAsyncThunk<RegisterResponse, RegisterRequest, { rejectValue: { message: string; statusCode: number } }>(
     'auth/register',
     async ({ body }, { rejectWithValue }) => {
         try {
             const response = await axios.post<RegisterResponse>(`${baseUrl}/Account/register`, body);
             const result = response.data;
             return result;
-        } catch (err) {
-            return rejectWithValue(err);
+        } catch (err: any) {
+            return rejectWithValue(err.response.data as { message: string, statusCode: number });
         }
     }
 )
@@ -126,8 +105,8 @@ export const forgetPasswordAsync = createAsyncThunk<ForgetPasswordResponse, Forg
             });
             const result = response.data;
             return result;
-        } catch (err) {
-            return rejectWithValue(err);
+        } catch (err: any) {
+            return rejectWithValue(err.response.data as { message: string, statusCode: number });
         }
     }
 );
@@ -145,8 +124,8 @@ export const verifyOTPAsync = createAsyncThunk<VerifyOTPResponse, VerifyOTPReque
             });
             const result = response.data;
             return result;
-        } catch (err) {
-            return rejectWithValue(err);
+        } catch (err: any) {
+            return rejectWithValue(err.response.data as { message: string, statusCode: number });
         }
     }
 );
@@ -157,13 +136,13 @@ export const getCurrentUserAsync = createAsyncThunk<LoginResponse, GetCurrentUse
         try {
             const response = await axios.get<LoginResponse>(`${baseUrl}/Account/current-user`, {
                 headers: {
-                    Authorization: `Bearer ${token}`
+                    Authorization: `Bearer ${getAuthToken() || token}`
                 }
             });
             const result = response.data;
             return result;
-        } catch (err) {
-            return rejectWithValue(err);
+        } catch (err: any) {
+            return rejectWithValue(err.response.data as { message: string, statusCode: number });
         }
     }
 );
@@ -191,19 +170,31 @@ interface InitialState {
     refreshToken: string | null;
 }
 const initialState: InitialState = {
-    user: null,
+    user: Cookies.get("user") ? JSON.parse(Cookies.get("user")!) : null,
     loading: false,
     error: null,
     message: null,
     statusCode: null,
-    token: null,
-    refreshToken: null,
+    token: Cookies.get("token") || null,
+    refreshToken: Cookies.get("refreshToken") || null,
 };
 
 const authSlice = createSlice({
     name: 'auth',
     initialState,
     reducers: {
+        logout: (state) => {
+            Cookies.remove("token");
+            Cookies.remove("refreshToken");
+            Cookies.remove("user");
+
+            return {
+                ...state,
+                token: null,
+                refreshToken: null,
+                user: null,
+            };
+        },
     },
     extraReducers: (builder) => {
         builder
@@ -216,12 +207,14 @@ const authSlice = createSlice({
             })
             .addCase(registerAsync.fulfilled, (state, action: PayloadAction<RegisterResponse>) => {
                 state.loading = false;
-                state.message = action.payload.message;
-                state.statusCode = action.payload.statusCode;
+                state.message = (action.payload as any).message;
+                state.statusCode = (action.payload as RegisterResponse).statusCode;
             })
             .addCase(registerAsync.rejected, (state, action) => {
                 state.loading = false;
                 state.error = action.payload;
+                state.message = action.payload?.message || null;
+                state.statusCode = action.payload?.statusCode || null;
             })
             // --------------------------------- LOGIN ---------------------------------
             .addCase(loginAsync.pending, (state) => {
@@ -234,30 +227,22 @@ const authSlice = createSlice({
                 state.loading = false;
                 state.message = action.payload.message;
                 state.statusCode = action.payload.statusCode;
-                state.user = {
-                    id: 0,
-                    DisplayName: action.payload.data.displayName,
-                    email: action.payload.data.email,
-                };
-                state.token = action.payload.data.token;
-                state.refreshToken = action.payload.data.refreshToken;
+                if (action.payload.statusCode == 200) {
+                    const userData = {
+                        id: 0,
+                        DisplayName: action.payload.data.displayName,
+                        email: action.payload.data.email,
+                    };
+                    state.user = userData;
+                    state.token = action.payload.data.token;
+                    state.refreshToken = action.payload.data.refreshToken;
+
+                    Cookies.set("token", action.payload.data.token, { expires: 7 });
+                    Cookies.set("refreshToken", action.payload.data.refreshToken, { expires: 7 });
+                    Cookies.set("user", JSON.stringify(userData), { expires: 7 });
+                }
             })
             .addCase(loginAsync.rejected, (state, action) => {
-                state.loading = false;
-                state.error = action.payload;
-            })
-            // --------------------------------- LOGOUT ---------------------------------
-            .addCase(logoutAsync.pending, (state) => {
-                state.loading = true;
-                state.error = null;
-                state.message = null;
-                state.statusCode = null;
-            })
-            .addCase(logoutAsync.fulfilled, (state, action: PayloadAction<LogoutResponse>) => {
-                state.loading = false;
-                state.message = action.payload.message;
-            })
-            .addCase(logoutAsync.rejected, (state, action) => {
                 state.loading = false;
                 state.error = action.payload;
             })
@@ -276,6 +261,8 @@ const authSlice = createSlice({
             .addCase(forgetPasswordAsync.rejected, (state, action) => {
                 state.loading = false;
                 state.error = action.payload;
+                state.message = (action.payload as any).message;
+                state.statusCode = (action.payload as RegisterResponse).statusCode;
             })
             // --------------------------------- VERIFY OTP ---------------------------------
             .addCase(verifyOTPAsync.pending, (state) => {
@@ -292,6 +279,8 @@ const authSlice = createSlice({
             .addCase(verifyOTPAsync.rejected, (state, action) => {
                 state.loading = false;
                 state.error = action.payload;
+                state.message = (action.payload as any).message;
+                state.statusCode = (action.payload as RegisterResponse).statusCode;
             })
             // --------------------------------- RESET PASSWORD ---------------------------------
             .addCase(resetPasswordAsync.pending, (state) => {
@@ -308,6 +297,8 @@ const authSlice = createSlice({
             .addCase(resetPasswordAsync.rejected, (state, action) => {
                 state.loading = false;
                 state.error = action.payload;
+                state.message = (action.payload as any).message;
+                state.statusCode = (action.payload as RegisterResponse).statusCode;
             })
             // --------------------------------- GET CURRENT USER ---------------------------------
             .addCase(getCurrentUserAsync.pending, (state) => {
@@ -330,8 +321,10 @@ const authSlice = createSlice({
             .addCase(getCurrentUserAsync.rejected, (state, action) => {
                 state.loading = false;
                 state.error = action.payload;
+                state.message = (action.payload as any).message;
+                state.statusCode = (action.payload as RegisterResponse).statusCode;
             })
     }
 });
-
+export const { logout } = authSlice.actions;
 export default authSlice.reducer;

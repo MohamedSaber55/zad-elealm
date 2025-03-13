@@ -1,10 +1,13 @@
 import { useTranslation } from "react-i18next";
 import { Link, useLocation } from "react-router-dom";
 import ThemeButton from "./ThemeButton";
-import { ArrowDown2, ArrowUp2, CloseSquare, LanguageSquare, Menu, Notification, ProfileCircle } from "iconsax-react";
-import Language from "../utils/i18n";
+import { ArrowDown2, ArrowUp2, CloseSquare, Menu, Notification, ProfileCircle } from "iconsax-react";
+// import Language from "../utils/i18n";
 import { useEffect, useRef, useState } from "react";
 import logo from "../../public/logo.png";
+import { useDispatch, useSelector } from "react-redux";
+import { AppDispatch, RootState } from "../store/store";
+import { logout } from "../store/slices/auth";
 interface Link {
     name: string;
     url: string;
@@ -13,20 +16,23 @@ const Navbar = () => {
     const { t, i18n } = useTranslation();
     const currentLanguage = i18n.language;
     const location = useLocation();
-    const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+    // const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+    // const dropdownRef = useRef<HTMLDivElement>(null);
     const [isProfileDropdownOpen, setIsProfileDropdownOpen] = useState(false);
     const [activeLink, setActiveLink] = useState(location.pathname);
     const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
-    const dropdownRef = useRef<HTMLDivElement>(null);
     const profileDropdownRef = useRef<HTMLDivElement>(null);
+    const state = useSelector((state: RootState) => state.auth);
+    const dispatch = useDispatch<AppDispatch>();
+
     useEffect(() => {
         setActiveLink(location.pathname);
     }, [location.pathname]);
     useEffect(() => {
         const handleClickOutside = (event: MouseEvent) => {
-            if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
-                setIsDropdownOpen(false);
-            }
+            // if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
+            //     setIsDropdownOpen(false);
+            // }
             if (profileDropdownRef.current && !profileDropdownRef.current.contains(event.target as Node)) {
                 setIsProfileDropdownOpen(false);
             }
@@ -37,12 +43,12 @@ const Navbar = () => {
             document.removeEventListener("mousedown", handleClickOutside);
         };
     }, []);
-    const changeLanguage = (language: string) => {
-        Language.changeLanguage(language);
-        setIsDropdownOpen(false);
-    };
+    // const changeLanguage = (language: string) => {
+    //     Language.changeLanguage(language);
+    //     setIsDropdownOpen(false);
+    // };
 
-    const toggleDropdown = () => setIsDropdownOpen(!isDropdownOpen);
+    // const toggleDropdown = () => setIsDropdownOpen(!isDropdownOpen);
     const toggleProfile = () => setIsProfileDropdownOpen(!isProfileDropdownOpen);
     const toggleMobileMenu = () => setIsMobileMenuOpen(!isMobileMenuOpen);
 
@@ -52,22 +58,25 @@ const Navbar = () => {
         { name: t("navbar.favorites"), url: "/favorites" },
         { name: t("navbar.certificates"), url: "/certifications" }
     ];
-    const languages = [
-        {
-            code: "en", name: "English", img: <img
-                src="https://upload.wikimedia.org/wikipedia/commons/a/a4/Flag_of_the_United_States.svg"
-                alt="English"
-                style={{ width: 20, height: 15 }}
-            />
-        },
-        {
-            code: "ar", name: "العربية", img: <img
-                src="https://upload.wikimedia.org/wikipedia/commons/0/0d/Flag_of_Saudi_Arabia.svg"
-                alt="Arabic"
-                style={{ width: 20, height: 15 }}
-            />
-        },
-    ];
+    const handleLogout = () => {
+        dispatch(logout());
+    };
+    // const languages = [
+    //     {
+    //         code: "en", name: "English", img: <img
+    //             src="https://upload.wikimedia.org/wikipedia/commons/a/a4/Flag_of_the_United_States.svg"
+    //             alt="English"
+    //             style={{ width: 20, height: 15 }}
+    //         />
+    //     },
+    //     {
+    //         code: "ar", name: "العربية", img: <img
+    //             src="https://upload.wikimedia.org/wikipedia/commons/0/0d/Flag_of_Saudi_Arabia.svg"
+    //             alt="Arabic"
+    //             style={{ width: 20, height: 15 }}
+    //         />
+    //     },
+    // ];
     return (
         <nav className="navbar h-20 bg-white dark:bg-dark-light shadow">
             <div className="container flex justify-between h-full items-center ">
@@ -116,13 +125,15 @@ const Navbar = () => {
                                 <Link to="/profile" className="w-full flex items-center gap-2 px-4 py-2 text-dark dark:text-light hover:bg-gray dark:hover:bg-muted transition-colors duration-200">
                                     {t("navbar.profile")}
                                 </Link>
-                                <button className="w-full flex items-center gap-2 px-4 py-2 text-dark dark:text-light hover:bg-gray dark:hover:bg-muted transition-colors duration-200">{t("navbar.logout")}</button>
+                                <button onClick={handleLogout} className="w-full flex items-center gap-2 px-4 py-2 text-danger dark:text-light hover:bg-gray dark:hover:bg-muted transition-colors duration-200">{t("navbar.logout")}</button>
                             </div>
                         )}
                     </div>
-                    <Link to={'/login'} className="hidden md:block bg-primary dark:bg-primary-light hover:bg-primary-dark text-white dark:text-light font-bold py-3 px-4 rounded-lg">
-                        {t("navbar.login")}
-                    </Link>
+                    {state.token ? null :
+                        <Link to={'/login'} className="hidden md:block bg-primary dark:bg-primary-light hover:bg-primary-dark text-white dark:text-light font-bold py-3 px-4 rounded-lg">
+                            {t("navbar.login")}
+                        </Link>
+                    }
                     <button onClick={toggleMobileMenu} className="md:hidden">
                         {isMobileMenuOpen ? <CloseSquare size="32" color="currentColor" /> : <Menu size="32" color="currentColor" />}
                     </button>
@@ -143,9 +154,11 @@ const Navbar = () => {
                                 {link.name}
                             </Link>
                         ))}
-                        <Link to="/login" className="w-full text-center bg-primary text-white py-2 rounded-lg">
-                            {t("navbar.login")}
-                        </Link>
+                        {state.token ? null :
+                            <Link to="/login" className="w-full text-center bg-primary text-white py-2 rounded-lg">
+                                {t("navbar.login")}
+                            </Link>
+                        }
                     </div>
                 </div>
             </div>
