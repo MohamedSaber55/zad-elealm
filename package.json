@@ -12,11 +12,13 @@
   "dependencies": {
     "@reduxjs/toolkit": "^2.6.1",
     "@tailwindcss/vite": "^4.0.12",
+    "@types/lodash": "^4.17.16",
     "axios": "^1.8.2",
     "formik": "^2.4.6",
     "i18next": "^24.2.2",
     "iconsax-react": "^0.0.8",
     "js-cookie": "^3.0.5",
+    "lodash": "^4.17.21",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
     "react-i18next": "^15.4.1",

@@ -13,6 +13,7 @@
   --color-light-bg: #F5F5F5;
   --color-light: #F8F9FA;
   --color-muted: #9C9C9C;
+  --color-muted-dark: #6a7282;
   --color-gray: #F5F5F5;
   --color-warning: #FFC107;
   --color-danger: #DC3545;
@@ -45,8 +46,13 @@
     outline: none;
     font-size: large;
   }
+
   button {
     cursor: pointer;
+  }
+
+  .clip-path-triangle {
+    clip-path: polygon(50% 0%, 0% 100%, 100% 100%);
   }
 
   /* Custom Scrollbar for WebKit browsers (Chrome, Safari) */

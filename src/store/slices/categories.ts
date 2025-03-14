@@ -1,10 +1,11 @@
 import { createAsyncThunk, createSlice, PayloadAction } from "@reduxjs/toolkit";
-import { Category } from "../../interfaces";
+import { Category, Course, MetaData } from "../../interfaces";
 import axios from "axios";
 import { baseUrl } from "../../utils/constants";
 interface InitialState {
     categories: Category[];
-    courses: Category[];
+    courses: Course[];
+    metaData: MetaData | null;
     category: Category | null;
     loading: boolean;
     status: string;
@@ -15,6 +16,7 @@ interface InitialState {
 const initialState: InitialState = {
     category: null,
     status: "",
+    metaData: null,
     courses: [],
     categories: [],
     loading: false,
@@ -26,11 +28,27 @@ const initialState: InitialState = {
 interface GetAllCategoriesRequest {
     token: string;
 }
-interface GetAllCategoriesRequest {
+interface GetCoursesByCategoryRequest {
     params: {
-        id: string;
+        categoryId: string;
+        sortBy?: string;
+        sortDirection?: string;
+        search?: string;
+        author?: string;
+        fromDate?: string;
+        toDate?: string;
+        minRating?: number;
+        maxRating?: number;
+        pageNumber?: number;
+        pageSize?: number;
     };
     token: string;
+}
+interface GetCoursesByCategoryResponse {
+    metaData: MetaData;
+    data: Course[];
+    statusCode: number;
+    message: string;
 }
 interface GetAllCategoriesResponse {
     data: Category[];
@@ -53,14 +71,15 @@ export const getAllCategoriesAsync = createAsyncThunk<GetAllCategoriesResponse, 
     }
 )
 
-export const getCoursesByCategoryAsync = createAsyncThunk<GetAllCategoriesResponse, GetAllCategoriesRequest>(
+export const getCoursesByCategoryAsync = createAsyncThunk<GetCoursesByCategoryResponse, GetCoursesByCategoryRequest>(
     'categories/getCoursesByCategory',
     async ({ params, token }, thunkAPI) => {
         try {
-            const response = await axios.get<GetAllCategoriesResponse>(`${baseUrl}/category/${params.id}`, {
+            const response = await axios.get<GetCoursesByCategoryResponse>(`${baseUrl}/category/get-courses-by-category`, {
                 headers: {
                     Authorization: `Bearer ${token}`
-                }
+                },
+                params: params
             })
             return response.data;
         } catch (error) {
@@ -98,12 +117,18 @@ const categoriesSlice = createSlice({
                 state.status = 'loading'
                 state.loading = true;
             })
-            .addCase(getCoursesByCategoryAsync.fulfilled, (state, action: PayloadAction<GetAllCategoriesResponse>) => {
+            .addCase(getCoursesByCategoryAsync.fulfilled, (state, action: PayloadAction<GetCoursesByCategoryResponse>) => {
                 state.status = 'succeeded'
                 state.loading = false;
                 state.courses = action.payload.data;
                 state.message = action.payload.message;
                 state.statusCode = action.payload.statusCode;
+            })
+            .addCase(getCoursesByCategoryAsync.rejected, (state, action) => {
+                state.status = 'failed'
+                state.error = action.payload as string;
+                state.statusCode = 404;
+                state.loading = false;
             })
     }
 })
