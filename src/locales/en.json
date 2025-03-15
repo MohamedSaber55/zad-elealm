@@ -3,6 +3,12 @@
     "zad-desc": "The platform provides an interactive, competitive way to learn Islamic sciences in various fields, to make seeking knowledge an enjoyable experience.",
     "zad-hadith": "On the authority of Abu Hurairah, may God be pleased with him, that the Messenger of God, may God bless him and grant him peace, said: “Whoever takes a path in search of knowledge, God will make easy for him a path to Paradise.” Narrated by Muslim.",
     "get-started": "Get Started",
+    "loading": "Loading...",
+    "noData": {
+        "title": "No Data Available",
+        "description": "There is no data to display at the moment.",
+        "refreshButton": "Refresh Page"
+    },
     "validations": {
         "email-required": " Email is required.",
         "password-required": " Password is required.",

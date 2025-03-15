@@ -7,6 +7,8 @@
   --color-primary: #3C6255;
   --color-primary-light: #4D7C6A;
   --color-primary-dark: #2B4A3D;
+  --color-muted-green: #A5C9B7;
+  --color-greenish-gray: #D6E4D9;
   --color-white: #FFFFFF;
   --color-black: #000000;
   /* --color-dark: #242424; */
@@ -15,6 +17,7 @@
   --color-muted: #9C9C9C;
   --color-muted-dark: #6a7282;
   --color-gray: #F5F5F5;
+  --color-track: #E8F5E9;
   --color-warning: #FFC107;
   --color-danger: #DC3545;
   --color-success: #28A745;
@@ -62,7 +65,7 @@
   }
 
   ::-webkit-scrollbar-track {
-    background: var(--color-gray);
+    background: var(--color-track);
     /* Track color */
     border-radius: 5px;
     /* Rounded corners */
@@ -84,7 +87,7 @@
   * {
     scrollbar-width: thin;
     /* "auto" or "thin" */
-    scrollbar-color: var(--color-primary) var(--color-gray);
+    scrollbar-color: var(--color-primary) var(--color-track);
     /* Thumb and track color */
   }
 }
