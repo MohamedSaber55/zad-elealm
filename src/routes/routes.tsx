@@ -19,6 +19,7 @@ import VerifyOTP from "../pages/VerifyOTP";
 import ResetPassword from "../pages/ResetPassword";
 import Profile from "../pages/Profile";
 import EditProfile from "../pages/EditProfile";
+import Quiz from "../pages/Quiz";
 
 const routes = createBrowserRouter(
     [
@@ -53,6 +54,10 @@ const routes = createBrowserRouter(
                 {
                     path: "/courses/:id",
                     element: <RouterGuard><Course /></RouterGuard>,
+                },
+                {
+                    path: "/quizzes/:id",
+                    element: <RouterGuard><Quiz /></RouterGuard>,
                 },
                 {
                     path: "/materials/:id",

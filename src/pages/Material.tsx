@@ -1,5 +1,5 @@
 import { Link, useParams } from "react-router-dom"
-import { ArrowDown2, ArrowUp2, Calendar, Filter, Global, Heart, Play, SearchNormal1, Star1 } from "iconsax-react"
+import { AddSquare, ArrowDown2, ArrowUp2, Calendar, Filter, Global, Heart, MinusSquare, Play, SearchNormal1, Star1 } from "iconsax-react"
 import { SetStateAction, useEffect, useState } from "react"
 import { useDispatch, useSelector } from "react-redux"
 import { AppDispatch, RootState } from "../store/store"
@@ -8,6 +8,8 @@ import { formatDateTime } from "../utils/formatDateTime"
 import debounce from "lodash/debounce";
 import Loading from "../components/Loading"
 import NoData from "../components/NoData"
+import { enrollCourse, getEnrolledCourses, unEnrollCourse } from "../store/slices/enrollment"
+import { notify } from "../utils/notify"
 
 const Material = () => {
     const { id } = useParams<{ id: string }>()
@@ -15,10 +17,13 @@ const Material = () => {
     const [favorites, setFavorites] = useState<number[]>([])
     const { token } = useSelector((state: RootState) => state.auth)
     const state = useSelector((state: RootState) => state.categories)
+    const enrollmentState = useSelector((state: RootState) => state.enrollment)
+    const enrollmentCourses = enrollmentState.courses;
     const courses = state.courses || [];
     // Filters & Pagination State
     const [search, setSearch] = useState("")
     const [sortBy, setSortBy] = useState("newest")
+    console.log(setSortBy);
     const [author, setAuthor] = useState("")
     const [language, setLanguage] = useState("")
     const [minRating, setMinRating] = useState(0)
@@ -27,7 +32,6 @@ const Material = () => {
     const [pageNumber, setPageNumber] = useState(1)
     const [pageSize, setPageSize] = useState(8)
     console.log(setPageNumber, setPageSize);
-
     const [showFilters, setShowFilters] = useState(false);
     const [sortByDropdownOpen, setSortByDropdownOpen] = useState(false);
 
@@ -38,7 +42,11 @@ const Material = () => {
         console.log("called");
 
     }, [token, id, search, sortBy, author, language, minRating, fromDate, toDate, pageNumber, pageSize])
-
+    useEffect(() => {
+        if (token) {
+            dispatch(getEnrolledCourses({ token }))
+        }
+    }, [token, dispatch])
     const fetchCourses = debounce(() => {
         dispatch(getCoursesByCategoryAsync({
             token: token || "",
@@ -69,6 +77,23 @@ const Material = () => {
         setFavorites((prev) =>
             prev.includes(itemId) ? prev.filter((id) => id !== itemId) : [...prev, itemId]
         )
+    }
+
+    const handleEnrollCourse = (courseId: number) => {
+        if (token) {
+            dispatch(enrollCourse({ token, id: courseId })).then(() => {
+                dispatch(getEnrolledCourses({ token }))
+            })
+            notify(" تم التسجيل بنجاح", "success")
+        }
+    }
+    const handleUnEnrollCourse = (courseId: number) => {
+        if (token) {
+            dispatch(unEnrollCourse({ token, id: courseId })).then(() => {
+                dispatch(getEnrolledCourses({ token }))
+            })
+            notify("تم الغاء التسجيل بنجاح", "success")
+        }
     }
 
     return (
@@ -235,6 +260,29 @@ const Material = () => {
                                             تمت الإضافة في
                                             <span className="text-xs text-muted-dark">{formatDateTime(course.createdAt, { isArabic: true, showDate: true })}</span>
                                         </p>
+                                        {/* Enroll Button */}
+                                        {!enrollmentCourses?.some((enrolled) => enrolled.id === course.id) ?
+                                            <button
+                                                onClick={(e) => {
+                                                    e.preventDefault();
+                                                    handleEnrollCourse(course.id);
+                                                }}
+                                                className="w-full mt-4 bg-primary hover:bg-primary-dark text-white py-2 px-4 rounded-lg transition flex items-center justify-center gap-2"
+                                            >
+                                                <AddSquare color="currentColor" size={20} />
+                                                <span className="">التسجيل في الدورة</span>
+                                            </button> :
+                                            <button
+                                                onClick={(e) => {
+                                                    e.preventDefault();
+                                                    handleUnEnrollCourse(course.id);
+                                                }}
+                                                className="w-full mt-4 bg-danger/90 hover:bg-danger text-white py-2 px-4 rounded-lg transition flex items-center justify-center gap-2"
+                                            >
+                                                <MinusSquare color="currentColor" size={20} />
+                                                <span className=""> الغاء التسجيل في الدورة</span>
+                                            </button>
+                                        }
                                     </div>
                                 </Link>
                             ))}

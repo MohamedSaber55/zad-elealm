@@ -41,18 +41,13 @@ interface Video {
     orderInCourse: number;
 }
 
-interface Quiz {
-    id: number;
-    name: string;
-    description: string;
-    createdAt: string;
-}
-
 interface Review {
     // Assuming reviews have a similar structure, you can define properties here
     // For example:
-    id: number;
-    comment: string;
+    courseId: number;
+    text: string;
+    displayName: string;
+    imageUrl: string;
     // rating: number;
     // createdAt: string;
 }
@@ -81,5 +76,27 @@ export interface CourseWithReviews {
     category: Category;
     videos: Video[];
     review: Review[];
-    quizzes: Quiz[];
+    quizzes: {
+        id: number;
+        name: string;
+        description: string;
+        createdAt: string;
+    }[];
 }
+interface Question {
+    id: number;
+    text: string;
+    correctChoice: number;
+    choices: {
+        id: number;
+        text: string;
+    }[];
+}
+export interface Quiz {
+    id: number;
+    name: string;
+    description: string;
+    createdAt: string;
+    course: Course;
+    questions: Question[];
+};

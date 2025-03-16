@@ -1,4 +1,4 @@
-import { DocumentText1, Global, Play, Star, Star1, User, VideoCircle } from "iconsax-react"
+import { DocumentText1, Global, Play, Star1, User, VideoCircle } from "iconsax-react"
 import RatingStars from "../components/RatingStars"
 import { useEffect, useState } from "react";
 import { Link, useParams } from "react-router-dom";
@@ -20,7 +20,7 @@ const Course = () => {
         setSelectedVideo(url)
     }
     const convertToEmbedUrl = (url: string) => {
-        const videoId = url.split('v=')[1]; // Extract the video ID
+        const videoId = url.split('v=')[1];
         return `https://www.youtube.com/embed/${videoId}`;
     };
 
@@ -29,7 +29,7 @@ const Course = () => {
             dispatch(getCourseDetails({ token, id }))
         }
     }, [id, token, dispatch]);
-
+    console.log("Selected Video:", selectedVideo);
     return (
         <div className="dark:bg-dark dark:text-white">
             {state.loading ? <div className="h-main">
@@ -39,23 +39,20 @@ const Course = () => {
                     <div className="py-10">
                         <h2 className="text-2xl font-bold ">{course?.name}</h2>
                     </div>
-                    <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
+                    <div className={`grid grid-cols-3 gap-5 `}>
                         {/* Video Player Section */}
                         {selectedVideo && (
-                            <div className="videos col-span-2 bg-white rounded-xl p-5">
-                                {/* Embedded YouTube Video */}
-                                <div className="mb-5">
-                                    <iframe
-                                        className="w-full aspect-video rounded-lg"
-                                        src={convertToEmbedUrl(selectedVideo)}
-                                        title="YouTube video player"
-                                        frameBorder="0"
-                                        allowFullScreen
-                                    />
-                                </div>
+                            <div className={`col-span-3 md:col-span-2 bg-white rounded-xl p-5`}>
+                                <iframe
+                                    className="w-full aspect-video rounded-lg"
+                                    src={convertToEmbedUrl(selectedVideo || "")}
+                                    title="YouTube video player"
+                                    frameBorder="0"
+                                    allowFullScreen
+                                />
                             </div>
                         )}
-                        <div className={`videos h-[520px] overflow-y-scroll ${selectedVideo ? "col-span-1" : "col-span-2"} bg-white rounded-xl p-5`}>
+                        <div className={`videos h-[520px] overflow-y-scroll col-span-3 ${selectedVideo ? "md:col-span-1" : "md:col-span-2"} bg-white rounded-xl p-5`}>
                             <h3 className="text-2xl text-primary font-bold mb-5">الفيديوهات</h3>
                             <div className="flex flex-col justify-center gap-5">
                                 {course?.videos.map((video, index) => (
@@ -79,34 +76,34 @@ const Course = () => {
                                 <h3 className="text-2xl text-primary font-bold mb-5">تفاصيل الكورس</h3>
                                 <div className="flex flex-col justify-center items-center gap-5 mb-5">
                                     <div className="w-full flex justify-between items-center">
-                                        <p className="text-lg font-bold flex items-center gap-1">
+                                        <div className="text-lg font-bold flex items-center gap-1">
                                             <User size="24" color="currentColor" className="text-primary" variant="Bold" />
                                             بواسطة
-                                        </p>
+                                        </div>
                                         <p className="font-bold">{course?.author}</p>
                                     </div>
                                     <div className="w-full flex justify-between items-center">
-                                        <p className="text-lg font-bold flex items-center gap-1">
+                                        <div className="text-lg font-bold flex items-center gap-1">
                                             <Play size="24" color="currentColor" className="text-primary" variant="Bold" />
                                             عدد الدروس
-                                        </p>
+                                        </div>
                                         <p className="font-bold"><span className="text-danger">{course?.courseVideosCount}</span> فيديو</p>
                                     </div>
                                     <div className="w-full flex justify-between items-center">
-                                        <p className="text-lg font-bold flex items-center gap-1">
+                                        <div className="text-lg font-bold flex items-center gap-1">
                                             <Global size="24" color="currentColor" className="text-primary" variant="Bold" />
                                             اللغه
-                                        </p>
+                                        </div>
                                         <p className="font-bold">{course?.courseLanguage}</p>
                                     </div>
                                     <div className="w-full flex justify-between items-center">
-                                        <p className="text-lg font-bold flex items-center gap-1">
+                                        <div className="text-lg font-bold flex items-center gap-1">
                                             <Star1 size="24" color="currentColor" className="text-primary" variant="Bold" />
                                             التقييم
-                                        </p>
-                                        <p className="font-bold">
+                                        </div>
+                                        <div className="font-bold">
                                             <RatingStars initialRating={course?.rating} allowSelection={false} />
-                                        </p>
+                                        </div>
                                     </div>
                                 </div>
                                 <div className="button flex justify-center items-center mt-8">
@@ -117,18 +114,18 @@ const Course = () => {
                     </div>
                     {/* Additional Course Details Section */}
                     <div className="mt-5">
-                        {/* <div className="grid grid-cols-1 md:grid-cols-2 gap-5"> */}
                         <div className="">
                             {/* Category Section */}
                             <div className="bg-white rounded-xl p-5">
                                 <h3 className="text-2xl text-primary font-bold mb-5">التصنيف</h3>
                                 <p className="text-lg font-bold">{course?.category.name}</p>
-                                <p className="text-gray-600">{course?.category.description}</p>
+                                <p className="text-muted-dark">{course?.category.description}</p>
                             </div>
                         </div>
                         {/* Quizzes Section */}
                         <div className="mt-5 bg-white rounded-xl p-5">
                             <h3 className="text-2xl text-primary font-bold mb-5">الاختبارات</h3>
+                            {course?.quizzes.length ?
                             <div className="flex flex-col gap-5">
                                 {course?.quizzes.map((quiz) => (
                                     <Link to={`/quizzes/${quiz.id}`} key={quiz.id} className="flex items-center gap-2 group">
@@ -141,23 +138,33 @@ const Course = () => {
                                         </div>
                                     </Link>
                                 ))}
-                            </div>
+                            </div>:(
+                                <p className="text-muted-dark">لا يوجد اختبارات حتى الآن.</p>
+                            )
+                            }
                         </div>
                         {/* Reviews Section */}
                         <div className="mt-5 bg-white rounded-xl p-5">
                             <h3 className="text-2xl text-primary font-bold mb-5">التقييمات</h3>
                             <div className="flex flex-col gap-5">
                                 {course?.review && course.review.length > 0 ? (
-                                    course?.review.map((review) => (
-                                        <div key={review.id} className="flex items-center gap-2">
-                                            <div className="">
-                                                <Star size="28" color="currentColor" className="text-primary" variant="Bold" />
+                                    course?.review.map((review, i) => (
+                                        <div key={i} className="flex items-start gap-3 text-dark border border-primary p-4 rounded-lg">
+                                            {/* User Image */}
+                                            <img
+                                                src={review.imageUrl}
+                                                alt={review.displayName}
+                                                className="w-10 h-10 rounded-full object-cover"
+                                            />
+                                            {/* Review Content */}
+                                            <div className="flex flex-col">
+                                                <p className="font-bold text-primary">{review.displayName}</p>
+                                                <p className="text-sm">{review.text}</p>
                                             </div>
-                                            <p className="font-bold text-sm">{review.comment}</p>
                                         </div>
                                     ))
                                 ) : (
-                                    <p className="text-gray-600">لا توجد تقييمات حتى الآن.</p>
+                                    <p className="text-muted-dark">لا توجد تقييمات حتى الآن.</p>
                                 )}
                             </div>
                         </div>
