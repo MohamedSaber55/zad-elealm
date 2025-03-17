@@ -45,7 +45,7 @@
     background-color: var(--color-light-bg);
   }
 
-  input {
+  input, textarea {
     outline: none;
     font-size: large;
   }
