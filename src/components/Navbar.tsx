@@ -1,6 +1,6 @@
 import { useTranslation } from "react-i18next";
 import { Link, useLocation } from "react-router-dom";
-// import ThemeButton from "./ThemeButton";
+import ThemeButton from "./ThemeButton";
 import { ArrowDown2, ArrowUp2, CloseSquare, Menu, Notification, ProfileCircle } from "iconsax-react";
 // import Language from "../utils/i18n";
 import { useEffect, useRef, useState } from "react";
@@ -114,7 +114,7 @@ const Navbar = () => {
                         </Link>
                     )}
 
-                    {/* <ThemeButton /> */}
+                    <ThemeButton />
                     {state.token &&
                         <div className="relative" ref={profileDropdownRef}>
                             <button
