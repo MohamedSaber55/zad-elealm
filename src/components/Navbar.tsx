@@ -1,6 +1,6 @@
 import { useTranslation } from "react-i18next";
 import { Link, useLocation } from "react-router-dom";
-import ThemeButton from "./ThemeButton";
+// import ThemeButton from "./ThemeButton";
 import { ArrowDown2, ArrowUp2, CloseSquare, Menu, Notification, ProfileCircle } from "iconsax-react";
 // import Language from "../utils/i18n";
 import { useEffect, useRef, useState } from "react";
@@ -8,6 +8,7 @@ import logo from "../../public/logo.png";
 import { useDispatch, useSelector } from "react-redux";
 import { AppDispatch, RootState } from "../store/store";
 import { logout } from "../store/slices/auth";
+import { getNotifications } from "../store/slices/notifications";
 interface Link {
     name: string;
     url: string;
@@ -23,11 +24,17 @@ const Navbar = () => {
     const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
     const profileDropdownRef = useRef<HTMLDivElement>(null);
     const state = useSelector((state: RootState) => state.auth);
+    const notificationState = useSelector((state: RootState) => state.notifications);
     const dispatch = useDispatch<AppDispatch>();
 
     useEffect(() => {
         setActiveLink(location.pathname);
     }, [location.pathname]);
+    useEffect(() => {
+        if (state.token) {
+            dispatch(getNotifications({ token: state.token }))
+        }
+    }, [state.token, dispatch]);
     useEffect(() => {
         const handleClickOutside = (event: MouseEvent) => {
             // if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
@@ -96,12 +103,18 @@ const Navbar = () => {
                     </div>
                 }
                 <div className="buttons flex gap-4 justify-center items-center">
-                    {state.token &&
-                        <Link to="/notifications" className="relative text-info">
-                            <Notification size="32" variant='Bulk' color="currentColor" />
+                    {state.token && (
+                        <Link to="/notifications" className="relative text-primary">
+                            <Notification size="32" variant="Bold" color="currentColor" />
+                            {notificationState && notificationState.unreadCount !== null && notificationState.unreadCount > 0 && (
+                                <span className="absolute -top-2 -right-2 bg-red-500 text-white text-xs font-bold w-5 h-5 flex items-center justify-center rounded-full">
+                                    {notificationState.unreadCount}
+                                </span>
+                            )}
                         </Link>
-                    }
-                    <ThemeButton />
+                    )}
+
+                    {/* <ThemeButton /> */}
                     {state.token &&
                         <div className="relative" ref={profileDropdownRef}>
                             <button

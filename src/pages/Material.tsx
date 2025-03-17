@@ -11,6 +11,7 @@ import NoData from "../components/NoData"
 import { enrollCourse, getEnrolledCourses, unEnrollCourse } from "../store/slices/enrollment"
 import { notify } from "../utils/notify"
 import { addFavoriteCourseAsync, getFavoritesForUserAsync, removeFavoriteCourseAsync } from "../store/slices/favorites"
+import { getNotifications } from "../store/slices/notifications"
 
 const Material = () => {
     const { id } = useParams<{ id: string }>()
@@ -81,7 +82,9 @@ const Material = () => {
     const handleEnrollCourse = (courseId: number) => {
         if (token) {
             dispatch(enrollCourse({ token, id: courseId })).then(() => {
-                dispatch(getEnrolledCourses({ token }))
+                dispatch(getEnrolledCourses({ token })).then(() => {
+                    dispatch(getNotifications({ token }))
+                })
             })
             notify(" تم التسجيل بنجاح", "success")
         }

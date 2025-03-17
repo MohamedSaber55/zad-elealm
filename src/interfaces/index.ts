@@ -100,3 +100,12 @@ export interface Quiz {
     course: Course;
     questions: Question[];
 };
+
+export interface Notification {
+    id: number;
+    title: string;
+    description: string;
+    type: number;
+    createdAt: string;
+    isRead: boolean;
+}

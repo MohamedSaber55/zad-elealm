@@ -6,6 +6,7 @@ import quizzesSlice from './slices/quizzes';
 import enrollmentSlice from './slices/enrollment';
 import favoritesSlice from './slices/favorites';
 import reviewSlice from './slices/reviews';
+import notificationsSlice from './slices/notifications';
 
 export type RootState = ReturnType<typeof store.getState>;
 export type AppDispatch = typeof store.dispatch;
@@ -18,7 +19,8 @@ const store = configureStore({
         quizzes: quizzesSlice,
         enrollment: enrollmentSlice,
         favorites: favoritesSlice,
-        reviews: reviewSlice
+        reviews: reviewSlice,
+        notifications: notificationsSlice
     },
 });
 
