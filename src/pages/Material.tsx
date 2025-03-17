@@ -10,28 +10,28 @@ import Loading from "../components/Loading"
 import NoData from "../components/NoData"
 import { enrollCourse, getEnrolledCourses, unEnrollCourse } from "../store/slices/enrollment"
 import { notify } from "../utils/notify"
+import { addFavoriteCourseAsync, getFavoritesForUserAsync, removeFavoriteCourseAsync } from "../store/slices/favorites"
 
 const Material = () => {
     const { id } = useParams<{ id: string }>()
     const dispatch = useDispatch<AppDispatch>()
-    const [favorites, setFavorites] = useState<number[]>([])
     const { token } = useSelector((state: RootState) => state.auth)
     const state = useSelector((state: RootState) => state.categories)
-    const enrollmentState = useSelector((state: RootState) => state.enrollment)
+    const enrollmentState = useSelector((state: RootState) => state.enrollment) as { courses: any[] }
+    const favoritesState = useSelector((state: RootState) => state.favorites)
     const enrollmentCourses = enrollmentState.courses;
+    const favoritesCourses = favoritesState.favoriteCourses;
     const courses = state.courses || [];
     // Filters & Pagination State
     const [search, setSearch] = useState("")
-    const [sortBy, setSortBy] = useState("newest")
-    console.log(setSortBy);
+    const [sortBy] = useState("newest")
     const [author, setAuthor] = useState("")
     const [language, setLanguage] = useState("")
     const [minRating, setMinRating] = useState(0)
     const [fromDate, setFromDate] = useState("")
     const [toDate, setToDate] = useState("")
-    const [pageNumber, setPageNumber] = useState(1)
-    const [pageSize, setPageSize] = useState(8)
-    console.log(setPageNumber, setPageSize);
+    const [pageNumber] = useState(1)
+    const [pageSize] = useState(8)
     const [showFilters, setShowFilters] = useState(false);
     const [sortByDropdownOpen, setSortByDropdownOpen] = useState(false);
 
@@ -45,6 +45,11 @@ const Material = () => {
     useEffect(() => {
         if (token) {
             dispatch(getEnrolledCourses({ token }))
+        }
+    }, [token, dispatch])
+    useEffect(() => {
+        if (token) {
+            dispatch(getFavoritesForUserAsync({ token }))
         }
     }, [token, dispatch])
     const fetchCourses = debounce(() => {
@@ -73,12 +78,6 @@ const Material = () => {
         setSortByDropdownOpen(false);
     };
 
-    const toggleFavorite = (itemId: number) => {
-        setFavorites((prev) =>
-            prev.includes(itemId) ? prev.filter((id) => id !== itemId) : [...prev, itemId]
-        )
-    }
-
     const handleEnrollCourse = (courseId: number) => {
         if (token) {
             dispatch(enrollCourse({ token, id: courseId })).then(() => {
@@ -93,6 +92,22 @@ const Material = () => {
                 dispatch(getEnrolledCourses({ token }))
             })
             notify("تم الغاء التسجيل بنجاح", "success")
+        }
+    }
+    const handleAddFavCourse = (courseId: number) => {
+        if (token) {
+            dispatch(addFavoriteCourseAsync({ token, courseId })).then(() => {
+                dispatch(getFavoritesForUserAsync({ token }))
+            })
+            notify(" تم إضافة المادة بنجاح", "success")
+        }
+    }
+    const handleRemoveFavCourse = (courseId: number) => {
+        if (token) {
+            dispatch(removeFavoriteCourseAsync({ token, courseId })).then(() => {
+                dispatch(getFavoritesForUserAsync({ token }))
+            })
+            notify(" تم إزالة المادة من المفضلة بنجاح", "success")
         }
     }
 
@@ -222,19 +237,32 @@ const Material = () => {
                                 <Link to={`/courses/${course.id}`} key={course.id} className="bg-white dark:bg-dark-light rounded-lg overflow-hidden shadow hover:shadow-md transition">
                                     <div className="relative">
                                         <img src={course.imageUrl} alt={course.name} className="w-full h-48 object-cover" />
-                                        <button
-                                            onClick={(e) => {
-                                                e.preventDefault();
-                                                toggleFavorite(course.id);
-                                            }}
-                                            className="absolute top-3 right-3 bg-white dark:bg-dark-light p-2 rounded-full z-10"
-                                        >
-                                            <Heart
-                                                size="20"
-                                                variant={favorites.includes(course.id) ? "Bold" : "Linear"}
-                                                color={favorites.includes(course.id) ? "#E63946" : "#A0A0A0"}
-                                            />
-                                        </button>
+                                        {!favoritesCourses?.some((fav) => fav.id === course.id) ?
+                                            <button
+                                                onClick={(e) => {
+                                                    e.preventDefault();
+                                                    handleAddFavCourse(course.id);
+                                                }}
+                                                className="absolute top-3 right-3 bg-white dark:bg-dark-light p-2 rounded-full z-10"
+                                            >
+                                                <Heart
+                                                    size="20"
+                                                    variant={"Linear"}
+                                                    color={"#A0A0A0"}
+                                                />
+                                            </button> : <button
+                                                onClick={(e) => {
+                                                    e.preventDefault();
+                                                    handleRemoveFavCourse(course.id);
+                                                }}
+                                                className="absolute top-3 right-3 bg-white dark:bg-dark-light p-2 rounded-full z-10"
+                                            >
+                                                <Heart
+                                                    size="20"
+                                                    variant={"Bold"}
+                                                    color={"#E63946"}
+                                                />
+                                            </button>}
                                     </div>
 
                                     {/* Course Details */}
