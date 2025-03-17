@@ -69,8 +69,11 @@ export const getEnrolledCourses = createAsyncThunk<GetEnrolledCoursesResponse, G
                     Authorization: `Bearer ${token}`,
                 },
             });
+            console.log(response);
+
             return response.data;
         } catch (error: any) {
+            console.log(error);
             return rejectWithValue(error.response.data as { message: string, statusCode: number });
         }
     }
@@ -128,8 +131,13 @@ const enrollmentSlice = createSlice({
             })
             .addCase(getEnrolledCourses.fulfilled, (state, action: PayloadAction<GetEnrolledCoursesResponse>) => {
                 state.loading = false;
-                state.courses = action.payload.data.courses;
-                state.allEnrolledCourses = action.payload.data.allEnrolledCourses;
+                if (action.payload.message == "لا توجد دورات مسجلة") {
+                    state.courses = [];
+                    state.allEnrolledCourses = 0
+                } else {
+                    state.courses = action.payload.data.courses;
+                    state.allEnrolledCourses = action.payload.data.allEnrolledCourses;
+                }
                 state.message = action.payload.message || null;
                 state.statusCode = action.payload.statusCode || null;
                 state.status = 'fulfilled';

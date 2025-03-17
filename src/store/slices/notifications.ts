@@ -58,8 +58,11 @@ export const getNotifications = createAsyncThunk<GetNotificationsResponse, GetNo
                     Authorization: `Bearer ${token}`,
                 },
             });
+            console.log(response);
             return response.data;
         } catch (error: any) {
+            console.log(error);
+
             return rejectWithValue(error.response.data as { message: string, statusCode: number });
         }
     }
@@ -131,8 +134,8 @@ interface initialState {
     error: any;
     statusCode: number | null;
     status: string | null;
-    unreadCount : number | null;
-    totalCount : number | null;
+    unreadCount: number | null;
+    totalCount: number | null;
     notifications: Notification[];
     notification: Notification | null;
 }
@@ -141,8 +144,8 @@ const initialState: initialState = {
     message: null,
     loading: false,
     error: null,
-    totalCount : null,
-    unreadCount : null,
+    totalCount: null,
+    unreadCount: null,
     statusCode: null,
     status: null,
     notifications: [],
@@ -160,9 +163,15 @@ const notificationsSlice = createSlice({
             })
             .addCase(getNotifications.fulfilled, (state, action) => {
                 state.loading = false;
-                state.notifications = action.payload.data.notifications;
-                state.totalCount = action.payload.data.totalCount;
-                state.unreadCount = action.payload.data.unreadCount;
+                if (action.payload.message === "لا توجد إشعارات") {
+                    state.notifications = [];
+                    state.totalCount = 0;
+                    state.unreadCount = 0;
+                } else {
+                    state.notifications = action.payload.data.notifications;
+                    state.totalCount = action.payload.data.totalCount;
+                    state.unreadCount = action.payload.data.unreadCount;
+                }
                 state.statusCode = action.payload.statusCode;
                 state.message = action.payload.message;
             })
