@@ -22,11 +22,13 @@ export interface Category {
 }
 
 export interface Certificate {
-    id: string;
-    userId: string;
-    courseId: string;
-    certificateUrl: string;
-    issuedAt: string;
+    id: number;
+    name: string;
+    description: string;
+    pdfUrl: string;
+    completedDate: string;
+    userName: string;
+    quizName: string;
 }
 
 

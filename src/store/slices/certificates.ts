@@ -35,12 +35,11 @@ interface DownloadCertificateRequest {
 }
 
 interface GetUserCertificatesRequest {
-    userId: string;
     token: string;
 }
 
 interface CertificateResponse {
-    data: Certificate | Certificate[];
+    data: Certificate[];
     statusCode: number;
     message: string;
 }
@@ -114,7 +113,7 @@ const certificatesSlice = createSlice({
             .addCase(generateCertificateAsync.fulfilled, (state, action: PayloadAction<CertificateResponse>) => {
                 state.status = "succeeded";
                 state.loading = false;
-                state.certificate = action.payload.data as Certificate;
+                // state.certificate = action.payload.data;
                 state.message = action.payload.message;
                 state.statusCode = action.payload.statusCode;
             })
@@ -148,9 +147,11 @@ const certificatesSlice = createSlice({
                 state.loading = true;
             })
             .addCase(getUserCertificatesAsync.fulfilled, (state, action: PayloadAction<CertificateResponse>) => {
+                console.log(action.payload);
+
                 state.status = "succeeded";
                 state.loading = false;
-                state.certificates = action.payload.data as Certificate[];
+                state.certificates = action.payload.data;
                 state.message = action.payload.message;
                 state.statusCode = action.payload.statusCode;
             })

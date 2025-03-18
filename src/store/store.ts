@@ -7,6 +7,7 @@ import enrollmentSlice from './slices/enrollment';
 import favoritesSlice from './slices/favorites';
 import reviewSlice from './slices/reviews';
 import notificationsSlice from './slices/notifications';
+import certificatesSlice from './slices/certificates';
 
 export type RootState = ReturnType<typeof store.getState>;
 export type AppDispatch = typeof store.dispatch;
@@ -15,6 +16,7 @@ const store = configureStore({
     reducer: {
         auth: authSlice,
         categories: categoriesSlice,
+        certificates: certificatesSlice,
         courses: coursesSlice,
         quizzes: quizzesSlice,
         enrollment: enrollmentSlice,
