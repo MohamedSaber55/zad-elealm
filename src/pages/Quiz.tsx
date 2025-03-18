@@ -70,33 +70,33 @@ const Quiz = () => {
     if (loading) return <div className="h-main"><Loading /></div>;
 
     return (
-        <div className="dark:bg-dark dark:text-white">
+        <div className="dark:bg-dark dark:text-white py-5">
             <div className="container min-h-main">
-                <div className="my-10">
+                <div className="py-10">
                     <h2 className="text-2xl font-bold">{quiz?.name}</h2>
-                    <p className="text-muted-dark">{quiz?.description}</p>
+                    <p className="text-muted-dark dark:text-muted">{quiz?.description}</p>
                 </div>
-                <div className="bg-white p-5 rounded-xl">
+                <div className="bg-white dark:bg-dark-light p-5 rounded-xl">
                     {quiz?.course && (
                         <div>
-                            <h3 className="text-xl font-bold text-dark mb-2">الدورة التدريبية:</h3>
+                            <h3 className="text-xl font-bold text-dark dark:text-light mb-2">الدورة التدريبية:</h3>
                             <div className="flex items-center gap-4">
                                 <img src={quiz.course.imageUrl} alt={quiz.course.name} className="w-44 border border-primary aspect-video rounded-md object-cover " />
                                 <div className="flex flex-col gap-2 justify-between">
                                     {/* Course Name */}
-                                    <p className="text-xl font-bold text-primary">{quiz.course.name}</p>
+                                    <p className="text-xl font-bold text-primary dark:text-primary-light">{quiz.course.name}</p>
 
                                     {/* Author Name */}
-                                    <p className="text-gray-600 text-sm">{quiz.course.author}</p>
+                                    <p className="text-muted-dark dark:text-muted text-sm">{quiz.course.author}</p>
 
                                     {/* Videos Count */}
-                                    <p className="text-gray-700 flex items-center gap-1">
+                                    <p className="text-muted-dark dark:text-muted flex items-center gap-1">
                                         <Play className="text-red-500" variant="Bold" color="currentColor" size="22" />
                                         <span>عدد الفيديوهات: {quiz.course.courseVideosCount}</span>
                                     </p>
 
                                     {/* Rating */}
-                                    <p className="text-gray-700 flex items-center gap-1">
+                                    <p className="text-muted-dark dark:text-muted flex items-center gap-1">
                                         <Star1 className="text-yellow-400" variant="Bold" color="currentColor" size="22" />
                                         <span>{quiz.course.rating} / 5</span>
                                     </p>
@@ -107,8 +107,8 @@ const Quiz = () => {
                 </div>
                 {result && (
                     (
-                        <div className="my-5 p-5 rounded-xl bg-white shadow-sm">
-                            <h3 className="text-xl font-bold text-primary-dark mb-4">
+                        <div className="mt-5 p-5 rounded-xl bg-white dark:bg-dark-light shadow-sm">
+                            <h3 className="text-xl font-bold text-primary-dark dark:text-primary-light mb-4">
                                 نتيجة الاختبار:
                             </h3>
                             <div className="space-y-3">
@@ -191,15 +191,15 @@ const Quiz = () => {
                         </div>
                     )
                 )}
-                <div className="my-5 bg-white p-5 rounded-xl">
+                <div className="my-5 bg-white dark:bg-dark-light p-5 rounded-xl">
                     {/* Quiz Questions */}
                     {quiz?.questions && quiz.questions.length > 0 ? (
                         <div>
-                            <h3 className="text-xl font-bold text-dark mb-2">الأسئلة:</h3>
+                            <h3 className="text-xl font-bold text-dark dark:text-light mb-2">الأسئلة:</h3>
                             <form onSubmit={formik.handleSubmit}>
                                 <ul className="space-y-4">
                                     {currentQuestions?.map((question, index) => (
-                                        <li key={question.id} className="p-4 bg-gray rounded-md">
+                                        <li key={question.id} className="p-4 bg-gray dark:bg-dark-lighter rounded-md">
                                             <p className="font-bold">{index + 1 + currentPage * questionsPerPage}. {question.text}</p>
                                             <ul className="mt-2 space-y-2">
                                                 {question.choices.map((choice) => (
@@ -223,7 +223,7 @@ const Quiz = () => {
                                             {formik.errors.studentAnswers &&
                                                 formik.touched.studentAnswers &&
                                                 !formik.values.studentAnswers[question.id] && (
-                                                    <p className="text-red-500 text-sm mt-1">يجب اختيار إجابة</p>
+                                                    <p className="text-danger text-sm mt-1">يجب اختيار إجابة</p>
                                                 )}
                                         </li>
                                     ))}
@@ -269,7 +269,7 @@ const Quiz = () => {
                                 className="w-40 h-40 md:w-48 md:h-48 mb-4 opacity-80"
                             />
                             {/* Message */}
-                            <p className="text-gray-500 text-lg font-medium text-center">
+                            <p className="text-muted text-lg font-medium text-center">
                                 لا توجد أسئلة متاحة حاليًا
                             </p>
                         </div>
@@ -278,9 +278,9 @@ const Quiz = () => {
             </div>
             {showModal && (
                 <div className="fixed inset-0 flex items-center justify-center bg-black/50">
-                    <div className="bg-white p-6 rounded-lg shadow-lg w-96">
+                    <div className="bg-white dark:bg-dark-lighter p-6 rounded-lg shadow-lg w-96">
                         <h3 className="text-lg font-semibold text-center mb-4">تأكيد الإرسال</h3>
-                        <p className="text-muted-dark text-center mb-6">هل أنت متأكد من إرسال الإجابات؟</p>
+                        <p className="text-muted-dark dark:text-muted text-center mb-6">هل أنت متأكد من إرسال الإجابات؟</p>
                         <div className="flex justify-center gap-4">
                             <button
                                 className="px-4 py-2 bg-red-500/90 hover:bg-danger text-white rounded-lg"

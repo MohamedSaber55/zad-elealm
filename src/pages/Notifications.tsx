@@ -44,39 +44,39 @@ export default function NotificationsPage() {
     };
 
     return (
-        <div className="min-h-main">
+        <div className="min-h-main dark:bg-dark dark:text-white">
             {state.loading ? <div className="h-main"><Loading /></div> :
                 <div className="container">
                     <div className="heading flex justify-between items-center gap-5">
                         <h2 className="heading text-2xl font-bold my-10 flex items-center gap-2">
-                            <NotificationBing color="currentColor" variant="Bulk" size={32} className="text-warning" /> الإشعارات <span className="text-dark">( <span className="text-danger">{state.unreadCount || 0}</span>/{state.totalCount || 0} )</span>
+                            <NotificationBing color="currentColor" variant="Bulk" size={32} className="text-warning" /> الإشعارات <span className="text-dark dark:text-muted">( <span className="text-danger">{state.unreadCount || 0}</span>/{state.totalCount || 0} )</span>
                         </h2>
                         <button
                             onClick={handleMarkAllAsRead}
-                            className="flex items-center gap-2 px-4 py-2 bg-primary text-white rounded-md hover:bg-primary-dark transition-colors"
+                            className="flex items-center gap-2 px-4 py-2 bg-primary dark:bg-primary-light text-white rounded-md hover:bg-primary-dark transition-colors"
                         >
                             <TickCircle color="currentColor" variant="Bold" size={20} />
                             <span>تعليم الكل كمقروء</span>
                         </button>
                     </div>
                     {notifications.length > 0 ?
-                        <ul className="mb-10 flex flex-col gap-4">
+                        <ul className="pb-10 flex flex-col gap-4">
                             {notifications.map((notif) => (
                                 <li
                                     key={notif.id}
-                                    className={`flex flex-col gap-2 p-4 border-b border-primary-light border rounded-lg ${!notif.isRead ? "bg-track" : "bg-white"
+                                    className={`flex flex-col gap-2 p-4 border-b border-primary-light border rounded-lg ${!notif.isRead ? "bg-track dark:bg-dark-lighter" : "bg-white dark:bg-dark-light"
                                         }`}
                                 >
                                     <div className="space-y-1">
-                                        <p className="font-semibold text-dark">{notif.title}</p>
-                                        <p className="text-sm text-muted-dark">{notif.description}</p>
-                                        <span className="text-xs text-muted">{formatDateTime(notif.createdAt, { isArabic: true, showDate: true, showTime: true })}</span>
+                                        <p className="font-semibold text-dark dark:text-light">{notif.title}</p>
+                                        <p className="text-sm text-muted-dark dark:text-muted">{notif.description}</p>
+                                        <span className="text-xs text-muted-dark dark:text-muted">{formatDateTime(notif.createdAt, { isArabic: true, showDate: true, showTime: true })}</span>
                                     </div>
                                     <div className="flex gap-2 items-center">
                                         {!notif.isRead && (
                                             <button
                                                 onClick={() => handleMarkAsRead(notif.id)}
-                                                className="text-primary hover:text-primary-dark bg-greenish-gray p-3 py-1 rounded-lg flex items-center gap-1 self-start"
+                                                className="text-primary hover:text-primary-dark bg-greenish-gray dark:bg-muted-green p-3 py-1 rounded-lg flex items-center gap-1 self-start"
                                             >
                                                 <TickCircle color="currentColor" size={18} /> مقروء
                                             </button>

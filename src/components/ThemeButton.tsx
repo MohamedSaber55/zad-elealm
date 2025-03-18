@@ -26,20 +26,20 @@ const ThemeButton = () => {
     }
     return (
         <div className="flex">
-            <div className="relative p-1 rounded-lg flex justify-center items-center w-12 h-12">
+            <div className="relative p-1 rounded-lg flex justify-center items-center w-12 h-12 bg-primary dark:bg-primary-light">
                 <Sun1
                     size="32"
-                    variant='Bulk'
+                    variant='Bold'
                     color="currentColor"
-                    className={`absolute text-warning transition-all duration-300 cursor-pointer ${theme === "dark" ? "opacity-0" : "opacity-100"
+                    className={`absolute text-white transition-all duration-300 cursor-pointer ${theme === "dark" ? "opacity-0" : "opacity-100"
                         }`}
                     onClick={changeTheme}
                 />
                 <Moon
                     size="32"
-                    variant='Bulk'
+                    variant='Bold'
                     color="currentColor"
-                    className={`absolute text-light transition-all duration-300 cursor-pointer ${theme === "dark" ? "opacity-100" : "opacity-0"
+                    className={`absolute text-white transition-all duration-300 cursor-pointer ${theme === "dark" ? "opacity-100" : "opacity-0"
                         }`}
                     onClick={changeTheme}
                 />

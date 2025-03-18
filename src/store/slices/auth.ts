@@ -159,7 +159,6 @@ export const resetPasswordAsync = createAsyncThunk<ResetPasswordResponse, ResetP
         }
     }
 );
-
 interface InitialState {
     user: User | null;
     loading: boolean;

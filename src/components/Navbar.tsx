@@ -96,7 +96,7 @@ const Navbar = () => {
                 {state.token &&
                     <div className="links hidden md:flex gap-4">
                         {links.map((link, index) => (
-                            <Link to={link.url} key={index} className={`${activeLink === link.url ? "bg-primary text-white p-3 rounded-lg" : "p-3"} text-lg text-dark dark:text-light font-semibold`}>
+                            <Link to={link.url} key={index} className={`${activeLink === link.url ? "bg-primary dark:bg-primary-light text-white p-3 rounded-lg" : "p-3"} text-lg text-dark dark:text-light font-semibold`}>
                                 {link.name}
                             </Link>
                         ))}
@@ -104,10 +104,10 @@ const Navbar = () => {
                 }
                 <div className="buttons flex gap-4 justify-center items-center">
                     {state.token && (
-                        <Link to="/notifications" className="relative text-primary">
+                        <Link to="/notifications" className="relative text-primary dark:text-primary-light">
                             <Notification size="32" variant="Bold" color="currentColor" />
                             {notificationState && notificationState.unreadCount !== null && notificationState.unreadCount > 0 && (
-                                <span className="absolute -top-2 -right-2 bg-red-500 text-white text-xs font-bold w-5 h-5 flex items-center justify-center rounded-full">
+                                <span className="absolute -top-2 -right-2 bg-danger text-white text-xs font-bold w-5 h-5 flex items-center justify-center rounded-full">
                                     {notificationState.unreadCount}
                                 </span>
                             )}
@@ -152,9 +152,11 @@ const Navbar = () => {
                             {t("navbar.login")}
                         </Link>
                     }
-                    <button onClick={toggleMobileMenu} className="md:hidden">
-                        {isMobileMenuOpen ? <CloseSquare size="32" color="currentColor" /> : <Menu size="32" color="currentColor" />}
-                    </button>
+                    <div className="p-2 md:hidden rounded-md flex justify-center items-center bg-primary dark:bg-primary-light">
+                        <button onClick={toggleMobileMenu} className=" text-light">
+                            {isMobileMenuOpen ? <CloseSquare size="32" color="currentColor" /> : <Menu size="32" color="currentColor" />}
+                        </button>
+                    </div>
                 </div>
                 {isMobileMenuOpen && (
                     <div className="fixed inset-0 bg-black/50 z-40 md:hidden" onClick={toggleMobileMenu}></div>
@@ -162,7 +164,7 @@ const Navbar = () => {
 
                 {/* Mobile Sidebar */}
                 <div className={` md:hidden fixed top-0 end-0 h-full bg-white dark:bg-dark-light shadow-lg w-64 z-50 transform ${isMobileMenuOpen ? "translate-x-0" : currentLanguage == "ar" ? "-translate-x-full" : "translate-x-full"} transition-transform duration-300`}>
-                    <button onClick={toggleMobileMenu} className="absolute top-4 end-4">
+                    <button onClick={toggleMobileMenu} className="absolute top-4 end-4 text-dark dark:text-light">
                         <CloseSquare size="32" color="currentColor" />
                     </button>
 

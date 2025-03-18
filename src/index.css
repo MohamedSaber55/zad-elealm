@@ -45,7 +45,8 @@
     background-color: var(--color-light-bg);
   }
 
-  input, textarea {
+  input,
+  textarea {
     outline: none;
     font-size: large;
   }
@@ -71,6 +72,10 @@
     /* Rounded corners */
   }
 
+  .dark ::-webkit-scrollbar-track {
+    background: var(--color-dark-lighter); /* Dark mode */
+  }
+
   ::-webkit-scrollbar-thumb {
     background: var(--color-primary);
     /* Thumb color */
@@ -84,10 +89,8 @@
   }
 
   /* Custom Scrollbar for Firefox */
-  * {
+  /* * {
     scrollbar-width: thin;
-    /* "auto" or "thin" */
     scrollbar-color: var(--color-primary) var(--color-track);
-    /* Thumb and track color */
-  }
+  } */
 }

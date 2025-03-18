@@ -42,7 +42,7 @@ const Course = () => {
                     <div className={`grid grid-cols-3 gap-5 `}>
                         {/* Video Player Section */}
                         {selectedVideo && (
-                            <div className={`col-span-3 md:col-span-2 bg-white rounded-xl p-5`}>
+                            <div className={`col-span-3 md:col-span-2 bg-white dark:bg-dark-light rounded-xl p-5`}>
                                 <iframe
                                     className="w-full aspect-video rounded-lg"
                                     src={convertToEmbedUrl(selectedVideo || "")}
@@ -52,16 +52,16 @@ const Course = () => {
                                 />
                             </div>
                         )}
-                        <div className={`videos h-[520px] overflow-y-scroll col-span-3 ${selectedVideo ? "md:col-span-1" : "md:col-span-2"} bg-white rounded-xl p-5`}>
-                            <h3 className="text-2xl text-primary font-bold mb-5">الفيديوهات</h3>
+                        <div className={`videos h-[520px] overflow-y-scroll col-span-3 ${selectedVideo ? "md:col-span-1" : "md:col-span-2"} bg-white dark:bg-dark-light rounded-xl p-5`}>
+                            <h3 className="text-2xl text-primary dark:text-primary-light font-bold mb-5">الفيديوهات</h3>
                             <div className="flex flex-col justify-center gap-5">
                                 {course?.videos.map((video, index) => (
                                     <div key={index} className="flex items-center gap-2">
                                         <div className="">
-                                            <VideoCircle size="28" color="currentColor" className="text-primary" variant="Bold" />
+                                            <VideoCircle size="28" color="currentColor" className="text-primary dark:text-primary-light" variant="Bold" />
                                         </div>
                                         <p
-                                            className={`font-bold text-sm ${selectedVideo == video.videoUrl && "text-primary"} hover:text-primary cursor-pointer transition`}
+                                            className={`font-bold text-sm ${selectedVideo == video.videoUrl && "text-primary dark:text-primary-light"} hover:text-primary cursor-pointer transition`}
                                             onClick={() => setVideoUrlAsEmbedded(video.videoUrl)}
                                         >
                                             {index + 1}- {" "}
@@ -71,34 +71,34 @@ const Course = () => {
                                 ))}
                             </div>
                         </div>
-                        <div className={`details col-span-1 ${selectedVideo && "col-span-3"} bg-white rounded-xl`}>
-                            <div className=" bg-white rounded-xl p-5">
-                                <h3 className="text-2xl text-primary font-bold mb-5">تفاصيل الكورس</h3>
+                        <div className={`details col-span- ${selectedVideo ? "col-span-3": "col-span-3 md:col-span-1"} bg-white dark:bg-dark-light  rounded-xl`}>
+                            <div className=" bg-white dark:bg-dark-light  rounded-xl p-5">
+                                <h3 className="text-2xl text-primary dark:text-primary-light font-bold mb-5">تفاصيل الكورس</h3>
                                 <div className="flex flex-col justify-center items-center gap-5 mb-5">
                                     <div className="w-full flex justify-between items-center">
-                                        <div className="text-lg font-bold flex items-center gap-1">
-                                            <User size="24" color="currentColor" className="text-primary" variant="Bold" />
+                                        <div className="text-lg font-bold flex items-center flex-wrap gap-1">
+                                            <User size="24" color="currentColor" className="text-primary dark:text-primary-light" variant="Bold" />
                                             بواسطة
                                         </div>
                                         <p className="font-bold">{course?.author}</p>
                                     </div>
                                     <div className="w-full flex justify-between items-center">
-                                        <div className="text-lg font-bold flex items-center gap-1">
-                                            <Play size="24" color="currentColor" className="text-primary" variant="Bold" />
+                                        <div className="text-lg font-bold flex items-center flex-wrap gap-1">
+                                            <Play size="24" color="currentColor" className="text-primary dark:text-primary-light  " variant="Bold" />
                                             عدد الدروس
                                         </div>
                                         <p className="font-bold"><span className="text-danger">{course?.courseVideosCount}</span> فيديو</p>
                                     </div>
                                     <div className="w-full flex justify-between items-center">
-                                        <div className="text-lg font-bold flex items-center gap-1">
-                                            <Global size="24" color="currentColor" className="text-primary" variant="Bold" />
+                                        <div className="text-lg font-bold flex items-center flex-wrap gap-1">
+                                            <Global size="24" color="currentColor" className="text-primary dark:text-primary-light" variant="Bold" />
                                             اللغه
                                         </div>
                                         <p className="font-bold">{course?.courseLanguage}</p>
                                     </div>
                                     <div className="w-full flex justify-between items-center">
-                                        <div className="text-lg font-bold flex items-center gap-1">
-                                            <Star1 size="24" color="currentColor" className="text-primary" variant="Bold" />
+                                        <div className="text-lg font-bold flex items-center flex-wrap gap-1">
+                                            <Star1 size="24" color="currentColor" className="text-primary dark:text-primary-light" variant="Bold" />
                                             التقييم
                                         </div>
                                         <div className="font-bold">
@@ -116,25 +116,25 @@ const Course = () => {
                     <div className="mt-5">
                         <div className="">
                             {/* Category Section */}
-                            <div className="bg-white rounded-xl p-5">
-                                <h3 className="text-2xl text-primary font-bold mb-5">التصنيف</h3>
+                            <div className="bg-white dark:bg-dark-light rounded-xl p-5">
+                                <h3 className="text-2xl text-primary dark:text-primary-light font-bold mb-5">التصنيف</h3>
                                 <p className="text-lg font-bold">{course?.category.name}</p>
-                                <p className="text-muted-dark">{course?.category.description}</p>
+                                <p className="text-muted-dark dark:text-muted">{course?.category.description}</p>
                             </div>
                         </div>
                         {/* Quizzes Section */}
-                        <div className="mt-5 bg-white rounded-xl p-5">
-                            <h3 className="text-2xl text-primary font-bold mb-5">الاختبارات</h3>
+                        <div className="mt-5 bg-white dark:bg-dark-light rounded-xl p-5">
+                            <h3 className="text-2xl text-primary dark:text-primary-light font-bold mb-5">الاختبارات</h3>
                             {course?.quizzes.length ?
                             <div className="flex flex-col gap-5">
                                 {course?.quizzes.map((quiz) => (
                                     <Link to={`/quizzes/${quiz.id}`} key={quiz.id} className="flex items-center gap-2 group">
                                         <div className="">
-                                            <DocumentText1 size="28" color="currentColor" className="text-primary" variant="Bold" />
+                                            <DocumentText1 size="28" color="currentColor" className="text-primary dark:text-primary-light" variant="Bold" />
                                         </div>
                                         <div className="space-y-1">
-                                            <p className="font-bold group-hover:text-primary text-sm">{quiz.name}</p>
-                                            <p className=" text-muted"> {quiz.description}</p>
+                                            <p className="font-bold group-hover:text-primary dark:group-hover:text-primary-light text-sm">{quiz.name}</p>
+                                            <p className=" text-muted-dark dark:text-muted"> {quiz.description}</p>
                                         </div>
                                     </Link>
                                 ))}
@@ -144,12 +144,12 @@ const Course = () => {
                             }
                         </div>
                         {/* Reviews Section */}
-                        <div className="mt-5 bg-white rounded-xl p-5">
-                            <h3 className="text-2xl text-primary font-bold mb-5">التقييمات</h3>
+                        <div className="mt-5 bg-white dark:bg-dark-light rounded-xl p-5">
+                            <h3 className="text-2xl text-primary dark:text-primary-light font-bold mb-5">التقييمات</h3>
                             <div className="flex flex-col gap-5">
                                 {course?.review && course.review.length > 0 ? (
                                     course?.review.map((review, i) => (
-                                        <div key={i} className="flex items-start gap-3 text-dark border border-primary p-4 rounded-lg">
+                                        <div key={i} className="flex items-start gap-3 text-dark border border-primary dark:border-primary-light p-4 rounded-lg">
                                             {/* User Image */}
                                             <img
                                                 src={review.imageUrl}
@@ -158,13 +158,13 @@ const Course = () => {
                                             />
                                             {/* Review Content */}
                                             <div className="flex flex-col">
-                                                <p className="font-bold text-primary">{review.displayName}</p>
+                                                <p className="font-bold text-primary dark:text-primary-light">{review.displayName}</p>
                                                 <p className="text-sm">{review.text}</p>
                                             </div>
                                         </div>
                                     ))
                                 ) : (
-                                    <p className="text-muted-dark">لا توجد تقييمات حتى الآن.</p>
+                                    <p className="text-muted-dark dark:text-muted">لا توجد تقييمات حتى الآن.</p>
                                 )}
                             </div>
                         </div>
