@@ -6,7 +6,6 @@ import { verifyOTPAsync } from "../store/slices/auth";
 import { useFormik } from "formik";
 import { object, string } from "yup";
 import { Driving } from "iconsax-react";
-import logo from "./../../public/logo.png"
 const VerifyOTP = () => {
     const { t } = useTranslation();
     const dispatch = useDispatch<AppDispatch>();
@@ -39,7 +38,7 @@ const VerifyOTP = () => {
             <div className="w-11/12 sm:w-3/4 md:w-1/2 bg-white dark:bg-drk shadow-lg px-8 py-6 rounded-xl">
                 <div className="top mb-10 flex flex-col items-center justify-center">
                     <div className="logo">
-                        <img src={logo} alt="Logo" className="h-20" />
+                        <img src={'./logo.png'} alt="Logo" className="h-20" />
                     </div>
                     <h1 className="text-2xl font-bold text-center text-black">{t("auth.verify-otp")}</h1>
                 </div>

@@ -73,7 +73,7 @@ export const getAllCategoriesAsync = createAsyncThunk<GetAllCategoriesResponse, 
 
 export const getCoursesByCategoryAsync = createAsyncThunk<GetCoursesByCategoryResponse, GetCoursesByCategoryRequest>(
     'categories/getCoursesByCategory',
-    async ({ params, token }, thunkAPI) => {
+    async ({ params, token }, { rejectWithValue }) => {
         try {
             const response = await axios.get<GetCoursesByCategoryResponse>(`${baseUrl}/category/get-courses-by-category`, {
                 headers: {
@@ -82,8 +82,8 @@ export const getCoursesByCategoryAsync = createAsyncThunk<GetCoursesByCategoryRe
                 params: params
             })
             return response.data;
-        } catch (error) {
-            return thunkAPI.rejectWithValue(error);
+        } catch (error: any) {
+            return rejectWithValue(error.response.data as { message: string, statusCode: number });
         }
     }
 )
@@ -121,6 +121,7 @@ const categoriesSlice = createSlice({
                 state.status = 'succeeded'
                 state.loading = false;
                 state.courses = action.payload.data;
+                state.metaData = action.payload.metaData
                 state.message = action.payload.message;
                 state.statusCode = action.payload.statusCode;
             })

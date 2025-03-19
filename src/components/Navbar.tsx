@@ -4,7 +4,6 @@ import ThemeButton from "./ThemeButton";
 import { ArrowDown2, ArrowUp2, CloseSquare, Logout, Menu, Notification, Profile, ProfileCircle } from "iconsax-react";
 // import Language from "../utils/i18n";
 import { useEffect, useRef, useState } from "react";
-import logo from "../../public/logo.png";
 import { useDispatch, useSelector } from "react-redux";
 import { AppDispatch, RootState } from "../store/store";
 import { logout } from "../store/slices/auth";
@@ -89,8 +88,7 @@ const Navbar = () => {
             <div className="container flex justify-between h-full items-center ">
                 <div className="logo h-full">
                     <Link to="/">
-                        {/* <img src="./logo.png" className="w-full h-full" alt="Logo" /> */}
-                        <img src={logo} className="w-full h-full" alt="Logo" />
+                        <img src="./logo.png" className="w-full h-full" alt="Logo" />
                     </Link>
                 </div>
                 {state.token &&

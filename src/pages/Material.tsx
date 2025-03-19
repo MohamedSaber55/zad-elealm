@@ -1,23 +1,26 @@
 import { Link, useParams } from "react-router-dom"
 import { AddSquare, ArrowDown2, ArrowUp2, Calendar, Filter, Global, Heart, MinusSquare, Play, SearchNormal1, Star1 } from "iconsax-react"
-import { SetStateAction, useEffect, useState } from "react"
+import { useEffect, useState } from "react"
 import { useDispatch, useSelector } from "react-redux"
 import { AppDispatch, RootState } from "../store/store"
 import { getCoursesByCategoryAsync } from "../store/slices/categories"
 import { formatDateTime } from "../utils/formatDateTime"
-import debounce from "lodash/debounce";
 import Loading from "../components/Loading"
 import NoData from "../components/NoData"
 import { enrollCourse, getEnrolledCourses, unEnrollCourse } from "../store/slices/enrollment"
 import { notify } from "../utils/notify"
 import { addFavoriteCourseAsync, getFavoritesForUserAsync, removeFavoriteCourseAsync } from "../store/slices/favorites"
 import { getNotifications } from "../store/slices/notifications"
+import Pagination from "../components/Pagination"
 
 const Material = () => {
     const { id } = useParams<{ id: string }>()
     const dispatch = useDispatch<AppDispatch>()
     const { token } = useSelector((state: RootState) => state.auth)
     const state = useSelector((state: RootState) => state.categories)
+    console.log(state);
+    const metaData = state.metaData
+
     const enrollmentState = useSelector((state: RootState) => state.enrollment) as { courses: any[] }
     const favoritesState = useSelector((state: RootState) => state.favorites)
     const enrollmentCourses = enrollmentState.courses;
@@ -25,23 +28,44 @@ const Material = () => {
     const courses = state.courses || [];
     // Filters & Pagination State
     const [search, setSearch] = useState("")
-    const [sortBy] = useState("newest")
-    const [author, setAuthor] = useState("")
-    const [language, setLanguage] = useState("")
-    const [minRating, setMinRating] = useState(0)
+    const [sortBy, setSortBy] = useState("rating")
+    const [sortDirection, setSortDirection] = useState<"desc" | "asc">("desc")
+    const [author, setAuthor] = useState<string>("")
+    const [minRating, setMinRating] = useState<number | null>(null)
+    const [maxRating, setMaxRating] = useState<number | null>(null)
     const [fromDate, setFromDate] = useState("")
     const [toDate, setToDate] = useState("")
     const [pageNumber] = useState(1)
-    const [pageSize] = useState(8)
+    const [pageSize] = useState(1)
     const [showFilters, setShowFilters] = useState(false);
-    const [sortByDropdownOpen, setSortByDropdownOpen] = useState(false);
 
     useEffect(() => {
         if (token && id) {
-            fetchCourses()
+            const params: Record<string, any> = {
+                categoryId: id,
+                search,
+                sortBy,
+                author,
+                minRating,
+                fromDate,
+                toDate,
+                pageNumber,
+                pageSize
+            };
+            const filteredParams = {
+                categoryId: id,
+                ...Object.fromEntries(
+                    Object.entries(params).filter(([_, value]) => value !== undefined && value !== null && value !== "")
+                )
+            };
+
+            dispatch(getCoursesByCategoryAsync({
+                token: token || "",
+                params: filteredParams
+            }))
         }
 
-    }, [token, id, search, sortBy, author, language, minRating, fromDate, toDate, pageNumber, pageSize])
+    }, [token, id, search, sortBy, author, minRating, fromDate, toDate, pageNumber, pageSize])
     useEffect(() => {
         if (token) {
             dispatch(getEnrolledCourses({ token }))
@@ -52,31 +76,23 @@ const Material = () => {
             dispatch(getFavoritesForUserAsync({ token }))
         }
     }, [token, dispatch])
-    const fetchCourses = debounce(() => {
-        dispatch(getCoursesByCategoryAsync({
-            token: token || "",
-            params: {
-                categoryId: id || "",
-                search,
-                sortBy,
-                author,
-                minRating,
-                fromDate,
-                toDate,
-                pageNumber,
-                pageSize
-            }
-        }))
-    }, 500)
-    const options = [
-        { value: "", label: "كل اللغات" },
-        { value: "العربي", label: "العربية" },
-        { value: "English", label: "الإنجليزية" },
-    ];
-    const handleSelect = (value: SetStateAction<string>) => {
-        setLanguage(value);
-        setSortByDropdownOpen(false);
-    };
+
+    // const fetchCourses = debounce(() => {
+    //     dispatch(getCoursesByCategoryAsync({
+    //         token: token || "",
+    //         params: {
+    //             categoryId: id || "",
+    //             search,
+    //             sortBy,
+    //             author,
+    //             minRating,
+    //             fromDate,
+    //             toDate,
+    //             pageNumber,
+    //             pageSize
+    //         }
+    //     }))
+    // }, 500)
 
     const handleEnrollCourse = (courseId: number) => {
         if (token) {
@@ -115,7 +131,7 @@ const Material = () => {
 
     return (
         <div className="dark:bg-dark dark:text-white">
-            {state.loading ? <div className="h-main">
+            {false ? <div className="h-main">
                 <Loading />
             </div> :
                 <div className="container min-h-main">
@@ -146,91 +162,110 @@ const Material = () => {
                                     className="flex items-center gap-2 px-4 py-2 bg-primary dark:bg-primary-light border border-primary text-white rounded-lg hover:bg-primary-dark transition"
                                 >
                                     <Filter size="20" color="currentColor" />
-                                    <span> فلتر</span>
+                                    <span>فلتر</span>
                                     {showFilters ? <ArrowUp2 size="18" color={"currentColor"} /> : <ArrowDown2 size="18" color={"currentColor"} />}
                                 </button>
+
                                 {/* Filters Section */}
                                 {showFilters && (
-                                    <div className="p-4 my-4 bg-white dark:bg-dark-light shadow-xl absolute end-0 z-50 border border-muted-dark rounded-xl">
+                                    <div className="p-5 mt-4 bg-white dark:bg-dark-light shadow-xl absolute end-0 z-50 border border-muted-dark rounded-xl w-80">
                                         <div className="triangle border absolute -top-4 end-5 border-muted-dark bg-muted-dark h-4 w-5 clip-path-triangle"></div>
-                                        <div className="flex flex-col gap-4">
-                                            <div className="relative">
-                                                {/* Dropdown Trigger */}
-                                                <div className="w-full inline-flex items-center overflow-hidden rounded-md border border-primary bg-white dark:bg-dark-light">
-                                                    <div
-                                                        className="cursor-pointer w-full border-e border-primary px-4 py-2 text-sm/normal text-muted-dark dark:text-muted"
-                                                        onClick={() => setSortByDropdownOpen(!sortByDropdownOpen)}
-                                                    >
-                                                        {language ? options.find((opt) => opt.value === language)?.label : "كل اللغات"}
-                                                    </div>
 
-                                                    <button
-                                                        className="h-full p-2 text-gray-600 hover:bg-gray  dark:hover:bg-dark-lighter"
-                                                        onClick={() => setSortByDropdownOpen(!sortByDropdownOpen)}
-                                                    >
-                                                        <span className="sr-only">Menu</span>
-                                                        {sortByDropdownOpen ? (
-                                                            <ArrowUp2 size="18" color="currentColor" />
-                                                        ) : (
-                                                            <ArrowDown2 size="18" color="currentColor" />
-                                                        )}
-                                                    </button>
-                                                </div>
-
-                                                {/* Dropdown Menu */}
-                                                {sortByDropdownOpen && (
-                                                    <div
-                                                        className="absolute end-0 z-10 mt-2 w-56 divide-y divide-gray dark:divide-dark-lighter rounded-md border border-gray dark:border-muted bg-white dark:bg-dark-light shadow-lg"
-                                                        role="menu"
-                                                    >
-                                                        <div className="p-2">
-                                                            {options.map((option) => (
-                                                                <button
-                                                                    key={option.value}
-                                                                    className="block w-full rounded-lg px-4 py-2 text-sm text-muted-dark dark:text-muted hover:bg-gray-50 hover:text-gray-700 text-left"
-                                                                    role="menuitem"
-                                                                    onClick={() => handleSelect(option.value)}
-                                                                >
-                                                                    {option.label}
-                                                                </button>
-                                                            ))}
-                                                        </div>
-                                                    </div>
-                                                )}
+                                        {/* Filter Fields */}
+                                        <div className="grid grid-cols-2 gap-4">
+                                            {/* Sort By */}
+                                            <div className="col-span-2">
+                                                <label className="text-sm font-medium text-gray-700 dark:text-muted">ترتيب حسب</label>
+                                                <select
+                                                    className="w-full p-2 text-sm rounded-md border border-primary bg-white dark:bg-dark-light text-muted-dark dark:text-muted"
+                                                    value={sortBy}
+                                                    onChange={(e) => setSortBy(e.target.value)}
+                                                >
+                                                    <option value="rating">التقييم</option>
+                                                    <option value="date">التاريخ</option>
+                                                    <option value="name">الاسم</option>
+                                                </select>
                                             </div>
-                                            <input
-                                                type="text"
-                                                placeholder="اسم المؤلف"
-                                                className="p-2 px-4 rounded-md text-sm/normal border border-primary bg-white dark:bg-dark-light text-muted-dark dark:text-muted"
-                                                value={author}
-                                                onChange={(e) => setAuthor(e.target.value)}
-                                            />
-                                            <input
-                                                type="number"
-                                                min="0"
-                                                max="5"
-                                                step="0.1"
-                                                placeholder="التقييم الأدنى"
-                                                className="p-2 px-4 text-sm/normal rounded-md border border-primary bg-white dark:bg-dark-light text-muted-dark dark:text-muted"
-                                                value={minRating}
-                                                onChange={(e) => setMinRating(Number(e.target.value))}
-                                            />
-                                            <input
-                                                type="date"
-                                                className="p-2 px-4 text-sm/normal rounded-md border border-primary bg-white dark:bg-dark-light text-muted-dark dark:text-muted"
-                                                value={fromDate}
-                                                onChange={(e) => setFromDate(e.target.value)}
-                                            />
-                                            <input
-                                                type="date"
-                                                className="p-2 px-4 text-sm/normal rounded-md border border-primary bg-white dark:bg-dark-light text-muted-dark dark:text-muted"
-                                                value={toDate}
-                                                onChange={(e) => setToDate(e.target.value)}
-                                            />
+
+                                            {/* Sort Direction */}
+                                            <div className="col-span-2">
+                                                <label className="text-sm font-medium text-gray-700 dark:text-muted">اتجاه الترتيب</label>
+                                                <select
+                                                    className="w-full p-2 text-sm rounded-md border border-primary bg-white dark:bg-dark-light text-muted-dark dark:text-muted"
+                                                    value={sortDirection}
+                                                    onChange={(e) => setSortDirection(e.target.value as "asc" | "desc")}
+                                                >
+                                                    <option value="desc">تنازلي</option>
+                                                    <option value="asc">تصاعدي</option>
+                                                </select>
+                                            </div>
+
+                                            {/* Author */}
+                                            <div className="col-span-2">
+                                                <label className="text-sm font-medium text-gray-700 dark:text-muted">اسم المؤلف</label>
+                                                <input
+                                                    type="text"
+                                                    placeholder="ادخل اسم المؤلف"
+                                                    className="w-full p-2 text-sm rounded-md border border-primary bg-white dark:bg-dark-light text-muted-dark dark:text-muted"
+                                                    value={author}
+                                                    onChange={(e) => setAuthor(e.target.value)}
+                                                />
+                                            </div>
+
+                                            {/* Min Rating */}
+                                            <div>
+                                                <label className="text-sm font-medium text-gray-700 dark:text-muted">التقييم الأدنى</label>
+                                                <input
+                                                    type="number"
+                                                    min="0"
+                                                    max="5"
+                                                    step="0.1"
+                                                    placeholder="0 - 5"
+                                                    className="w-full p-2 text-sm rounded-md border border-primary bg-white dark:bg-dark-light text-muted-dark dark:text-muted"
+                                                    value={minRating ?? ""}
+                                                    onChange={(e) => setMinRating(e.target.value ? Number(e.target.value) : null)}
+                                                />
+                                            </div>
+
+                                            {/* Max Rating */}
+                                            <div>
+                                                <label className="text-sm font-medium text-gray-700 dark:text-muted">التقييم الأعلى</label>
+                                                <input
+                                                    type="number"
+                                                    min="0"
+                                                    max="5"
+                                                    step="0.1"
+                                                    placeholder="0 - 5"
+                                                    className="w-full p-2 text-sm rounded-md border border-primary bg-white dark:bg-dark-light text-muted-dark dark:text-muted"
+                                                    value={maxRating ?? ""}
+                                                    onChange={(e) => setMaxRating(e.target.value ? Number(e.target.value) : null)}
+                                                />
+                                            </div>
+
+                                            {/* Date Range */}
+                                            <div>
+                                                <label className="text-sm font-medium text-gray-700 dark:text-muted">من تاريخ</label>
+                                                <input
+                                                    type="date"
+                                                    className="w-full p-2 text-sm rounded-md border border-primary bg-white dark:bg-dark-light text-muted-dark dark:text-muted"
+                                                    value={fromDate}
+                                                    onChange={(e) => setFromDate(e.target.value)}
+                                                />
+                                            </div>
+                                            <div>
+                                                <label className="text-sm font-medium text-gray-700 dark:text-muted">إلى تاريخ</label>
+                                                <input
+                                                    type="date"
+                                                    className="w-full p-2 text-sm rounded-md border border-primary bg-white dark:bg-dark-light text-muted-dark dark:text-muted"
+                                                    value={toDate}
+                                                    onChange={(e) => setToDate(e.target.value)}
+                                                />
+                                            </div>
                                         </div>
                                     </div>
                                 )}
                             </div>
+
                         </div>
                     </div>
                     {courses.length ? <>
@@ -317,66 +352,7 @@ const Material = () => {
                                 </Link>
                             ))}
                         </div>
-                        <div className="pagination py-10">
-                            <ol className="flex justify-center gap-1 text-xs font-medium">
-                                <li>
-                                    <a
-                                        href="#"
-                                        className="inline-flex size-8 items-center justify-center rounded-sm border border-muted bg-white dark:bg-dark-light dark:text-light dark:border-muted-dark text-dark rtl:rotate-180"
-                                    >
-                                        <span className="sr-only">Prev Page</span>
-                                        <svg
-                                            xmlns="http://www.w3.org/2000/svg"
-                                            className="size-3"
-                                            viewBox="0 0 20 20"
-                                            fill="currentColor"
-                                        >
-                                            <path
-                                                fillRule="evenodd"
-                                                d="M12.707 5.293a1 1 0 010 1.414L9.414 10l3.293 3.293a1 1 0 01-1.414 1.414l-4-4a1 1 0 010-1.414l4-4a1 1 0 011.414 0z"
-                                                clipRule="evenodd"
-                                            />
-                                        </svg>
-                                    </a>
-                                </li>
-
-                                <li>
-                                    <a
-                                        href="#"
-                                        className="block size-8 rounded-sm border border-muted bg-white dark:bg-dark-light dark:text-light dark:border-muted-dark text-center leading-8 text-dark"
-                                    >
-                                        1
-                                    </a>
-                                </li>
-
-                                <li className="block size-8 rounded-sm border border-muted-green bg-primary text-center leading-8 text-white">
-                                    2
-                                </li>
-
-
-
-                                <li>
-                                    <a
-                                        href="#"
-                                        className="inline-flex size-8 items-center justify-center rounded-sm border border-muted bg-white dark:bg-dark-light dark:text-light dark:border-muted-dark text-center leading-8 text-dark rtl:rotate-180"
-                                    >
-                                        <span className="sr-only">Next Page</span>
-                                        <svg
-                                            xmlns="http://www.w3.org/2000/svg"
-                                            className="size-3"
-                                            viewBox="0 0 20 20"
-                                            fill="currentColor"
-                                        >
-                                            <path
-                                                fillRule="evenodd"
-                                                d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z"
-                                                clipRule="evenodd"
-                                            />
-                                        </svg>
-                                    </a>
-                                </li>
-                            </ol>
-                        </div>
+                        {metaData && <Pagination metaData={metaData} onPageChange={(page) => console.log("Go to page:", page)} />}
                     </> :
                         <div className=" h-80">
                             <NoData />
