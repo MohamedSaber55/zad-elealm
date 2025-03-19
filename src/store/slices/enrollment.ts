@@ -69,11 +69,8 @@ export const getEnrolledCourses = createAsyncThunk<GetEnrolledCoursesResponse, G
                     Authorization: `Bearer ${token}`,
                 },
             });
-            console.log(response);
-
             return response.data;
         } catch (error: any) {
-            console.log(error);
             return rejectWithValue(error.response.data as { message: string, statusCode: number });
         }
     }
@@ -88,11 +85,8 @@ export const enrollCourse = createAsyncThunk<EnrollCourseResponse, EnrollCourseR
                     Authorization: `Bearer ${token}`,
                 },
             });
-            console.log(response.data);
-
             return response.data;
         } catch (error: any) {
-            console.log(error);
             return rejectWithValue(error.response.data as { message: string, statusCode: number });
         }
     }
@@ -106,10 +100,8 @@ export const unEnrollCourse = createAsyncThunk<EnrollCourseResponse, EnrollCours
                     Authorization: `Bearer ${token}`,
                 },
             });
-            console.log(response.data);
             return response.data;
         } catch (error: any) {
-            console.log(error);
             return rejectWithValue(error.response.data as { message: string, statusCode: number });
         }
     }

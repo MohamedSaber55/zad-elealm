@@ -37,7 +37,6 @@ const Register = () => {
   const togglePasswordVisibility = () => {
     setShowPassword(!showPassword);
   };
-  console.log(state);
   
   if (state.token) {
     return <Navigate to="/" />;

@@ -27,7 +27,6 @@ const VerifyOTP = () => {
         validationSchema: validationSchema,
         onSubmit: (values) => {
             dispatch(verifyOTPAsync({ params: values })).then((res) => {
-                console.log(res);
                 if ((res.payload as { statusCode: number })?.statusCode === 200) {
                     return navigate(`/reset-password/${params.email}`)
                 }

@@ -10,7 +10,7 @@ import { notify } from "../utils/notify";
 import { Course } from "../interfaces";
 import ReviewModal from "../components/ReviewModal";
 import RatingModal from "../components/RatingModal";
-import { addRating } from "../store/slices/reviews";
+import { addRating, addReview } from "../store/slices/reviews";
 
 const UserCourses = () => {
     const dispatch = useDispatch<AppDispatch>();
@@ -41,13 +41,22 @@ const UserCourses = () => {
         setRatingOpen(true);
     };
 
-    const handleSubmitReview = (reviewData: any) => {
-        console.log("تم إرسال المراجعة للدورة:", selectedCourse?.name, reviewData);
+    const handleSubmitReview = (reviewText: string) => {
         notify("تم إضافة تقييمك بنجاح", "success");
+        if (selectedCourse?.id !== undefined) {
+            const body = {
+                reviewText,
+                courseId: selectedCourse.id,
+            }
+            console.log(body);
+
+            if (token) {
+                dispatch(addReview({ token, body }));
+            }
+        }
         setReviewOpen(false);
     };
     const handleSubmitRating = (reviewData: { rating: number }) => {
-        console.log("تم إرسال المراجعة للدورة:", selectedCourse?.name, reviewData);
         if (selectedCourse?.id !== undefined && token) {
             dispatch(addRating({ body: { courseId: selectedCourse.id, value: reviewData.rating }, token }));
         }

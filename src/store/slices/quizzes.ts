@@ -101,11 +101,8 @@ export const submitQuiz = createAsyncThunk<SubmitQuizDetailsResponse, SubmitQuiz
                     Authorization: `Bearer ${token}`,
                 },
             });
-            console.log(response.data);
-
             return response.data;
         } catch (error: any) {
-            console.log(error);
             return rejectWithValue(error.response.data as { message: string, statusCode: number });
         }
     }

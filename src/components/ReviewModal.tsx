@@ -1,30 +1,51 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { useFormik } from "formik";
+import * as Yup from "yup";
 import { Rnd } from "react-rnd";
 
 interface ReviewModalProps {
     isOpen: boolean;
     onClose: () => void;
-    onSubmit: (data: { rating: number; reviewText: string }) => void;
+    onSubmit: (reviewText: string) => void;
 }
 
 const ReviewModal = ({ isOpen, onClose, onSubmit }: ReviewModalProps) => {
-    const [rating, setRating] = useState(0);
-    const [reviewText, setReviewText] = useState("");
-    const [size, setSize] = useState({ width: 400, height: 250 });
+    const [size, setSize] = useState({ width: 350, height: 250 });
+    const [position, setPosition] = useState({ x: 0, y: 150 });
+    // Adjust modal position on mount (especially for mobile screens)
+    useEffect(() => {
+        if (isOpen) {
+            const screenWidth = window.innerWidth;
+            const screenHeight = window.innerHeight;
 
-    const handleSubmit = () => {
-        if (rating > 0 && reviewText.trim()) {
-            onSubmit({ rating, reviewText });
-            setRating(0);
-            setReviewText("");
-            onClose();
+            setPosition({
+                x: Math.max((screenWidth - size.width) / 2, 10), // Center horizontally
+                y: Math.max((screenHeight - size.height) / 3, 10), // Keep within viewport
+            });
         }
-    };
+    }, [isOpen, size.width, size.height]);
+    const formik = useFormik({
+        initialValues: { reviewText: "" },
+        validationSchema: Yup.object({
+            reviewText: Yup.string()
+                .trim()
+                .min(10, "يجب أن يكون التقييم 10 أحرف على الأقل")
+                .required("يرجى إدخال تقييمك"),
+        }),
+        onSubmit: (values) => {
+            onSubmit(values.reviewText);
+            formik.resetForm();
+            onClose();
+        },
+    });
+    console.log(formik.errors);
+
 
     return isOpen ? (
         <div className="fixed inset-0 flex items-center justify-center z-50 bg-black/40">
             <Rnd
-                default={{ x: 500, y: 150, width: size.width, height: size.height }}
+                position={position}
+                default={{ x: position.x, y: position.y, width: size.width, height: size.height }}
                 minWidth={350}
                 minHeight={250}
                 maxWidth={600}
@@ -40,20 +61,39 @@ const ReviewModal = ({ isOpen, onClose, onSubmit }: ReviewModalProps) => {
                 </div>
 
                 {/* Content */}
-                <div className="flex-grow flex flex-col my-3">
+                <form onSubmit={formik.handleSubmit} className="flex-grow flex flex-col my-3 w-full">
                     <textarea
-                        value={reviewText}
-                        onChange={(e) => setReviewText(e.target.value)}
-                        placeholder="اكتب رأيك عن الدورة..."
-                        className="w-full border border-muted-green dark:border-muted-dark p-2 rounded-md bg-light dark:bg-dark-lighter focus:ring-2 focus:ring-primary-light"
+                        name="reviewText"
+                        value={formik.values.reviewText}
+                        onChange={formik.handleChange}
+                        placeholder="اكتب رأيك عن الدورة (10 أحرف على الاقل)"
+                        className={`w-full border p-2 rounded-md bg-light dark:bg-dark-lighter focus:ring-2 ${formik.errors.reviewText && formik.touched.reviewText
+                            ? "border-red-500 focus:ring-red-500"
+                            : "border-muted-green dark:border-muted-dark focus:ring-primary-light"
+                            }`}
                     />
-                </div>
+                    {formik.errors.reviewText && formik.touched.reviewText && (
+                        <p className="text-red-500 text-sm mt-1">{formik.errors.reviewText}</p>
+                    )}
 
-                {/* Buttons */}
-                <div className="flex justify-end gap-4 mt-6">
-                    <button onClick={onClose} className="px-4 py-2 border border-muted-dark dark:border-muted dark:text-muted rounded-md text-muted-dark">إلغاء</button>
-                    <button onClick={handleSubmit} className="px-5 py-2 bg-primary text-white rounded-md hover:bg-primary-dark">إرسال</button>
-                </div>
+                    {/* Buttons */}
+                    <div className="flex justify-end gap-4 mt-6">
+                        <button
+                            type="button"
+                            onClick={onClose}
+                            className="px-4 py-2 border border-muted-dark dark:border-muted dark:text-muted rounded-md text-muted-dark"
+                        >
+                            إلغاء
+                        </button>
+                        <button
+                            type="submit"
+                            className="px-5 py-2 bg-primary text-white rounded-md hover:bg-primary-dark disabled:bg-gray-400 disabled:cursor-not-allowed"
+                            disabled={!formik.isValid || formik.isSubmitting}
+                        >
+                            إرسال
+                        </button>
+                    </div>
+                </form>
             </Rnd>
         </div>
     ) : null;

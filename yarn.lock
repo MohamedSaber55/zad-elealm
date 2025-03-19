@@ -583,6 +583,11 @@
   resolved "https://registry.npmjs.org/@types/use-sync-external-store/-/use-sync-external-store-0.0.6.tgz"
   integrity sha512-zFDAD+tlpf2r4asuHEj0XH6pY6i0g5NeAHPn+15wk3BV6JA69eERFXC1gyGThDkVa1zCyKr5jox1+2LbV/AMLg==
 
+"@types/youtube@^0.1.0":
+  version "0.1.0"
+  resolved "https://registry.yarnpkg.com/@types/youtube/-/youtube-0.1.0.tgz#0e116bd0a8ddb93daf1372fb5e07f576cf9fe5cc"
+  integrity sha512-Pg33m3X2mFgdmhtvzOlAfUfgOa3341N3/2JCrVY/mXVxb4hagcqqEG6w4vGCfB64StQNWHSj/T8Eotb1Rko/FQ==
+
 "@typescript-eslint/eslint-plugin@8.26.0":
   version "8.26.0"
   resolved "https://registry.npmjs.org/@typescript-eslint/eslint-plugin/-/eslint-plugin-8.26.0.tgz"
@@ -1473,6 +1478,11 @@ mime-types@^2.1.12:
   dependencies:
     mime-db "1.52.0"
 
+mime@1.2.2:
+  version "1.2.2"
+  resolved "https://registry.yarnpkg.com/mime/-/mime-1.2.2.tgz#b9d6355bf53e8d7d56693130e451daff340148cf"
+  integrity sha512-lNLN1kF9wEWH/ONdxQa+rIlI5mivJv62036NP1Qt7Sh45ZxazBLPFvQB3+IBg3octwyrORhWyv/xcH+8bxv1eg==
+
 minimatch@^3.1.2:
   version "3.1.2"
   resolved "https://registry.npmjs.org/minimatch/-/minimatch-3.1.2.tgz"
@@ -1598,6 +1608,11 @@ punycode@^2.1.0:
   resolved "https://registry.npmjs.org/punycode/-/punycode-2.3.1.tgz"
   integrity sha512-vYt7UD1U9Wg6138shLtLOvdAu+8DsC/ilFtEVHcH+wydcSpNE20AfSOduf6MkRFahL5FY7X1oU7nKVZFtfq8Fg==
 
+qs@0.4.2:
+  version "0.4.2"
+  resolved "https://registry.yarnpkg.com/qs/-/qs-0.4.2.tgz#3cac4c861e371a8c9c4770ac23cda8de639b8e5f"
+  integrity sha512-VAtfWeUtlBOnGiWFok2vOIMmwumiLmpqXDcXQcAEIQmLYgDbjrkHrcFBfth+YVDeRsz7jX44dhJr7IBJR0t/FQ==
+
 queue-microtask@^1.2.2:
   version "1.2.3"
   resolved "https://registry.npmjs.org/queue-microtask/-/queue-microtask-1.2.3.tgz"
@@ -1710,6 +1725,11 @@ regenerator-runtime@^0.14.0:
   resolved "https://registry.npmjs.org/regenerator-runtime/-/regenerator-runtime-0.14.1.tgz"
   integrity sha512-dYnhHh0nJoMfnkZs6GmmhFknAGRrLznOu5nc9ML+EJxGvrx6H7teuevqVqCuPcPK//3eDrrjQhehXVx9cnkGdw==
 
+request@2.1.1:
+  version "2.1.1"
+  resolved "https://registry.yarnpkg.com/request/-/request-2.1.1.tgz#5570e0c737d656ebd6d1d3c80aa510d3cf86c6fa"
+  integrity sha512-FMF+25XbxxgyPn+/twIEJeupQuu5LqifPjeNigL3hf0UQUqZHKMbgbRuUKNudxxEHNqJhSXIekZSEiikc/ApVw==
+
 reselect@^5.1.0:
   version "5.1.1"
   resolved "https://registry.npmjs.org/reselect/-/reselect-5.1.1.tgz"
@@ -1759,6 +1779,11 @@ run-parallel@^1.1.9:
   integrity sha512-5l4VyZR86LZ/lDxZTR6jqL8AFE2S0IFLMP26AbjsLVADxHdhB/c0GUsH+y39UfCi3dzz8OlQuPmnaJOMoDHQBA==
   dependencies:
     queue-microtask "^1.2.2"
+
+sax@>=0.1.1:
+  version "1.4.1"
+  resolved "https://registry.yarnpkg.com/sax/-/sax-1.4.1.tgz#44cc8988377f126304d3b3fc1010c733b929ef0f"
+  integrity sha512-+aWOz7yVScEGoKNd4PA10LZ8sk0A/z5+nXQG5giUO5rprX9jgYsTdov9qCchZiPIZezbZH+jRut8nPodFAX4Jg==
 
 scheduler@^0.25.0:
   version "0.25.0"
@@ -1927,10 +1952,27 @@ word-wrap@^1.2.5:
   resolved "https://registry.npmjs.org/word-wrap/-/word-wrap-1.2.5.tgz"
   integrity sha512-BN22B5eaMMI9UMtjrGd5g5eCYPpCPDUy0FJXbYsaT5zYxjFOckS53SQDE3pWkVoWpHXVb3BrYcEN4Twa55B5cA==
 
+xml2js@0.1.9:
+  version "0.1.9"
+  resolved "https://registry.yarnpkg.com/xml2js/-/xml2js-0.1.9.tgz#c26fd0826e01a2be7110748a34f0f8385be459f1"
+  integrity sha512-eP6RtX8QJ3wyKPV1IZ6bMUmjMxmbNxm5CVdCX0H4XFWTR1QtpG/Dx3Zcp8YBQR26xIxkGPm+UIEJjaqPZNfnMQ==
+  dependencies:
+    sax ">=0.1.1"
+
 yocto-queue@^0.1.0:
   version "0.1.0"
   resolved "https://registry.npmjs.org/yocto-queue/-/yocto-queue-0.1.0.tgz"
   integrity sha512-rVksvsnNCdJ/ohGc6xgPwyN8eheCxsiLM8mxuE/t/mOVqJewPuO1miLpTHQiRgTKCLexL4MeAFVagts7HmNZ2Q==
+
+youtube@^0.1.0:
+  version "0.1.0"
+  resolved "https://registry.yarnpkg.com/youtube/-/youtube-0.1.0.tgz#96b01eb6ff6e85da505fb29cc8cf63b7d283d995"
+  integrity sha512-NyfeppDUrmCEfrBDOr7hyUbyo10WEaX4oLqIkVsT6CUBV8GQKigG7tZleA5pokNNRMRjx+YP7zOoLsoiHwRHTQ==
+  dependencies:
+    mime "1.2.2"
+    qs "0.4.2"
+    request "2.1.1"
+    xml2js "0.1.9"
 
 yup@^1.6.1:
   version "1.6.1"

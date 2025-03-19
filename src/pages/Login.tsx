@@ -26,7 +26,6 @@ const Login = () => {
         },
         validationSchema: validationSchema,
         onSubmit: (values) => {
-            console.log(values);
             dispatch(loginAsync({ body: values }));
         }
     })

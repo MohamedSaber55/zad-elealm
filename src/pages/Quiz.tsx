@@ -47,7 +47,6 @@ const Quiz = () => {
             questionId: Number(questionId),
             selectedChoice: selectedChoice as number,
         }));
-        console.log(formattedAnswers);
         dispatch(
             submitQuiz({
                 token,

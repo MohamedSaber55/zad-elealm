@@ -18,7 +18,10 @@
   --color-muted-dark: #6a7282;
   --color-gray: #F5F5F5;
   --color-track: #E8F5E9;
-  --color-warning: #FFC107;
+  --color-track-dark: #2F3E36; /* Darker muted green for progress bars in dark mode */
+  --color-primary-dark-hover: #1F332B; /* Darker shade for primary elements */
+  --color-muted-dark-alt: #87938D; /* Slightly lighter muted text for better readability */
+  --color-border-dark: #3E4C45; /* Subtle dark border color */  --color-warning: #FFC107;
   --color-danger: #DC3545;
   --color-success: #28A745;
   --color-info: #17A2B8;

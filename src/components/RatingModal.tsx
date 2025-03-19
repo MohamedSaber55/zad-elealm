@@ -1,16 +1,18 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Rnd } from "react-rnd";
 import { Star1 } from "iconsax-react";
 
 interface RatingModalProps {
     isOpen: boolean;
     onClose: () => void;
-    onSubmit: (data: { rating: number; }) => void;
+    onSubmit: (data: { rating: number }) => void;
 }
 
 const RatingModal = ({ isOpen, onClose, onSubmit }: RatingModalProps) => {
     const [rating, setRating] = useState(0);
-    const [size, setSize] = useState({ width: 400, height: 250 });
+    const [size, setSize] = useState({ width: 350, height: 250 });
+    const [position, setPosition] = useState({ x: 0, y: 150 });
+
     // Mapping for star descriptions
     const starDescriptions = {
         1: "ضعيف - غير راضٍ تمامًا",
@@ -19,6 +21,18 @@ const RatingModal = ({ isOpen, onClose, onSubmit }: RatingModalProps) => {
         4: "جيد جدًا - راضٍ",
         5: "ممتاز - راضٍ جدًا",
     };
+
+    useEffect(() => {
+        if (isOpen) {
+            const screenWidth = window.innerWidth;
+            const screenHeight = window.innerHeight;
+
+            setPosition({
+                x: Math.max((screenWidth - size.width) / 2, 10),
+                y: Math.max((screenHeight - size.height) / 3, 10),
+            });
+        }
+    }, [isOpen, size.width, size.height]);
 
     const handleSubmit = () => {
         if (rating > 0) {
@@ -31,8 +45,9 @@ const RatingModal = ({ isOpen, onClose, onSubmit }: RatingModalProps) => {
     return isOpen ? (
         <div className="fixed inset-0 flex items-center justify-center z-50 bg-black/40">
             <Rnd
-                default={{ x: 500, y: 150, width: size.width, height: size.height }}
-                minWidth={350}
+                position={position}
+                default={{ x: position.x, y: position.y, width: size.width, height: size.height }}
+                minWidth={300}
                 minHeight={250}
                 maxWidth={600}
                 maxHeight={450}
@@ -61,22 +76,29 @@ const RatingModal = ({ isOpen, onClose, onSubmit }: RatingModalProps) => {
                         ))}
                     </div>
                     {/* Star Description */}
-                    {rating > 0 ? (
-                        <p className="text-center text-muted-dark dark:text-muted mt-2">
-                            {starDescriptions[rating as keyof typeof starDescriptions]}
-                        </p>
-                    ) :
-                        <p className="text-center text-muted-dark dark:text-muted mt-2">
-                            أضف تقييمك
-                        </p>}
+                    <p className="text-center text-muted-dark dark:text-muted mt-2">
+                        {rating > 0 ? starDescriptions[rating as keyof typeof starDescriptions] : "أضف تقييمك"}
+                    </p>
                 </div>
+
                 {/* Buttons */}
                 <div className="flex justify-end gap-4 mt-6">
-                    <button onClick={onClose} className="px-4 py-2 border border-muted-dark dark:border-muted dark:text-muted rounded-md text-muted-dark">إلغاء</button>
-                    <button onClick={handleSubmit} className="px-5 py-2 bg-primary dark:bg-primary-light text-white rounded-md hover:bg-primary-dark">إرسال</button>
+                    <button
+                        onClick={onClose}
+                        className="px-4 py-2 border border-muted-dark dark:border-muted dark:text-muted rounded-md text-muted-dark"
+                    >
+                        إلغاء
+                    </button>
+                    <button
+                        onClick={handleSubmit}
+                        className="px-5 py-2 bg-primary dark:bg-primary-light text-white rounded-md hover:bg-primary-dark"
+                        disabled={rating === 0}
+                    >
+                        إرسال
+                    </button>
                 </div>
-            </Rnd >
-        </div >
+            </Rnd>
+        </div>
     ) : null;
 };
 

@@ -11,7 +11,6 @@ function App() {
   useEffect(() => {
     document.body.dir = current === "ar" ? "rtl" : "ltr"
   }, [current])
-  console.log(current)
   return (
     <>
       <I18nextProvider i18n={Language}>

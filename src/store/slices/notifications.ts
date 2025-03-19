@@ -58,11 +58,8 @@ export const getNotifications = createAsyncThunk<GetNotificationsResponse, GetNo
                     Authorization: `Bearer ${token}`,
                 },
             });
-            console.log(response);
             return response.data;
         } catch (error: any) {
-            console.log(error);
-
             return rejectWithValue(error.response.data as { message: string, statusCode: number });
         }
     }

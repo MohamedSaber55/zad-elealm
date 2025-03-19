@@ -40,7 +40,6 @@ const Material = () => {
         if (token && id) {
             fetchCourses()
         }
-        console.log("called");
 
     }, [token, id, search, sortBy, author, language, minRating, fromDate, toDate, pageNumber, pageSize])
     useEffect(() => {
@@ -122,7 +121,7 @@ const Material = () => {
                 <div className="container min-h-main">
                     <div className="flex justify-between flex-wrap items-center py-10">
                         <h2 className="text-2xl font-bold">{id}</h2>
-                        <div className="flex gap-4 items-center">
+                        <div className="flex flex-wrap gap-4 items-center">
                             {/* Search Input */}
                             <div className="relative">
                                 <div className="relative">
@@ -152,8 +151,8 @@ const Material = () => {
                                 </button>
                                 {/* Filters Section */}
                                 {showFilters && (
-                                    <div className="p-4 my-4 bg-white dark:bg-dark-light shadow-xl absolute end-0 z-50 border border-muted rounded-xl">
-                                        <div className="triangle border absolute -top-4 end-5 border-muted bg-muted h-4 w-5 clip-path-triangle"></div>
+                                    <div className="p-4 my-4 bg-white dark:bg-dark-light shadow-xl absolute end-0 z-50 border border-muted-dark rounded-xl">
+                                        <div className="triangle border absolute -top-4 end-5 border-muted-dark bg-muted-dark h-4 w-5 clip-path-triangle"></div>
                                         <div className="flex flex-col gap-4">
                                             <div className="relative">
                                                 {/* Dropdown Trigger */}

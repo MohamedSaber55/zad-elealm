@@ -47,8 +47,8 @@ export default function NotificationsPage() {
         <div className="min-h-main dark:bg-dark dark:text-white">
             {state.loading ? <div className="h-main"><Loading /></div> :
                 <div className="container">
-                    <div className="heading flex justify-between items-center gap-5">
-                        <h2 className="heading text-2xl font-bold my-10 flex items-center gap-2">
+                    <div className="heading flex flex-wrap py-10  justify-between items-center gap-5">
+                        <h2 className="heading text-2xl font-bold flex items-center gap-2">
                             <NotificationBing color="currentColor" variant="Bulk" size={32} className="text-warning" /> الإشعارات <span className="text-dark dark:text-muted">( <span className="text-danger">{state.unreadCount || 0}</span>/{state.totalCount || 0} )</span>
                         </h2>
                         <button

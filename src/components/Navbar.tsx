@@ -1,7 +1,7 @@
 import { useTranslation } from "react-i18next";
 import { Link, useLocation } from "react-router-dom";
 import ThemeButton from "./ThemeButton";
-import { ArrowDown2, ArrowUp2, CloseSquare, Menu, Notification, ProfileCircle } from "iconsax-react";
+import { ArrowDown2, ArrowUp2, CloseSquare, Logout, Menu, Notification, Profile, ProfileCircle } from "iconsax-react";
 // import Language from "../utils/i18n";
 import { useEffect, useRef, useState } from "react";
 import logo from "../../public/logo.png";
@@ -138,11 +138,18 @@ const Navbar = () => {
                                 }
                             </button>
                             {isProfileDropdownOpen && (
-                                <div className="absolute border border-primary py-1 -end-0 mt-2 w-60 bg-white dark:bg-dark shadow-lg rounded-lg overflow-hidden z-10">
+                                <div className="absolute border border-primary py-1 -end-0 mt-2 w-60 bg-white dark:bg-dark-light shadow-lg rounded-lg overflow-hidden z-10">
+                                    {/* Profile Link */}
                                     <Link to="/profile" className="w-full flex items-center gap-2 px-4 py-2 text-dark dark:text-light hover:bg-gray dark:hover:bg-muted transition-colors duration-200">
+                                        <Profile size="20" color="currentColor" variant="Outline" /> {/* Profile icon */}
                                         {t("navbar.profile")}
                                     </Link>
-                                    <button onClick={handleLogout} className="w-full flex items-center gap-2 px-4 py-2 text-danger dark:text-light hover:bg-gray dark:hover:bg-muted transition-colors duration-200">{t("navbar.logout")}</button>
+
+                                    {/* Logout Button */}
+                                    <button onClick={handleLogout} className="w-full flex items-center gap-2 px-4 py-2 text-danger hover:bg-gray dark:hover:bg-muted transition-colors duration-200">
+                                        <Logout size="20" color="currentColor" variant="Outline" /> {/* Logout icon */}
+                                        {t("navbar.logout")}
+                                    </button>
                                 </div>
                             )}
                         </div>

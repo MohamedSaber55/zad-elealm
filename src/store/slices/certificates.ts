@@ -147,8 +147,6 @@ const certificatesSlice = createSlice({
                 state.loading = true;
             })
             .addCase(getUserCertificatesAsync.fulfilled, (state, action: PayloadAction<CertificateResponse>) => {
-                console.log(action.payload);
-
                 state.status = "succeeded";
                 state.loading = false;
                 state.certificates = action.payload.data;

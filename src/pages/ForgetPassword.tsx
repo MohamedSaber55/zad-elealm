@@ -22,7 +22,6 @@ const ForgetPassword = () => {
         validationSchema: validationSchema,
         onSubmit: (values) => {
             dispatch(forgetPasswordAsync({ params: values })).then((res) => {
-                console.log(res);
                 if ((res.payload as { statusCode: number })?.statusCode === 200) {
                     navigate(`/verify-otp/${values.email}`)
                 }
