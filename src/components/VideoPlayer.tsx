@@ -27,30 +27,37 @@ declare global {
 
 interface VideoPlayerProps {
     selectedVideo: string | null;
-    currentVideoId: number
+    currentVideoId: number;
+    selectedVideoDuration: string;
 }
 
-const VideoPlayer: React.FC<VideoPlayerProps> = ({ selectedVideo, currentVideoId }) => {
+const VideoPlayer: React.FC<VideoPlayerProps> = ({ selectedVideo, currentVideoId, selectedVideoDuration }) => {
     const playerRef = useRef<YT.Player | null>(null);
     const intervalRef = useRef<ReturnType<typeof setInterval> | null>(null);
     const [watchedSeconds, setWatchedSeconds] = useState<number>(0);
-    const dispatch = useDispatch<AppDispatch>()
-    const { token } = useSelector((state: RootState) => state.auth)
+    const dispatch = useDispatch<AppDispatch>();
+    const { token } = useSelector((state: RootState) => state.auth);
+
+    // Convert video duration to seconds
+    const [hours, minutes, seconds] = selectedVideoDuration.split(':').map(Number);
+    const timeInSeconds = (hours * 3600) + (minutes * 60) + seconds;
+
+    const fetchCourseProgress = () => {
+        const body = {
+            videoId: currentVideoId,
+            watchedSeconds: timeInSeconds,
+        };
+
+        if (selectedVideo && token) {
+            dispatch(updateVideoProgress({ body, token }));
+        }
+    };
 
     useEffect(() => {
-        const fetchCourseProgress = () => {
-            const body = {
-                videoId: currentVideoId,
-                watchedSeconds: watchedSeconds + 30,
-            }
-            if (selectedVideo && token) {
-                dispatch(updateVideoProgress({ body, token }));
-            }
-        };
-        fetchCourseProgress();
-        const intervalId = setInterval(fetchCourseProgress, 20000);
-        return () => clearInterval(intervalId);
-    }, [dispatch, currentVideoId, token]);
+        if (watchedSeconds + 20 >= timeInSeconds && watchedSeconds > 0) {
+            fetchCourseProgress();
+        }
+    }, [watchedSeconds]);
 
     useEffect(() => {
         if (!selectedVideo) return;
@@ -71,7 +78,6 @@ const VideoPlayer: React.FC<VideoPlayerProps> = ({ selectedVideo, currentVideoId
         }
     }, [selectedVideo]);
 
-
     const initializePlayer = () => {
         if (!selectedVideo) return;
 
@@ -84,7 +90,7 @@ const VideoPlayer: React.FC<VideoPlayerProps> = ({ selectedVideo, currentVideoId
             return;
         }
 
-        // Initialize YouTube player if it doesn't exist
+        // Initialize YouTube player
         window.onYouTubeIframeAPIReady = () => {
             playerRef.current = new window.YT.Player("youtube-player", {
                 videoId: videoId,
@@ -111,8 +117,7 @@ const VideoPlayer: React.FC<VideoPlayerProps> = ({ selectedVideo, currentVideoId
         if (event.data === window.YT.PlayerState.PLAYING) {
             intervalRef.current = setInterval(() => {
                 if (playerRef.current) {
-                    // setWatchedSeconds(playerRef.current.getCurrentTime());
-                    const seconds = Math.floor(playerRef.current.getCurrentTime())
+                    const seconds = Math.floor(playerRef.current.getCurrentTime());
                     setWatchedSeconds(seconds);
                 }
             }, 1000);
@@ -121,12 +126,10 @@ const VideoPlayer: React.FC<VideoPlayerProps> = ({ selectedVideo, currentVideoId
         }
     };
 
-
-
     return (
         <div className="col-span-3 md:col-span-2 bg-white dark:bg-dark-light rounded-xl p-5">
             <div id="youtube-player" className="w-full aspect-video h-full rounded-lg"></div>
-            {/* <p>Watched Seconds: {watchedSeconds}</p> */}
+            <p>Watched Seconds: {watchedSeconds}</p>
         </div>
     );
 };

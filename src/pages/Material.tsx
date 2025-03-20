@@ -18,7 +18,6 @@ const Material = () => {
     const dispatch = useDispatch<AppDispatch>()
     const { token } = useSelector((state: RootState) => state.auth)
     const state = useSelector((state: RootState) => state.categories)
-    console.log(state);
     const metaData = state.metaData
 
     const enrollmentState = useSelector((state: RootState) => state.enrollment) as { courses: any[] }
@@ -35,10 +34,18 @@ const Material = () => {
     const [maxRating, setMaxRating] = useState<number | null>(null)
     const [fromDate, setFromDate] = useState("")
     const [toDate, setToDate] = useState("")
-    const [pageNumber] = useState(1)
-    const [pageSize] = useState(1)
+    const [pageNumber, setPageNumber] = useState(1)
+    const [pageSize, setPageSize] = useState<number>(() => {
+        const saved = localStorage.getItem('pageSize');
+        return saved ? parseInt(saved, 10) : 10;
+    });
     const [showFilters, setShowFilters] = useState(false);
 
+    const handlePageSizeChange = (size: number) => {
+        setPageSize(size);
+        setPageNumber(1); // Reset to first page when changing size
+        localStorage.setItem('pageSize', size.toString());
+    };
     useEffect(() => {
         if (token && id) {
             const params: Record<string, any> = {
@@ -76,23 +83,6 @@ const Material = () => {
             dispatch(getFavoritesForUserAsync({ token }))
         }
     }, [token, dispatch])
-
-    // const fetchCourses = debounce(() => {
-    //     dispatch(getCoursesByCategoryAsync({
-    //         token: token || "",
-    //         params: {
-    //             categoryId: id || "",
-    //             search,
-    //             sortBy,
-    //             author,
-    //             minRating,
-    //             fromDate,
-    //             toDate,
-    //             pageNumber,
-    //             pageSize
-    //         }
-    //     }))
-    // }, 500)
 
     const handleEnrollCourse = (courseId: number) => {
         if (token) {
@@ -135,31 +125,29 @@ const Material = () => {
                 <Loading />
             </div> :
                 <div className="container min-h-main">
-                    <div className="flex justify-between flex-wrap items-center py-10">
+                    <div className="flex justify-between flex-wrap gap-4 items-center py-10">
                         <h2 className="text-2xl font-bold">{id}</h2>
-                        <div className="flex flex-wrap gap-4 items-center">
+                        <div className="flex flex-wrap items-center gap-4 w-ful">
                             {/* Search Input */}
-                            <div className="relative">
-                                <div className="relative">
-                                    <SearchNormal1
-                                        size="20"
-                                        color="currentColor"
-                                        className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400"
-                                    />
-                                    <input
-                                        type="text"
-                                        placeholder="بحث..."
-                                        className="pl-10 pr-3 py-2 rounded-lg border border-primary bg-white dark:bg-dark-light text-black dark:text-white focus:outline-none focus:ring focus:ring-primary"
-                                        value={search}
-                                        onChange={(e) => setSearch(e.target.value)}
-                                    />
-                                </div>
+                            <div className="relative flex-1 min-w-[150px]">
+                                <SearchNormal1
+                                    size="20"
+                                    color="currentColor"
+                                    className="absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-dark dark:text-muted"
+                                />
+                                <input
+                                    type="text"
+                                    placeholder="بحث..."
+                                    className="pl-10 pr-3 py-2 rounded-lg w-full border border-primary bg-white dark:bg-dark-light text-black dark:text-white focus:outline-none focus:ring focus:ring-primary"
+                                    value={search}
+                                    onChange={(e) => setSearch(e.target.value)}
+                                />
                             </div>
 
                             <div className="relative">
                                 <button
                                     onClick={() => setShowFilters(!showFilters)}
-                                    className="flex items-center gap-2 px-4 py-2 bg-primary dark:bg-primary-light border border-primary text-white rounded-lg hover:bg-primary-dark transition"
+                                    className="flex w-full items-center justify-center gap-2 px-4 py-2 bg-primary dark:bg-primary-light border border-primary text-white rounded-lg hover:bg-primary-dark transition"
                                 >
                                     <Filter size="20" color="currentColor" />
                                     <span>فلتر</span>
@@ -265,7 +253,6 @@ const Material = () => {
                                     </div>
                                 )}
                             </div>
-
                         </div>
                     </div>
                     {courses.length ? <>
@@ -305,7 +292,7 @@ const Material = () => {
                                     {/* Course Details */}
                                     <div className="p-4">
                                         <h3 className="text-lg font-bold truncate">{course.name}</h3>
-                                        <p className="text-sm text-muted-dark dark:text-muted mt-1">{course.author}</p>
+                                        <p className="text-sm text-muted-dark dark:text-muted mt-1 truncate">{course.author}</p>
                                         <p className="text-sm text-muted-dark dark:text-muted mt-2 flex items-center gap-1">
                                             <Play size="18" color="currentColor" variant="Bold" />
                                             <span className="text-danger font-bold">{course.courseVideosCount} </span> فيديو
@@ -352,7 +339,7 @@ const Material = () => {
                                 </Link>
                             ))}
                         </div>
-                        {metaData && <Pagination metaData={metaData} onPageChange={(page) => console.log("Go to page:", page)} />}
+                        {metaData && <Pagination metaData={metaData} onPageChange={(page) => setPageNumber(page)} onPageSizeChange={handlePageSizeChange} pageSize={pageSize} />}
                     </> :
                         <div className=" h-80">
                             <NoData />

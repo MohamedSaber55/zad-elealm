@@ -38,8 +38,6 @@ const ReviewModal = ({ isOpen, onClose, onSubmit }: ReviewModalProps) => {
             onClose();
         },
     });
-    console.log(formik.errors);
-
 
     return isOpen ? (
         <div className="fixed inset-0 flex items-center justify-center z-50 bg-black/40">

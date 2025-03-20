@@ -45,8 +45,6 @@ export const addReview = createAsyncThunk<AddRatingResponse, AddReviewRequest>('
         });
         return response.data;
     } catch (error: any) {
-        console.log(error);
-        
         return rejectWithValue(error.response.data as { message: string, statusCode: number });
     }
 })

@@ -48,7 +48,6 @@ const UserCourses = () => {
                 reviewText,
                 courseId: selectedCourse.id,
             }
-            console.log(body);
 
             if (token) {
                 dispatch(addReview({ token, body }));
@@ -68,7 +67,7 @@ const UserCourses = () => {
         <div className="dark:bg-dark dark:text-white">
             {loading ? <div className="h-main"><Loading /></div> :
                 <div className="container min-h-main py-10">
-                    <h2 className="text-2xl font-bold mb-6">كورساتي <span className="text-danger">({allEnrolledCourses})</span></h2>
+                    <h2 className="text-2xl font-bold mb-6">كورساتي <span className="text-danger">({allEnrolledCourses || 0})</span></h2>
 
                     {courses?.length ?
                         <div className="flex flex-col gap-6">

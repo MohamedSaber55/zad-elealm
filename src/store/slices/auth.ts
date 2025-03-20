@@ -2,7 +2,7 @@ import { createAsyncThunk, createSlice, PayloadAction } from "@reduxjs/toolkit";
 import axios from "axios";
 // import { RootState } from "../store";
 import { baseUrl, getAuthToken } from "../../utils/constants";
-import { User } from "../../interfaces";
+import { User, UserProfile } from "../../interfaces";
 import Cookies from "js-cookie";
 interface LoginResponse {
     data: {
@@ -55,6 +55,27 @@ interface ResetPasswordRequest {
 interface ResetPasswordResponse {
     message: string;
     statusCode: number;
+}
+interface GetUserProfileResponse {
+    data: UserProfile;
+    message: string;
+    statusCode: number;
+}
+interface UpdateUserProfileResponse {
+    data: UserProfile;
+    message: string;
+    statusCode: number;
+}
+interface GetUserProfileRequest {
+    token: string;
+}
+interface UpdateUserProfileRequest {
+    token: string;
+    body: {
+        displayName: string;
+        imageUrl: string;
+        phoneNumber: string;
+    }
 }
 
 interface LoginRequest {
@@ -159,10 +180,46 @@ export const resetPasswordAsync = createAsyncThunk<ResetPasswordResponse, ResetP
         }
     }
 );
+
+export const getUserProfileAsync = createAsyncThunk<GetUserProfileResponse, GetUserProfileRequest>(
+    'auth/getUserProfile',
+    async ({ token }, { rejectWithValue }) => {
+        try {
+            const response = await axios.get<GetUserProfileResponse>(`${baseUrl}/Account/get-User-Profile`, {
+                headers: {
+                    Authorization: `Bearer ${getAuthToken() || token}`
+                }
+            });
+            const result = response.data;
+            return result;
+        } catch (err: any) {
+            return rejectWithValue(err.response.data as { message: string, statusCode: number });
+        }
+    }
+)
+export const updateUserProfileAsync = createAsyncThunk<UpdateUserProfileResponse, UpdateUserProfileRequest>(
+    'auth/updateUserProfile',
+    async ({ body, token }, { rejectWithValue }) => {
+        try {
+            const response = await axios.put<UpdateUserProfileResponse>(`${baseUrl}/Account/update-User-
+                Profile`, body, {
+                headers: {
+                    Authorization: `Bearer ${getAuthToken() || token}`
+                }
+            }
+            );
+            const result = response.data;
+            return result;
+        } catch (err: any) {
+            return rejectWithValue(err.response.data as { message: string, statusCode: number });
+        }
+    }
+)
 interface InitialState {
     user: User | null;
     loading: boolean;
     error: any;
+    userProfile: UserProfile | null;
     message: string | null;
     statusCode: number | null;
     token: string | null;
@@ -172,6 +229,7 @@ const initialState: InitialState = {
     user: Cookies.get("user") ? JSON.parse(Cookies.get("user")!) : null,
     loading: false,
     error: null,
+    userProfile: null,
     message: null,
     statusCode: null,
     token: Cookies.get("token") || null,
@@ -318,6 +376,25 @@ const authSlice = createSlice({
                 state.refreshToken = action.payload.data.refreshToken;
             })
             .addCase(getCurrentUserAsync.rejected, (state, action) => {
+                state.loading = false;
+                state.error = action.payload;
+                state.message = (action.payload as any).message;
+                state.statusCode = (action.payload as RegisterResponse).statusCode;
+            })
+            // --------------------------------- GET USER Profile ---------------------------------
+            .addCase(getUserProfileAsync.pending, (state) => {
+                state.loading = true;
+                state.error = null;
+                state.message = null;
+                state.statusCode = null;
+            })
+            .addCase(getUserProfileAsync.fulfilled, (state, action: PayloadAction<GetUserProfileResponse>) => {
+                state.loading = false;
+                state.userProfile = action.payload.data
+                state.message = action.payload.message;
+                state.statusCode = action.payload.statusCode;
+            })
+            .addCase(getUserProfileAsync.rejected, (state, action) => {
                 state.loading = false;
                 state.error = action.payload;
                 state.message = (action.payload as any).message;

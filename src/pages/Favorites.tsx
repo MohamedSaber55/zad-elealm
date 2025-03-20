@@ -31,7 +31,7 @@ const Favorites = () => {
         <div className="dark:bg-dark dark:text-white">
             <div className="container min-h-main">
                 <div className="py-10">
-                    <h2 className="text-2xl font-bold">المفضلة <span className='text-danger'>({state.allFavoriteCourses})</span></h2>
+                    <h2 className="text-2xl font-bold">المفضلة <span className='text-danger'>({state.allFavoriteCourses || 0})</span></h2>
                 </div>
                 {/* Display message if no favorites */}
                 {favoritesCourses.length === 0 ? (
@@ -43,7 +43,7 @@ const Favorites = () => {
                         {favoritesCourses.map((course) => (
                             <Link to={`/courses/${course.id}`} key={course.id} className="bg-white dark:bg-dark-light rounded-lg overflow-hidden shadow hover:shadow-md transition">
                                 <div className="relative">
-                                    <img src={image} alt={course.name} className="w-full h-48 object-cover" />
+                                    <img src={course.imageUrl || image} alt={course.name} className="w-full h-48 object-cover" />
                                     <button
                                         onClick={(e) => {
                                             e.preventDefault();

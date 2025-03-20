@@ -29,7 +29,7 @@ interface CheckQuizEligibilityResponse {
 }
 interface GetVideoProgressRequest {
     token: string;
-    videoId: string;
+    videoId: number;
 }
 interface GetVideoProgressResponse {
     videoId: number;
@@ -47,11 +47,8 @@ export const updateVideoProgress = createAsyncThunk<UpdateVideoProgressResponse,
                     Authorization: `Bearer ${token}`
                 }
             });
-            console.log(response.data);
-
             return response.data;
         } catch (err: any) {
-            console.log(err);
             return rejectWithValue(err.response.data as { message: string, statusCode: number });
         }
     }
@@ -65,10 +62,8 @@ export const getCourseProgress = createAsyncThunk<GetCourseProgressResponse, Get
                     Authorization: `Bearer ${token}`
                 }
             });
-            console.log(response.data);
             return response.data;
         } catch (err: any) {
-            console.log(err);
             return rejectWithValue(err.response.data as { message: string, statusCode: number });
         }
     }

@@ -69,7 +69,9 @@
     },
     "home": {
         "categories": "Categories",
-        "courses": "Courses"
+        "courses": "Courses",
+        "welcome": "Welcome to Our Religious Courses Platform",
+        "subtitle": "Embark on a spiritual journey and deepen your knowledge with our diverse courses."
     },
     "certificates": {
         "certificates": "Certificates",

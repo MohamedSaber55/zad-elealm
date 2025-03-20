@@ -31,7 +31,13 @@ export interface Certificate {
     quizName: string;
 }
 
-
+export interface UserProfile {
+    displayName: string;
+    email: string;
+    imageUrl: string;
+    userName: string;
+    phoneNumber: string;
+}
 
 interface Video {
     id: number;

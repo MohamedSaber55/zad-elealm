@@ -14,6 +14,7 @@ const Course = () => {
     const { id } = useParams<{ id: string }>()
     const [selectedVideo, setSelectedVideo] = useState<string | null>(null);
     const [selectedVideoId, setSelectedVideoId] = useState<number>(0);
+    const [selectedVideoDuration, setSelectedVideoDuration] = useState<string>("");
     const dispatch = useDispatch<AppDispatch>()
     const { token } = useSelector((state: RootState) => state.auth)
     const state = useSelector((state: RootState) => state.courses)
@@ -45,7 +46,7 @@ const Course = () => {
                     <div className={`grid grid-cols-3 gap-5 `}>
                         {/* Video Player Section */}
                         {selectedVideo && (
-                            <VideoPlayer selectedVideo={selectedVideo} currentVideoId={selectedVideoId} />
+                            <VideoPlayer selectedVideo={selectedVideo} currentVideoId={selectedVideoId} selectedVideoDuration={selectedVideoDuration} />
                         )}
                         <div className={`videos h-[520px] overflow-y-scroll col-span-3 ${selectedVideo ? "md:col-span-1" : "md:col-span-2"} bg-white dark:bg-dark-light rounded-xl p-5`}>
                             <h3 className="text-2xl text-primary dark:text-primary-light font-bold mb-5">الفيديوهات</h3>
@@ -59,7 +60,8 @@ const Course = () => {
                                             className={`font-bold text-sm ${selectedVideo == video.videoUrl && "text-primary dark:text-primary-light"} hover:text-primary cursor-pointer transition`}
                                             onClick={() => {
                                                 setVideoUrlAsEmbedded(video.videoUrl);
-                                                setSelectedVideoId(video.id)
+                                                setSelectedVideoId(video.id);
+                                                setSelectedVideoDuration(video.videoDuration);
                                             }}
                                         >
                                             {index + 1}- {" "}
