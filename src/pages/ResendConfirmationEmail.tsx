@@ -1,6 +1,6 @@
 import { useTranslation } from "react-i18next";
 import { useDispatch, useSelector } from "react-redux";
-import { Link, useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 import { AppDispatch, RootState } from "../store/store";
 import { resendConfirmationEmailAsync } from "../store/slices/auth";
 import { useFormik } from "formik";
@@ -12,7 +12,6 @@ const ResendConfirmationEmail = () => {
     const { t } = useTranslation();
     const dispatch = useDispatch<AppDispatch>();
     const state = useSelector((state: RootState) => state.auth)
-    const navigate = useNavigate()
     const validationSchema = object().shape({
         email: string().email(t("email")).required(t("validations.email-required")),
     });
