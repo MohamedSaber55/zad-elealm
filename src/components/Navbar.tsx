@@ -136,7 +136,7 @@ const Navbar = () => {
                                 }
                             </button>
                             {isProfileDropdownOpen && (
-                                <div className="absolute border border-primary py-1 -end-0 mt-2 w-60 bg-white dark:bg-dark-light shadow-lg rounded-lg overflow-hidden z-10">
+                                <div className="absolute border border-primary py-1 -end-0 mt-2 w-60 bg-white dark:bg-dark-light shadow-lg rounded-lg overflow-hidden z-50">
                                     {/* Profile Link */}
                                     <Link to="/profile" className="w-full flex items-center gap-2 px-4 py-2 text-dark dark:text-light hover:bg-gray dark:hover:bg-muted transition-colors duration-200">
                                         <Profile size="20" color="currentColor" variant="Outline" /> {/* Profile icon */}

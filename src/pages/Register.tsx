@@ -30,6 +30,7 @@ const Register = () => {
     onSubmit: (values) => {
       dispatch(registerAsync({ body: values })).then((res) => {
         if ((res.payload as { statusCode: number })?.statusCode === 200) {
+          notify("تم التسجيل بنجاح, يرجى متابعة البريد الإلكتروني لتفعيل الحساب", "success");
           return <Navigate to="/login" />;
         }
       })
@@ -40,7 +41,6 @@ const Register = () => {
   };
 
   if (state.token) {
-    notify("تم التسجيل بنجاح, يرجى متابعة البريد الإلكتروني لتفعيل الحساب", "success");
     return <Navigate to="/login" />;
   }
   return (
