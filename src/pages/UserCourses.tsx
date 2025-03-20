@@ -74,7 +74,7 @@ const UserCourses = () => {
                             {courses?.map((course) => (
                                 <div
                                     key={course.id}
-                                    className="bg-white border border-primary dark:bg-dark-light rounded-lg overflow-hidden flex flex-col sm:flex-row"
+                                    className="bg-white border border-primary dark:bg-dark-light rounded-lg overflow-hidden flex flex-col md:flex-row"
                                 >
                                     {/* <img src={course.imageUrl} alt={course.name} className="w-full sm:w-52 h-full object-cover" /> */}
                                     <img src={course.imageUrl} alt={course.name} className="w-ful aspect-video h-52 object-cover" />

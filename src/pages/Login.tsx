@@ -36,13 +36,13 @@ const Login = () => {
         return <Navigate to="/" />;
     }
     return (
-        <div className="flex justify-center items-center min-h-screen bg-primary">
-            <div className="form w-11/12 sm:w-3/4 md:w-1/2 bg-white dark:bg-drk shadow-lg px-8 py-2 rounded-xl">
+        <div className="flex justify-center items-center min-h-screen bg-primary dark:bg-primary-light">
+            <div className="form w-11/12 sm:w-3/4 md:w-1/2 bg-white dark:bg-dark dark:text-white shadow-lg px-8 py-2 rounded-xl">
                 <div className="top mb-10 flex flex-col items-center justify-center">
                     <div className="logo">
                         <img src="./logo.png" alt="Logo" className="h-20" />
                     </div>
-                    <h1 className="text-2xl font-bold text-center text-black">{t("auth.login")}</h1>
+                    <h1 className="text-2xl font-bold text-center text-black dark:text-white">{t("auth.login")}</h1>
                 </div>
                 <form onSubmit={formik.handleSubmit} className="mb-10">
                     <div className="w-full sm:w-3/4 mx-auto flex flex-col gap-5 justify-center">
@@ -95,7 +95,7 @@ const Login = () => {
                                         {t("auth.forgot-password")}
                                     </Link>
                                 </div>
-                                <div className="item flex items-center gap-2">
+                                <div className="item flex items-center gap-2 dark:text-white">
                                     <input
                                         type="checkbox"
                                         id="rememberMe"
@@ -104,7 +104,7 @@ const Login = () => {
                                         className="peer hidden"
                                     />
                                     <div
-                                        className="w-5 h-5 border-2 border-gray-300 rounded cursor-pointer flex items-center justify-center 
+                                        className="w-5 h-5 border-2 border-gray-300  rounded cursor-pointer flex items-center justify-center 
         peer-checked:border-primary peer-checked:bg-primary"
                                         onClick={() => setRememberMe(!rememberMe)}
                                     >
@@ -115,7 +115,7 @@ const Login = () => {
                                             className=" peer-checked:block"
                                         />
                                     </div>
-                                    <label htmlFor="rememberMe" className="font-semibold text-black">
+                                    <label htmlFor="rememberMe" className="font-semibold text-black dark:text-white">
                                         {t("auth.remember-me")}
                                     </label>
                                 </div>
@@ -128,7 +128,12 @@ const Login = () => {
                         }
                         <div className="item flex flex-col items-center justify-center gap-3">
                             <button className="bg-primary text-white font-bold py-3 px-16 min-w-64 rounded flex justify-center items-center">{state.loading ? <Driving size={32} className="animate-pulse" color="currentColor" /> : t("auth.login")}</button>
-                            <p className="text-lg font-semibold">{t("auth.don't-have-account")} <Link to="/register" className="text-primary ps-1">{t("auth.sign-up")}</Link></p>
+                            <p className="text-lg  text-center font-semibold">{t("auth.don't-have-account")} <Link to="/register" className="text-primary ps-1">{t("auth.sign-up")}</Link></p>
+                            {state.message == "لم يتم تأكيد البريد الإلكتروني" &&
+                                <Link to="/resend-confirmation" className="text-primary text-lg font-semibold">
+                                    {t("auth.resend-confirmation-email")}
+                                </Link>
+                            }
                         </div>
                     </div>
                 </form>

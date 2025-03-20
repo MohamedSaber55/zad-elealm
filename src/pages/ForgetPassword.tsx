@@ -30,11 +30,11 @@ const ForgetPassword = () => {
     })
 
     return (
-        <div className="flex justify-center items-center min-h-screen bg-primary">
-            <div className="w-11/12 sm:w-3/4 md:w-1/2 bg-white dark:bg-drk shadow-lg px-8 py-6 rounded-xl">
+        <div className="flex justify-center items-center min-h-screen bg-primary dark:bg-primary-light">
+            <div className="w-11/12 sm:w-3/4 md:w-1/2 bg-white dark:bg-dark dark:text-white shadow-lg px-8 py-6 rounded-xl">
                 <div className="text-center mb-6">
                     <img src="./logo.png" alt="Logo" className="h-16 mx-auto mb-2" />
-                    <h1 className="text-2xl font-bold text-black">{t("auth.forgot-password")}</h1>
+                    <h1 className="text-2xl font-bold">{t("auth.forgot-password")}</h1>
                     <p className="text-gray-600">{t("auth.enter-email-reset")}</p>
                 </div>
                 <form onSubmit={formik.handleSubmit}>

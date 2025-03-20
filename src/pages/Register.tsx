@@ -7,6 +7,7 @@ import { registerAsync } from "../store/slices/auth";
 import { useDispatch, useSelector } from "react-redux";
 import { AppDispatch, RootState } from "../store/store";
 import { object, string } from "yup";
+import { notify } from "../utils/notify";
 
 const Register = () => {
   const { t } = useTranslation();
@@ -37,18 +38,19 @@ const Register = () => {
   const togglePasswordVisibility = () => {
     setShowPassword(!showPassword);
   };
-  
+
   if (state.token) {
-    return <Navigate to="/" />;
+    notify("تم التسجيل بنجاح, يرجى متابعة البريد الإلكتروني لتفعيل الحساب", "success");
+    return <Navigate to="/login" />;
   }
   return (
-    <div className="flex justify-center items-center min-h-screen bg-primary">
-      <div className="form w-11/12 sm:w-3/4 md:w-1/2 bg-white dark:bg-drk shadow-lg px-8 py-2 rounded-xl">
+    <div className="flex justify-center items-center min-h-screen bg-primary dark:bg-primary-light">
+      <div className="form w-11/12 sm:w-3/4 md:w-1/2 bg-white dark:bg-dark dark:text-white shadow-lg px-8 py-2 rounded-xl">
         <div className="top mb-10 flex flex-col items-center justify-center">
           <div className="logo">
             <img src="./logo.png" alt="Logo" className="h-20" />
           </div>
-          <h1 className="text-2xl font-bold text-center text-black">{t("auth.register")}</h1>
+          <h1 className="text-2xl font-bold text-center ">{t("auth.register")}</h1>
         </div>
         <form onSubmit={formik.handleSubmit} className="mb-10">
           <div className="w-full sm:w-3/4 mx-auto flex flex-col gap-5 justify-center">

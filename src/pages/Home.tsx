@@ -37,7 +37,7 @@ const Home = () => {
     return (
         <div className="dark:bg-dark dark:text-white pb-10">
             {/* Here Section */}
-            <div className="h-screen py-14 px-4 sm:px-8 md:px-14 dark:bg-dark-light border-t border-t-muted dark:border-t-muted-dark">
+            <div className="h-screen py-14 px-4 sm:px-8 md:px-14 dark:bg-dark border-t border-t-muted dark:border-t-muted-dark">
                 <motion.div
                     initial={{ opacity: 0, y: -20 }}
                     animate={{ opacity: 1, y: 0 }}

@@ -48,7 +48,9 @@
         "input-newPassword": " Enter new password",
         "confirmPassword": " Confirm Password",
         "input-confirmPassword": " Enter confirm password",
-        "submit": " Submit"
+        "submit": " Submit",
+        "resend-confirmation-email": "Resend Confirmation Email",
+        "enter-email-to-resend": "Enter your email to resend confirmation email"
     },
     "navbar": {
         "home": "Home",

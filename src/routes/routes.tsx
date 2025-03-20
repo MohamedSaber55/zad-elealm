@@ -20,6 +20,7 @@ import ResetPassword from "../pages/ResetPassword";
 import Profile from "../pages/Profile";
 import EditProfile from "../pages/EditProfile";
 import Quiz from "../pages/Quiz";
+import ResendConfirmationEmail from "../pages/ResendConfirmationEmail";
 
 const routes = createBrowserRouter(
     [
@@ -80,6 +81,10 @@ const routes = createBrowserRouter(
         {
             path: "/forgot-password",
             element: <ForgetPassword />
+        },
+        {
+            path: "/resend-confirmation",
+            element: <ResendConfirmationEmail />
         },
         {
             path: "/reset-password/:email",

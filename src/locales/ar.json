@@ -48,7 +48,9 @@
         "input-newPassword": " أدخل كلمة المرور الجديدة",
         "confirmPassword": "تأكيد كلمة المرور",
         "input-confirmPassword": " أدخل كلمة المرور مرة أخرى",
-        "submit": "إرسال"
+        "submit": "إرسال",
+        "resend-confirmation-email": " إعادة إرسال بريد التحقق",
+        "enter-email-to-resend" : "أدخل بريدك الإلكتروني لإعادة إرسال بريد"
     },
     "navbar": {
         "home": "الرئيسية",

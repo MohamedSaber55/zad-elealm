@@ -131,6 +131,22 @@ export const forgetPasswordAsync = createAsyncThunk<ForgetPasswordResponse, Forg
         }
     }
 );
+export const resendConfirmationEmailAsync = createAsyncThunk<ForgetPasswordResponse, ForgetPasswordRequest>(
+    'auth/resendConfirmationEmailAsync',
+    async ({ params }, { rejectWithValue }) => {
+        try {
+            const response = await axios.post<ForgetPasswordResponse>(`${baseUrl}/Account/resend-confirmation-email`, null, {
+                params: {
+                    email: params.email
+                }
+            });
+            const result = response.data;
+            return result;
+        } catch (err: any) {
+            return rejectWithValue(err.response.data as { message: string, statusCode: number });
+        }
+    }
+);
 
 export const verifyOTPAsync = createAsyncThunk<VerifyOTPResponse, VerifyOTPRequest>(
     'auth/verifyOTP',
@@ -316,6 +332,24 @@ const authSlice = createSlice({
                 state.statusCode = action.payload.statusCode;
             })
             .addCase(forgetPasswordAsync.rejected, (state, action) => {
+                state.loading = false;
+                state.error = action.payload;
+                state.message = (action.payload as any).message;
+                state.statusCode = (action.payload as RegisterResponse).statusCode;
+            })
+            // --------------------------------- resendConfirmationEmailAsync ---------------------------------
+            .addCase(resendConfirmationEmailAsync.pending, (state) => {
+                state.loading = true;
+                state.error = null;
+                state.message = null;
+                state.statusCode = null;
+            })
+            .addCase(resendConfirmationEmailAsync.fulfilled, (state, action: PayloadAction<ForgetPasswordResponse>) => {
+                state.loading = false;
+                state.message = action.payload.message;
+                state.statusCode = action.payload.statusCode;
+            })
+            .addCase(resendConfirmationEmailAsync.rejected, (state, action) => {
                 state.loading = false;
                 state.error = action.payload;
                 state.message = (action.payload as any).message;

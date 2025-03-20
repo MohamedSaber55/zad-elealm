@@ -1,4 +1,5 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { Rnd } from "react-rnd";
 import { Star1 } from "iconsax-react";
 
 interface RatingModalProps {
@@ -9,6 +10,8 @@ interface RatingModalProps {
 
 const RatingModal = ({ isOpen, onClose, onSubmit }: RatingModalProps) => {
     const [rating, setRating] = useState(0);
+    const [size, setSize] = useState({ width: 350, height: 250 });
+    const [position, setPosition] = useState({ x: 0, y: 150 });
 
     // Mapping for star descriptions
     const starDescriptions = {
@@ -18,6 +21,18 @@ const RatingModal = ({ isOpen, onClose, onSubmit }: RatingModalProps) => {
         4: "جيد جدًا - راضٍ",
         5: "ممتاز - راضٍ جدًا",
     };
+
+    useEffect(() => {
+        if (isOpen) {
+            const screenWidth = window.innerWidth;
+            const screenHeight = window.innerHeight;
+
+            setPosition({
+                x: Math.max((screenWidth - size.width) / 2, 10),
+                y: Math.max((screenHeight - size.height) / 3, 10),
+            });
+        }
+    }, [isOpen, size.width, size.height]);
 
     const handleSubmit = () => {
         if (rating > 0) {
@@ -29,8 +44,20 @@ const RatingModal = ({ isOpen, onClose, onSubmit }: RatingModalProps) => {
 
     return isOpen ? (
         <div className="fixed inset-0 flex items-center justify-center z-50 bg-black/40">
-            <div className="bg-white min-w-xs dark:bg-dark-light p-6 rounded-lg shadow-lg flex justify-center items-stretc flex-col border border-muted-green dark:border-muted-dark">
-                <div className="p-3 bg-greenish-gray dark:bg-primary/50 rounded-t-lg">
+            <Rnd
+                position={position}
+                default={{ x: position.x, y: position.y, width: size.width, height: size.height }}
+                minWidth={300}
+                minHeight={250}
+                maxWidth={600}
+                maxHeight={450}
+                bounds="window"
+                enableResizing={{ bottomRight: true }}
+                onResizeStop={(_e, _direction, ref) => setSize({ width: ref.offsetWidth, height: ref.offsetHeight })}
+                className="bg-white dark:bg-dark-light p-6 rounded-lg shadow-lg flex justify-center items-center flex-col border border-muted-green dark:border-muted-dark"
+            >
+                {/* Drag Header */}
+                <div className="cursor-move p-3 bg-greenish-gray dark:bg-primary/50 rounded-t-lg">
                     <h3 className="text-xl font-bold text-primary-dark dark:text-greenish-gray font-cairo">أضف تقييمك</h3>
                 </div>
 
@@ -42,7 +69,7 @@ const RatingModal = ({ isOpen, onClose, onSubmit }: RatingModalProps) => {
                                 key={num}
                                 size={28}
                                 color="currentColor"
-                                className={num <= rating ? "text-warning cursor-pointer" : "text-muted-dark dark:text-muted cursor-pointer"}
+                                className={num <= rating ? "text-warning" : "text-muted-dark dark:text-muted"}
                                 variant={num <= rating ? "Bold" : "Linear"}
                                 onClick={() => setRating(num)}
                             />
@@ -70,7 +97,7 @@ const RatingModal = ({ isOpen, onClose, onSubmit }: RatingModalProps) => {
                         إرسال
                     </button>
                 </div>
-            </div>
+            </Rnd>
         </div>
     ) : null;
 };
