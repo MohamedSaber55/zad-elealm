@@ -5,9 +5,11 @@ import { baseUrl } from "../../utils/constants";
 interface Reply {
     id: number;
     text: string;
+    appUserId: string;
     displayName: string;
     userImage: string | null;
     createdAt: string;
+    replyLikesCount: number;
 }
 interface GetReviewRepliesResponse {
     message: string;
@@ -48,6 +50,10 @@ interface AddReplyRequest {
 interface ToggleLikeRequest {
     token: string;
     reviewId: number;
+}
+interface ToggleLikeReplyRequest {
+    token: string;
+    replyId: number;
 }
 
 export const addRating = createAsyncThunk<AddRatingResponse, AddRatingRequest>('rating/addRating', async ({ body, token }, { rejectWithValue }) => {
@@ -91,7 +97,7 @@ export const deleteReview = createAsyncThunk<AddRatingResponse, DeleteReviewRequ
 })
 export const addReply = createAsyncThunk<AddRatingResponse, AddReplyRequest>('rating/addReply', async ({ body, token, reviewId }, { rejectWithValue }) => {
     try {
-        const response = await axios.post<AddRatingResponse>(`${baseUrl}/Review/${reviewId}/replies`, body, {
+        const response = await axios.post<AddRatingResponse>(`${baseUrl}/Reply/addReply/${reviewId}`, body, {
             headers: {
                 'Authorization': `Bearer ${token}`,
                 'Content-Type': 'application/json',
@@ -104,7 +110,7 @@ export const addReply = createAsyncThunk<AddRatingResponse, AddReplyRequest>('ra
 })
 export const deleteReply = createAsyncThunk<AddRatingResponse, DeleteReplyRequest>('rating/deleteReply', async ({ token, replyId }, { rejectWithValue }) => {
     try {
-        const response = await axios.delete<AddRatingResponse>(`${baseUrl}/Review/${replyId}/reply`, {
+        const response = await axios.delete<AddRatingResponse>(`${baseUrl}/Reply/${replyId}/reply`, {
             headers: {
                 'Authorization': `Bearer ${token}`,
                 'Content-Type': 'application/json',
@@ -129,10 +135,23 @@ export const toggleLikeReview = createAsyncThunk<AddRatingResponse, ToggleLikeRe
         return rejectWithValue(error.response.data as { message: string, statusCode: number });
     }
 })
+export const toggleLikeReply = createAsyncThunk<AddRatingResponse, ToggleLikeReplyRequest>('rating/toggleLikeReply', async ({ token, replyId }, { rejectWithValue }) => {
+    try {
+        const response = await axios.post<AddRatingResponse>(`${baseUrl}/Reply/likeReply/${replyId}`, null, {
+            headers: {
+                'Authorization': `Bearer ${token}`,
+                'Content-Type': 'application/json',
+            },
+        });
+        return response.data;
+    } catch (error: any) {
+        return rejectWithValue(error.response.data as { message: string, statusCode: number });
+    }
+})
 
 export const getReviewReplies = createAsyncThunk<GetReviewRepliesResponse, ToggleLikeRequest>('rating/getReviewReplies', async ({ token, reviewId }, { rejectWithValue }) => {
     try {
-        const response = await axios.get<GetReviewRepliesResponse>(`${baseUrl}/Review/${reviewId}/replies`, {
+        const response = await axios.get<GetReviewRepliesResponse>(`${baseUrl}/Reply/${reviewId}/replies`, {
             headers: {
                 'Authorization': `Bearer ${token}`,
                 'Content-Type': 'application/json',

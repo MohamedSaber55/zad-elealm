@@ -32,6 +32,7 @@ export interface Certificate {
 }
 
 export interface UserProfile {
+    id: string;
     displayName: string;
     email: string;
     imageUrl: string;
@@ -54,9 +55,11 @@ export interface Review {
     courseId: number;
     text: string;
     displayName: string;
+    appUserId: string;
     imageUrl: string;
     hasReplies: boolean;
     repliesCount: number;
+    likesCount: number;
     createdAt?: string;
 }
 export interface Course {

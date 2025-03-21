@@ -85,7 +85,7 @@ const UserCourses = () => {
                                             <h3 className="text-lg font-bold">{course.name}</h3>
                                             <p className="text-sm text-muted dark:text-gray">{course.author}</p>
 
-                                            <div className="flex flex-wrap gap-5 text-sm mt-2">
+                                            <div className="flex flex-wrap gap-4 text-sm mt-2">
                                                 <p className="flex items-center gap-1">
                                                     <Play size="20" className="text-primary" color="currentColor" variant="Bold" />
                                                     <span>عدد الدروس: {course.courseVideosCount}</span>
@@ -103,10 +103,10 @@ const UserCourses = () => {
                                             </div>
                                         </div>
 
-                                        <div className="flex items-center gap-3 flex-wrap mt-3">
+                                        <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3 flex-wrap mt-3">
                                             <Link
                                                 to={`/courses/${course.id}`}
-                                                className="flex items-center gap-2 bg-primary hover:bg-primary-dark text-white py-2 px-4 rounded-lg transition text-sm font-medium"
+                                                className="flex items-center justify-center sm:justify-start gap-2 bg-primary hover:bg-primary-dark text-white py-2 px-4 rounded-lg transition text-sm font-medium"
                                             >
                                                 <ArrowRight2 size={18} color="currentColor" />
                                                 الذهاب إلى الكورس
@@ -117,7 +117,7 @@ const UserCourses = () => {
                                                     e.preventDefault();
                                                     handleUnEnrollCourse(course.id);
                                                 }}
-                                                className="flex items-center gap-2 bg-danger hover:bg-danger-dark text-white py-2 px-4 rounded-lg transition text-sm font-medium"
+                                                className="flex items-center justify-center sm:justify-start  gap-2 bg-danger hover:bg-danger-dark text-white py-2 px-4 rounded-lg transition text-sm font-medium"
                                             >
                                                 <MinusSquare color="currentColor" size={18} />
                                                 الغاء التسجيل
@@ -125,7 +125,7 @@ const UserCourses = () => {
 
                                             <button
                                                 onClick={() => handleOpenRating(course)}
-                                                className="flex items-center gap-2 bg-yellow-500 hover:bg-yellow-600 text-white py-2 px-4 rounded-lg transition text-sm font-medium"
+                                                className="flex items-center justify-center sm:justify-start  gap-2 bg-yellow-500 hover:bg-yellow-600 text-white py-2 px-4 rounded-lg transition text-sm font-medium"
                                             >
                                                 <Star1 color="currentColor" size={18} />
                                                 تقييم الدورة
@@ -133,7 +133,7 @@ const UserCourses = () => {
 
                                             <button
                                                 onClick={() => handleOpenReview(course)}
-                                                className="flex items-center gap-2 bg-gray-700 hover:bg-gray-800 text-white py-2 px-4 rounded-lg transition text-sm font-medium"
+                                                className="flex items-center justify-center sm:justify-start  gap-2 bg-gray-700 hover:bg-gray-800 text-white py-2 px-4 rounded-lg transition text-sm font-medium"
                                             >
                                                 <Star1 color="currentColor" size={18} />
                                                 اضافة تعليق

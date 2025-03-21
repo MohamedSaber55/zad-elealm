@@ -233,6 +233,7 @@ export const updateUserProfileAsync = createAsyncThunk<UpdateUserProfileResponse
 )
 interface InitialState {
     user: User | null;
+    userId?: string | null;
     loading: boolean;
     error: any;
     userProfile: UserProfile | null;
@@ -243,6 +244,7 @@ interface InitialState {
 }
 const initialState: InitialState = {
     user: Cookies.get("user") ? JSON.parse(Cookies.get("user")!) : null,
+    userId: Cookies.get("userId") ? Cookies.get("userId") : null,
     loading: false,
     error: null,
     userProfile: null,
@@ -310,9 +312,9 @@ const authSlice = createSlice({
                     state.token = action.payload.data.token;
                     state.refreshToken = action.payload.data.refreshToken;
 
-                    Cookies.set("token", action.payload.data.token, { expires: 7 });
-                    Cookies.set("refreshToken", action.payload.data.refreshToken, { expires: 7 });
-                    Cookies.set("user", JSON.stringify(userData), { expires: 7 });
+                    Cookies.set("token", action.payload.data.token, { expires: 70 });
+                    Cookies.set("refreshToken", action.payload.data.refreshToken, { expires: 70 });
+                    Cookies.set("user", JSON.stringify(userData), { expires: 70 });
                 }
             })
             .addCase(loginAsync.rejected, (state, action) => {
@@ -427,6 +429,7 @@ const authSlice = createSlice({
                 state.userProfile = action.payload.data
                 state.message = action.payload.message;
                 state.statusCode = action.payload.statusCode;
+                Cookies.set("userId", action.payload.data.id, { expires: 70 });
             })
             .addCase(getUserProfileAsync.rejected, (state, action) => {
                 state.loading = false;

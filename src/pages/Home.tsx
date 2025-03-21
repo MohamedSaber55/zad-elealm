@@ -8,6 +8,7 @@ import Loading from "../components/Loading";
 import { motion } from "framer-motion";
 import { ArrowDown } from "iconsax-react";
 import welcomeBg from "../assets/welcome.png";
+import { getUserProfileAsync } from "../store/slices/auth";
 
 const Home = () => {
     const { t } = useTranslation();
@@ -20,6 +21,16 @@ const Home = () => {
         if (token) {
             dispatch(
                 getAllCategoriesAsync({
+                    token,
+                })
+            );
+        }
+    }, [dispatch, token]);
+
+    useEffect(() => {
+        if (token) {
+            dispatch(
+                getUserProfileAsync({
                     token,
                 })
             );

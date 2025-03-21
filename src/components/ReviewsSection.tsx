@@ -1,7 +1,7 @@
 import React from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState, AppDispatch } from "../store/store";
-import { addReply, deleteReply, deleteReview, getReviewReplies, toggleLikeReview } from "../store/slices/reviews";
+import { addReply, deleteReply, deleteReview, getReviewReplies, toggleLikeReply, toggleLikeReview } from "../store/slices/reviews";
 import { Heart, Trash } from "iconsax-react";
 import avatarImage from "./../assets/avatar.png";
 import { formatDateTime } from "../utils/formatDateTime";
@@ -11,12 +11,13 @@ const ReviewsSection = ({ reviews }: { reviews?: Review[] }) => {
     const dispatch = useDispatch<AppDispatch>();
 
     const { loading } = useSelector((state: RootState) => state.reviews);
-    const { token } = useSelector((state: RootState) => state.auth);
+    const { token, userId } = useSelector((state: RootState) => state.auth);
 
     const [replyTextState, setReplyTextState] = React.useState<{ [key: number]: string }>({});
     const [repliesState, setRepliesState] = React.useState<{ [key: number]: any[] }>({});
     const [visibleReplies, setVisibleReplies] = React.useState<{ [key: number]: boolean }>({});
     const [likedReviews, setLikedReviews] = React.useState<{ [key: number]: boolean }>({});
+    const [likedReplies, setLikedReplies] = React.useState<{ [key: number]: boolean }>({});
 
     // Toggle Like
     const toggleLike = (id: number) => {
@@ -60,6 +61,16 @@ const ReviewsSection = ({ reviews }: { reviews?: Review[] }) => {
         });
     };
 
+    // Toggle Like
+    const toggleLikeRepl = (id: number) => {
+        setLikedReplies((prev) => ({ ...prev, [id]: !prev[id] }));
+        dispatch(toggleLikeReply({ replyId: id, token: token! })).then((res) => {
+            if ((res.payload as { statusCode: number }).statusCode !== 200) {
+                setLikedReplies((prev) => ({ ...prev, [id]: !prev[id] }));
+            }
+        })
+    };
+
     // Delete a review
     const handleDeleteReview = (reviewId: number) => {
         dispatch(deleteReview({ token: token!, reviewId }));
@@ -98,12 +109,14 @@ const ReviewsSection = ({ reviews }: { reviews?: Review[] }) => {
                             </div>
 
                             {/* Delete Review Button */}
-                            <button
-                                onClick={() => handleDeleteReview(review.id)}
-                                className="text-danger hover:text-white border border-danger p-2 rounded-lg hover:bg-danger"
-                            >
-                                <Trash color="currentColor" size="20" />
-                            </button>
+                            {review.appUserId === userId &&
+                                <button
+                                    onClick={() => handleDeleteReview(review.id)}
+                                    className="text-danger hover:text-white border border-danger p-2 rounded-lg hover:bg-danger"
+                                >
+                                    <Trash color="currentColor" size="20" />
+                                </button>
+                            }
                         </div>
 
                         {/* Review Content */}
@@ -117,7 +130,7 @@ const ReviewsSection = ({ reviews }: { reviews?: Review[] }) => {
                                 className={`mt-2 flex items-center gap-1 text-sm ${likedReviews[review.id] ? "text-red-500" : "text-muted-dark dark:text-muted"} transition-colors`}
                             >
                                 <Heart size="20" color={likedReviews[review.id] ? "red" : "currentColor"} variant={likedReviews[review.id] ? "Bold" : "Outline"} />
-                                {likedReviews[review.id] ? "إلغاء الإعجاب" : "أعجبني"}
+                                {likedReviews[review.id] ? "إلغاء الإعجاب" : "أعجبني"} ({review.likesCount})
                             </button>
 
                             {/* View Replies Button */}
@@ -134,38 +147,56 @@ const ReviewsSection = ({ reviews }: { reviews?: Review[] }) => {
                             <div className="mt-4 ml-4 space-y-3">
                                 {loading ? (
                                     <p className="text-sm text-muted-dark dark:text-muted">جاري تحميل الردود...</p>
-                                )
-                                    : !review.hasReplies ? (
-                                        <p className="text-sm text-muted-dark dark:text-muted">لا توجد ردود حتى الآن.</p>
-                                    ) : (
-                                        repliesState[review.id]?.map((reply) => (
-                                            <div
-                                                key={reply.id}
-                                                className="flex justify-between items-start p-2 bg-gray-100 dark:bg-dark-lighter rounded-lg"
-                                            >
-                                                <div className="flex gap-2">
-                                                    <img
-                                                        src={reply.imageUrl || avatarImage}
-                                                        alt={review.displayName}
-                                                        onError={(e) => {
-                                                            e.currentTarget.src = avatarImage;
-                                                        }}
-                                                        className="w-10 h-10 rounded-full object-cover border border-muted"
-                                                    />
-                                                    <div>
-                                                        <p className="font-medium text-dark dark:text-light">{reply.displayName}</p>
-                                                        <p className="text-sm text-muted-dark dark:text-muted">{reply.text}</p>
-                                                    </div>
+                                ) : !review.hasReplies ? (
+                                    <p className="text-sm text-muted-dark dark:text-muted">لا توجد ردود حتى الآن.</p>
+                                ) : (
+                                    repliesState[review.id]?.map((reply) => (
+                                        <div
+                                            key={reply.id}
+                                            className="flex justify-between items-center p-2 bg-gray-100 dark:bg-dark-lighter rounded-lg"
+                                        >
+                                            <div className="flex gap-2">
+                                                <img
+                                                    src={reply.imageUrl || avatarImage}
+                                                    alt={reply.displayName}
+                                                    onError={(e) => {
+                                                        e.currentTarget.src = avatarImage;
+                                                    }}
+                                                    className="w-10 h-10 rounded-full object-cover border border-muted"
+                                                />
+                                                <div>
+                                                    <p className="font-medium text-dark dark:text-light">{reply.displayName}</p>
+                                                    <p className="text-sm text-muted-dark dark:text-muted">{reply.text}</p>
                                                 </div>
-                                                <button
-                                                    onClick={() => handleDeleteReply(reply.id, review.id)}
-                                                    className="text-danger hover:text-danger-dark text-xs"
-                                                >
-                                                    حذف
-                                                </button>
                                             </div>
-                                        ))
-                                    )}
+                                            <div className="flex items-center gap-2">
+                                                {/* Like Button for Reply */}
+                                                <button
+                                                    onClick={() => toggleLikeRepl(reply.id)}
+                                                    className={`flex items-center gap-1 text-sm ${likedReplies[reply.id] ? "text-red-500" : "text-muted-dark dark:text-muted"
+                                                        } transition-colors`}
+                                                >
+                                                    <Heart
+                                                        size="20"
+                                                        color={likedReplies[reply.id] ? "red" : "currentColor"}
+                                                        variant={likedReplies[reply.id] ? "Bold" : "Outline"}
+                                                    />
+                                                    {likedReplies[reply.id] ? "إلغاء الإعجاب" : "أعجبني"} ({reply.likesCount || 0})
+                                                </button>
+                                                {/* Delete Reply Button */}
+                                                {reply.appUserId === userId && (
+                                                    <button
+                                                        onClick={() => handleDeleteReply(reply.id, review.id)}
+                                                        className="text-danger hover:text-danger-dark text-xs flex items-center gap-1"
+                                                    >
+                                                        <Trash color="currentColor" size="20" />
+                                                        حذف
+                                                    </button>
+                                                )}
+                                            </div>
+                                        </div>
+                                    ))
+                                )}
                             </div>
                         )}
 
