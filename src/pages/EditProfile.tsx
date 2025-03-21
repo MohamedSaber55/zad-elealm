@@ -73,7 +73,6 @@ const UpdateProfile = () => {
                     enableReinitialize={true}
                     validationSchema={Yup.object({
                         displayName: Yup.string().required("الاسم مطلوب"),
-                        userName: Yup.string().required("اسم المستخدم مطلوب"),
                         email: Yup.string().email("بريد غير صالح").required("البريد مطلوب"),
                         phoneNumber: Yup.string().matches(/^[0-9]{10,15}$/, "رقم الهاتف غير صالح"),
                     })}
