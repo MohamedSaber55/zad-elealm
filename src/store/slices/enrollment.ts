@@ -137,8 +137,8 @@ const enrollmentSlice = createSlice({
             .addCase(getEnrolledCourses.rejected, (state, action) => {
                 state.loading = false;
                 state.error = action.payload;
-                state.message = (action.payload as any).message;
-                state.statusCode = (action.payload as GetEnrolledCoursesResponse).statusCode;
+                state.message = (action.payload as GetEnrolledCoursesResponse)?.message || null;
+                state.statusCode = (action.payload as GetEnrolledCoursesResponse)?.statusCode || null;
                 state.status = 'rejected';
             })
             // -------------------------- Enroll Course --------------------------

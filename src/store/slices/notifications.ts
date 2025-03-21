@@ -128,6 +128,7 @@ export const markAllAsRead = createAsyncThunk<ReadNotificationsResponse, ReadNot
 interface initialState {
     message: string | null,
     loading: boolean;
+    getAllLoading: boolean;
     error: any;
     statusCode: number | null;
     status: string | null;
@@ -140,6 +141,7 @@ interface initialState {
 const initialState: initialState = {
     message: null,
     loading: false,
+    getAllLoading: false,
     error: null,
     totalCount: null,
     unreadCount: null,
@@ -155,11 +157,11 @@ const notificationsSlice = createSlice({
     extraReducers: (builder) => {
         builder
             .addCase(getNotifications.pending, (state) => {
-                state.loading = true;
+                state.getAllLoading = true;
                 state.error = null;
             })
             .addCase(getNotifications.fulfilled, (state, action) => {
-                state.loading = false;
+                state.getAllLoading = false;
                 if (action.payload.message === "لا توجد إشعارات") {
                     state.notifications = [];
                     state.totalCount = 0;
@@ -173,7 +175,7 @@ const notificationsSlice = createSlice({
                 state.message = action.payload.message;
             })
             .addCase(getNotifications.rejected, (state, action) => {
-                state.loading = false;
+                state.getAllLoading = false;
                 state.error = action.payload;
             })
 
@@ -201,7 +203,7 @@ const notificationsSlice = createSlice({
                 state.statusCode = action.payload.statusCode;
                 state.message = action.payload.message;
                 state.notifications = state.notifications.map(notification =>
-                    notification.id === action.meta.arg.id ? { ...notification, read: true } : notification
+                    notification.id === action.meta.arg.id ? { ...notification, isRead: true } : notification
                 );
             })
             .addCase(markOneAsRead.rejected, (state, action) => {
@@ -232,7 +234,7 @@ const notificationsSlice = createSlice({
                 state.loading = false;
                 state.statusCode = action.payload.statusCode;
                 state.message = action.payload.message;
-                state.notifications = state.notifications.map(notification => ({ ...notification, read: true }));
+                state.notifications = state.notifications.map(notification => ({ ...notification, isRead: true }));
             })
             .addCase(markAllAsRead.rejected, (state, action) => {
                 state.loading = false;

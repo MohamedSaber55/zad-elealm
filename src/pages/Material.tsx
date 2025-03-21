@@ -126,7 +126,7 @@ const Material = () => {
             </div> :
                 <div className="container min-h-main">
                     <div className="flex justify-between flex-wrap gap-4 items-center py-10">
-                        <h2 className="text-2xl font-bold">{id}</h2>
+                        <h2 className="text-2xl font-bold">{state.currentCategoryName || " الدورات"}</h2>
                         <div className="flex flex-wrap items-center gap-4 w-ful">
                             {/* Search Input */}
                             <div className="relative flex-1 min-w-[150px]">

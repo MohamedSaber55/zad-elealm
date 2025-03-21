@@ -21,31 +21,28 @@ export default function NotificationsPage() {
     const handleMarkAsRead = (id: number) => {
         if (token) {
             dispatch(markOneAsRead({ token, id })).then(() => {
-                dispatch(getNotifications({ token }))
+                notify("تم وضع الإشعار كمقروء", "success");
             })
         }
-        notify("تم وضع الإشعار كمقروء", "success");
     };
     const handleDeleteNotification = (id: number) => {
         if (token) {
             dispatch(deleteNotification({ token, id })).then(() => {
-                dispatch(getNotifications({ token }))
+                notify("تم حذف الإشعار", "success");
             })
         }
-        notify("تم حذف الإشعار", "success");
     };
     const handleMarkAllAsRead = () => {
         if (token) {
             dispatch(markAllAsRead({ token })).then(() => {
-                dispatch(getNotifications({ token }))
+                notify(" تم قراءة جميع الإشعارات", "success")
             })
         }
-        notify(" تم قراءة جميع الإشعارات", "success")
     };
 
     return (
         <div className="min-h-main dark:bg-dark dark:text-white">
-            {state.loading ? <div className="h-main"><Loading /></div> :
+            {state.getAllLoading ? <div className="h-main"><Loading /></div> :
                 <div className="container">
                     <div className="heading flex flex-wrap py-10  justify-between items-center gap-5">
                         <h2 className="heading text-2xl font-bold flex items-center gap-2">

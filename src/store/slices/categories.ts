@@ -9,6 +9,7 @@ interface InitialState {
     category: Category | null;
     loading: boolean;
     status: string;
+    currentCategoryName: string;
     error: string | null;
     message: string | null;
     statusCode: number | null;
@@ -16,6 +17,7 @@ interface InitialState {
 const initialState: InitialState = {
     category: null,
     status: "",
+    currentCategoryName: "",
     metaData: null,
     courses: [],
     categories: [],
@@ -91,7 +93,11 @@ export const getCoursesByCategoryAsync = createAsyncThunk<GetCoursesByCategoryRe
 const categoriesSlice = createSlice({
     name: 'categories',
     initialState,
-    reducers: {},
+    reducers: {
+        currentCategoryName(state, action) {
+            state.currentCategoryName = action.payload;
+        }
+    },
     extraReducers: (builder) => {
         builder
             // ---------------------------- GET ALL CATEGORIES ---------------------------
@@ -128,10 +134,12 @@ const categoriesSlice = createSlice({
             .addCase(getCoursesByCategoryAsync.rejected, (state, action) => {
                 state.status = 'failed'
                 state.error = action.payload as string;
+                state.courses = [];
                 state.statusCode = 404;
                 state.loading = false;
             })
     }
 })
 
+export const { currentCategoryName } = categoriesSlice.actions;
 export default categoriesSlice.reducer;

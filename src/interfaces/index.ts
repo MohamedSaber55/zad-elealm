@@ -49,15 +49,15 @@ interface Video {
     orderInCourse: number;
 }
 
-interface Review {
-    // Assuming reviews have a similar structure, you can define properties here
-    // For example:
+export interface Review {
+    id: number;
     courseId: number;
     text: string;
     displayName: string;
     imageUrl: string;
-    // rating: number;
-    // createdAt: string;
+    hasReplies: boolean;
+    repliesCount: number;
+    createdAt?: string;
 }
 export interface Course {
     id: number;
@@ -69,6 +69,7 @@ export interface Course {
     rating: number;
     imageUrl: string;
     createdAt: string;
+    category: Category;
 }
 
 export interface CourseWithReviews {

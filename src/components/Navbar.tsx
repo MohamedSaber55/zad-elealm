@@ -8,6 +8,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { AppDispatch, RootState } from "../store/store";
 import { logout } from "../store/slices/auth";
 import { getNotifications } from "../store/slices/notifications";
+import logo from "./../assets/logo.png"
 interface Link {
     name: string;
     url: string;
@@ -88,7 +89,7 @@ const Navbar = () => {
             <div className="container flex justify-between h-full items-center ">
                 <div className="logo h-full">
                     <Link to="/">
-                        <img src="./logo.png" className="w-full h-full" alt="Logo" />
+                        <img src={logo} className="w-full h-full" alt="Logo" />
                     </Link>
                 </div>
                 {state.token &&

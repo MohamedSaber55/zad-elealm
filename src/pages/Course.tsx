@@ -9,7 +9,7 @@ import { CourseWithReviews } from "../interfaces";
 import Loading from "../components/Loading";
 import VideoPlayer from "../components/VideoPlayer";
 import { getCourseProgress } from "../store/slices/videoProgress";
-import avatarImage from "./../assets/avatar.png"
+import ReviewsSection from "../components/ReviewsSection";
 const Course = () => {
     const { id } = useParams<{ id: string }>()
     const [selectedVideo, setSelectedVideo] = useState<string | null>(null);
@@ -20,6 +20,8 @@ const Course = () => {
     const state = useSelector((state: RootState) => state.courses)
     const videoProgressState = useSelector((state: RootState) => state.videoProgress)
     const course: CourseWithReviews | null = state.course || null;
+    console.log(course?.review);
+
     const { courseProgress } = videoProgressState
     const setVideoUrlAsEmbedded = (url: string) => {
         setSelectedVideo(url)
@@ -106,9 +108,11 @@ const Course = () => {
                                         </div>
                                     </div>
                                 </div>
-                                <div className="button flex justify-center items-center mt-8">
-                                    <button onClick={() => course?.videos[0].videoUrl && setVideoUrlAsEmbedded(course?.videos[0].videoUrl)} className="bg-primary hover:bg-primary-dark text-white rounded-lg py-3 px-10">ابدأ</button>
-                                </div>
+                                {selectedVideo ? null :
+                                    <div className="button flex justify-center items-center mt-8">
+                                        <button onClick={() => course?.videos[0].videoUrl && setVideoUrlAsEmbedded(course?.videos[0].videoUrl)} className="bg-primary hover:bg-primary-dark text-white rounded-lg py-3 px-10">ابدأ</button>
+                                    </div>
+                                }
                             </div>
                         </div>
                     </div>
@@ -196,30 +200,7 @@ const Course = () => {
                                 </div>
                             </>}
                         {/* Reviews Section */}
-                        <div className="mt-5 bg-white dark:bg-dark-light rounded-xl p-5">
-                            <h3 className="text-2xl text-primary dark:text-primary-light font-bold mb-5">التقييمات</h3>
-                            <div className="flex flex-col gap-5">
-                                {course?.review && course.review.length > 0 ? (
-                                    course?.review.map((review, i) => (
-                                        <div key={i} className="flex items-start gap-3 text-dark dark:text-muted border border-primary dark:border-primary-light p-4 rounded-lg">
-                                            {/* User Image */}
-                                            <img
-                                                src={review.imageUrl || avatarImage}
-                                                alt={review.displayName}
-                                                className="w-11 h-11 rounded-full object-cover border border-muted"
-                                            />
-                                            {/* Review Content */}
-                                            <div className="flex flex-col">
-                                                <p className="font-bold text-primary dark:text-primary-light">{review.displayName}</p>
-                                                <p className="text-sm">{review.text}</p>
-                                            </div>
-                                        </div>
-                                    ))
-                                ) : (
-                                    <p className="text-muted-dark dark:text-muted">لا توجد تقييمات حتى الآن.</p>
-                                )}
-                            </div>
-                        </div>
+                        <ReviewsSection reviews={course?.review} />
                     </div>
                 </div>
             }

@@ -3,7 +3,7 @@ import { Link } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { AppDispatch, RootState } from "../store/store";
 import { useEffect } from "react";
-import { getAllCategoriesAsync } from "../store/slices/categories";
+import { currentCategoryName, getAllCategoriesAsync } from "../store/slices/categories";
 import Loading from "../components/Loading";
 import { motion } from "framer-motion";
 import { ArrowDown } from "iconsax-react";
@@ -106,6 +106,7 @@ const Home = () => {
                             >
                                 <Link
                                     to={`/materials/${category.id}`}
+                                    onClick={() => dispatch(currentCategoryName(category.name))}
                                     className="relative overflow-hidden rounded-lg shadow-lg group"
                                 >
                                     <div
