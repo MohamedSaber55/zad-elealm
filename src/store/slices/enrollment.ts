@@ -1,20 +1,11 @@
 import { createAsyncThunk, createSlice, PayloadAction } from "@reduxjs/toolkit";
 import axios from "axios";
 import { baseUrl } from "../../utils/constants";
+import { Course } from "../../interfaces";
 type State = {
     loading: boolean;
     error: any;
-    courses: {
-        id: number;
-        name: string;
-        description: string;
-        author: string;
-        courseLanguage: string;
-        courseVideosCount: number;
-        rating: number;
-        imageUrl: string;
-        createdAt: string;
-    }[] | null;
+    courses: Course[] | null;
     allEnrolledCourses: number | null;
     statusCode: number | null;
     message: string | null;
@@ -23,17 +14,7 @@ type State = {
 
 interface GetEnrolledCoursesResponse {
     data: {
-        courses: {
-            id: number;
-            name: string;
-            description: string;
-            author: string;
-            courseLanguage: string;
-            courseVideosCount: number;
-            rating: number;
-            imageUrl: string;
-            createdAt: string;
-        }[],
+        courses: Course[],
         allEnrolledCourses: number;
     }
     statusCode: number;
