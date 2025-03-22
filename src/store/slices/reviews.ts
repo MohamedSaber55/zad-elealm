@@ -149,6 +149,19 @@ export const toggleLikeReply = createAsyncThunk<AddRatingResponse, ToggleLikeRep
     }
 })
 
+export const checkIfUserMakeReviewBefore = createAsyncThunk<boolean, ToggleLikeRequest>('rating/checkIfUserMakeReviewBefore', async ({ token, reviewId }, { rejectWithValue }) => {
+    try {
+        const response = await axios.get<boolean>(`${baseUrl}/Review/user-add-rateing-before/${reviewId}`, {
+            headers: {
+                'Authorization': `Bearer ${token}`,
+                'Content-Type': 'application/json',
+            },
+        });
+        return response.data;
+    } catch (error: any) {
+        return rejectWithValue(error.response.data as { message: string, statusCode: number });
+    }
+})
 export const getReviewReplies = createAsyncThunk<GetReviewRepliesResponse, ToggleLikeRequest>('rating/getReviewReplies', async ({ token, reviewId }, { rejectWithValue }) => {
     try {
         const response = await axios.get<GetReviewRepliesResponse>(`${baseUrl}/Reply/${reviewId}/replies`, {
@@ -169,6 +182,7 @@ interface InitialState {
     message: string | null;
     statusCode: number | null;
     loading: boolean;
+    canRate: boolean;
     replies: Reply[] | null;
     error: any;
     status: string | null;
@@ -177,6 +191,7 @@ interface InitialState {
 const initialState: InitialState = {
     message: null,
     loading: false,
+    canRate: false,
     replies: null,
     error: null,
     statusCode: null,
@@ -298,6 +313,23 @@ const reviewSlice = createSlice({
                 state.replies = action.payload.data;
             })
             .addCase(getReviewReplies.rejected, (state, action) => {
+                state.loading = false;
+                state.error = action.payload as { message: string; statusCode: number };
+            });
+        // ----------------------------- Check If User Make Review Before -----------------------------
+
+        builder
+            .addCase(checkIfUserMakeReviewBefore.pending, (state) => {
+                state.loading = true;
+                state.error = null;
+            })
+            .addCase(checkIfUserMakeReviewBefore.fulfilled, (state, action) => {
+                state.loading = false;
+                // If API returns false, user hasn't reviewed before (show button)
+                // If API returns true, user already reviewed (hide button)
+                state.canRate = !action.payload; // Negate the response per your requirement
+            })
+            .addCase(checkIfUserMakeReviewBefore.rejected, (state, action) => {
                 state.loading = false;
                 state.error = action.payload as { message: string; statusCode: number };
             });

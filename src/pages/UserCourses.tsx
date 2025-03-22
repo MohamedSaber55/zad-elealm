@@ -24,6 +24,7 @@ const UserCourses = () => {
             dispatch(getEnrolledCourses({ token }));
         }
     }, [token, dispatch]);
+
     const handleUnEnrollCourse = (courseId: number) => {
         if (token) {
             dispatch(unEnrollCourse({ token, id: courseId })).then(() => {
@@ -57,9 +58,12 @@ const UserCourses = () => {
     };
     const handleSubmitRating = (reviewData: { rating: number }) => {
         if (selectedCourse?.id !== undefined && token) {
-            dispatch(addRating({ body: { courseId: selectedCourse.id, value: reviewData.rating }, token }));
+            dispatch(addRating({ body: { courseId: selectedCourse.id, value: reviewData.rating }, token })).then((res) => {
+                (res.payload as { message: string }).message == "لقد قمت بتقييم هذه الدورة من قبل" ?
+                    notify("لقد قمت بتقييم هذه الدورة من قبل", "error") :
+                    notify("تم إضافة تقييمك بنجاح", "success");
+            })
         }
-        notify("تم إضافة تقييمك بنجاح", "success");
         setRatingOpen(false);
     };
 
@@ -130,7 +134,6 @@ const UserCourses = () => {
                                                 <Star1 color="currentColor" size={18} />
                                                 تقييم الدورة
                                             </button>
-
                                             <button
                                                 onClick={() => handleOpenReview(course)}
                                                 className="flex items-center justify-center sm:justify-start  gap-2 bg-gray-700 hover:bg-gray-800 text-white py-2 px-4 rounded-lg transition text-sm font-medium"

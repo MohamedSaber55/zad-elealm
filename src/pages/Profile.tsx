@@ -9,7 +9,8 @@ import { getUserProfileAsync, logout } from "../store/slices/auth";
 import Loading from "../components/Loading";
 import noDataSVG from "./../assets/svgicons/no-data.svg";
 import avatarImage from "../assets/avatar.png";
-
+import { Variants } from "framer-motion";
+import { motion } from "framer-motion"
 const Profile = () => {
     const dispatch = useDispatch<AppDispatch>();
     const { token, userProfile } = useSelector((state: RootState) => state.auth);
@@ -35,50 +36,109 @@ const Profile = () => {
     const handleLogout = () => {
         dispatch(logout());
     };
+
+    // Animation Variants
+    const containerVariants: Variants = {
+        hidden: { opacity: 0 },
+        visible: {
+            opacity: 1,
+            transition: { staggerChildren: 0.15, delayChildren: 0.3 }
+        }
+    };
+
+    const itemVariants: Variants = {
+        hidden: { opacity: 0, y: 20 },
+        visible: { opacity: 1, y: 0 },
+        exit: { opacity: 0, y: -20, transition: { duration: 0.2 } }
+    };
     return (
-        <div className="dark:bg-dark bg-light min-h-screen py-10 text-black dark:text-white">
+        <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            className="dark:bg-dark bg-light min-h-screen py-10 text-black dark:text-white">
             {loading ? <div className="h-main"><Loading /></div>
-                : <div className="container">
+                : <motion.div
+                    className="container"
+                    initial={{ opacity: 0, y: 20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ duration: 0.5 }}
+                >
                     {/* Profile Info */}
-                    <div className="bg-white dark:bg-dark-light border border-primary rounded-lg p-6 flex flex-col gap-2 items-center shadow-sm">
+                    <motion.div
+                        variants={containerVariants}
+                        initial="hidden"
+                        animate="visible"
+                        className="bg-white dark:bg-dark-light border border-primary rounded-lg p-6 flex flex-col gap-2 items-center shadow-sm">
                         {!userProfile?.imageUrl ?
-                            <div className="w-24 h-24 flex items-center justify-center bg-muted-green text-primary rounded-full mb-4">
+                            <motion.div
+                                variants={itemVariants}
+                                whileHover={{ scale: 1.05 }}
+                                className="w-24 h-24 flex items-center justify-center bg-muted-green text-primary rounded-full mb-4">
                                 <User size="48" color="currentColor" variant="Bold" />
-                            </div> :
-                            <img
-                                src={userProfile?.imageUrl ||avatarImage}
+                            </motion.div> :
+                            <motion.img
+                                variants={itemVariants}
+                                whileHover={{ scale: 1.05 }}
+                                src={userProfile?.imageUrl || avatarImage}
                                 alt="User Avatar"
                                 className="w-24 h-24 rounded-full object-cover border-4 border-success"
                             />
                         }
-                        <h2 className="text-xl font-bold">{userProfile?.displayName}</h2>
-                        <p className="text-muted-dark-alt">{userProfile?.email}</p>
-                        <p className="text-sm text-muted">{userProfile?.phoneNumber}</p>
+                        <motion.h2
+                            variants={itemVariants}
+                            className="text-xl font-bold">{userProfile?.displayName}</motion.h2>
+                        <motion.p
+                            variants={itemVariants}
+                            className="text-muted-dark-alt">{userProfile?.email}</motion.p>
+                        <motion.p
+                            variants={itemVariants}
+                            className="text-sm text-muted">{userProfile?.phoneNumber}</motion.p>
 
                         <div className="flex gap-3 mt-4">
-                            <Link
-                                to="/edit-profile"
-                                className="flex items-center gap-2 bg-primary text-white px-4 py-2 rounded-lg text-sm"
+                            <motion.div
+                                whileHover={{ scale: 1.05 }}
+                                whileTap={{ scale: 0.98 }}
+                                className=""
                             >
-                                <Edit size="18" color="currentColor" />
-                                تعديل الحساب
-                            </Link>
-                            <button className="flex items-center gap-2 bg-danger text-white px-4 py-2 rounded-lg text-sm" onClick={handleLogout}>
+                                <Link
+                                    to="/edit-profile"
+                                    className="flex items-center gap-2 bg-primary text-white px-4 py-2 rounded-lg text-sm"
+                                >
+                                    <Edit size="18" color="currentColor" />
+                                    تعديل الحساب
+                                </Link>
+                            </motion.div>
+                            <motion.button
+                                whileHover={{ scale: 1.05 }}
+                                whileTap={{ scale: 0.98 }}
+                                className="flex items-center gap-2 bg-danger text-white px-4 py-2 rounded-lg text-sm" onClick={handleLogout}>
                                 <Logout size="18" color="currentColor" />
                                 تسجيل الخروج
-                            </button>
+                            </motion.button>
                         </div>
-                    </div>
-
+                    </motion.div>
                     {/* User Courses */}
 
-                    <h2 className="text-2xl font-bold mt-10 mb-6">كورساتي <span className="text-danger">({allEnrolledCourses || 0})</span></h2>
+                    <motion.h2
+                        initial={{ opacity: 0, x: -20 }}
+                        animate={{ opacity: 1, x: 0 }}
+                        transition={{ duration: 0.5 }}
+                        className="text-2xl font-bold mt-10 mb-6">
+                        كورساتي
+                        <span className="text-danger">({allEnrolledCourses || 0})</span>
+                    </motion.h2>
                     {courses?.length != 0 ? <>
-                        <div className="flex flex-col gap-6">
+                        <motion.div
+                            variants={containerVariants}
+                            className="flex flex-col gap-6">
                             {courses?.map((course) => (
-                                <div
+                                <motion.div
                                     key={course.id}
                                     className="bg-white border border-primary dark:bg-dark-light rounded-lg overflow-hidden flex flex-col sm:flex-row"
+                                    variants={itemVariants}
+                                    exit="exit"
+                                    layout
                                 >
                                     {/* <img src={course.imageUrl} alt={course.name} className="w-full sm:w-52 h-full object-cover" /> */}
                                     <img src={course.imageUrl} alt={course.name} className="w-ful aspect-video h-52 object-cover" />
@@ -86,24 +146,34 @@ const Profile = () => {
                                     {/* Course Details */}
                                     <div className="p-5 flex flex-col justify-between flex-1 gap-4">
                                         <div className=" flex flex-col items-start gap-2">
-                                            <h3 className="text-lg font-bold">{course.name}</h3>
-                                            <p className="text-sm text-muted dark:text-gray">{course.author}</p>
+                                            <motion.h3
+                                                variants={itemVariants}
+                                                className="text-lg font-bold">{course.name}</motion.h3>
+                                            <motion.p
+                                                variants={itemVariants}
+                                                className="text-sm text-muted dark:text-gray">{course.author}</motion.p>
 
                                             <div className="flex flex-wrap gap-5 text-sm mt-2">
-                                                <p className="flex items-center gap-1">
+                                                <motion.div
+                                                    variants={itemVariants}
+                                                    className="flex items-center gap-1">
                                                     <Play size="20" className="text-primary" color="currentColor" variant="Bold" />
                                                     <span>عدد الدروس: {course.courseVideosCount}</span>
-                                                </p>
+                                                </motion.div>
 
-                                                <p className="flex items-center gap-1">
+                                                <motion.div
+                                                    variants={itemVariants}
+                                                    className="flex items-center gap-1">
                                                     <Global size="20" className="text-primary" color="currentColor" variant="Bold" />
                                                     <span>اللغة: {course.courseLanguage}</span>
-                                                </p>
+                                                </motion.div>
 
-                                                <p className="flex items-center gap-1">
+                                                <motion.div
+                                                    variants={itemVariants}
+                                                    className="flex items-center gap-1">
                                                     <Star1 size="20" className="text-primary" color="currentColor" variant="Bold" />
                                                     <span>التقييم: {course.rating.toFixed(1)} ⭐</span>
-                                                </p>
+                                                </motion.div>
                                             </div>
                                         </div>
 
@@ -116,7 +186,7 @@ const Profile = () => {
                                                 الذهاب إلى الكورس
                                             </Link>
 
-                                            <button
+                                            <motion.button
                                                 onClick={(e) => {
                                                     e.preventDefault();
                                                     handleUnEnrollCourse(course.id);
@@ -125,12 +195,12 @@ const Profile = () => {
                                             >
                                                 <MinusSquare color="currentColor" size={18} />
                                                 الغاء التسجيل
-                                            </button>
+                                            </motion.button>
                                         </div>
                                     </div>
-                                </div>
+                                </motion.div>
                             ))}
-                        </div>
+                        </motion.div>
                     </> : <div className="flex flex-col justify-center items-center">
                         {/* No Data Image */}
                         <img
@@ -143,9 +213,9 @@ const Profile = () => {
                             لا يوجد أي كورسات متاحة حالياً
                         </p>
                     </div>}
-                </div>
+                </motion.div>
             }
-        </div>
+        </motion.div>
     );
 };
 

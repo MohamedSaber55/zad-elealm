@@ -12,6 +12,7 @@ import { notify } from "../utils/notify"
 import { addFavoriteCourseAsync, getFavoritesForUserAsync, removeFavoriteCourseAsync } from "../store/slices/favorites"
 import { getNotifications } from "../store/slices/notifications"
 import Pagination from "../components/Pagination"
+import { motion } from "framer-motion";
 
 const Material = () => {
     const { id } = useParams<{ id: string }>()
@@ -41,9 +42,51 @@ const Material = () => {
     });
     const [showFilters, setShowFilters] = useState(false);
 
+    // Animation Variants
+    const pageVariants = {
+        initial: { opacity: 0, y: 20 },
+        animate: { opacity: 1, y: 0 },
+        exit: { opacity: 0, y: -20 }
+    };
+
+    const gridVariants = {
+        hidden: { opacity: 0 },
+        visible: {
+            opacity: 1,
+            transition: {
+                staggerChildren: 0.15,
+                delayChildren: 0.3,
+                type: "spring",
+                stiffness: 80,
+            },
+        },
+    };
+
+    const filtersVariants = {
+        open: {
+            opacity: 1,
+            height: "auto",
+            transition: {
+                type: "spring",
+                stiffness: 250,
+                damping: 15,
+                velocity: 2 
+            }
+        },
+        closed: {
+            opacity: 0,
+            height: 0,
+            transition: {
+                type: "spring",
+                stiffness: 250,
+                damping: 15
+            }
+        }
+    };
+
     const handlePageSizeChange = (size: number) => {
         setPageSize(size);
-        setPageNumber(1); // Reset to first page when changing size
+        setPageNumber(1);
         localStorage.setItem('pageSize', size.toString());
     };
     useEffect(() => {
@@ -121,12 +164,30 @@ const Material = () => {
 
     return (
         <div className="dark:bg-dark dark:text-white">
-            {false ? <div className="h-main">
+            {false ? <motion.div
+                className="h-main flex items-center justify-center"
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                exit={{ opacity: 0 }}
+                transition={{ duration: 0.5 }}
+            >
                 <Loading />
-            </div> :
-                <div className="container min-h-main">
-                    <div className="flex justify-between flex-wrap gap-4 items-center py-10">
-                        <h2 className="text-2xl font-bold">{state.currentCategoryName || " الدورات"}</h2>
+            </motion.div> :
+                <motion.div
+                    className="container min-h-main"
+                    variants={pageVariants}
+                    initial="initial"
+                    animate="animate"
+                    exit="exit"
+                    transition={{ duration: 0.5 }}
+                >
+                    <motion.div
+                        className="flex justify-between flex-wrap gap-4 items-center py-10"
+                        initial={{ y: -20, opacity: 0 }}
+                        animate={{ y: 0, opacity: 1 }}
+                        transition={{ duration: 0.5, delay: 0.2 }}
+                    >
+                        <h2 className="text-2xl font-bold">{state.currentCategoryName || courses[0]?.category?.name || " الدورات"}</h2>
                         <div className="flex flex-wrap items-center gap-4 w-ful">
                             {/* Search Input */}
                             <div className="relative flex-1 min-w-[150px]">
@@ -156,7 +217,12 @@ const Material = () => {
 
                                 {/* Filters Section */}
                                 {showFilters && (
-                                    <div className="p-5 mt-4 bg-white dark:bg-dark-light shadow-xl absolute end-0 z-50 border border-muted-dark rounded-xl w-80">
+                                    <motion.div
+                                        className="p-5 mt-4 overflow-hidden bg-white dark:bg-dark-light shadow-xl absolute end-0 z-[51] border border-muted-dark rounded-xl w-80"
+                                        variants={filtersVariants}
+                                        initial="closed" // Add this line
+                                        animate={showFilters ? "open" : "closed"}
+                                    >
                                         <div className="triangle border absolute -top-4 end-5 border-muted-dark bg-muted-dark h-4 w-5 clip-path-triangle"></div>
 
                                         {/* Filter Fields */}
@@ -250,102 +316,120 @@ const Material = () => {
                                                 />
                                             </div>
                                         </div>
-                                    </div>
+                                    </motion.div>
                                 )}
                             </div>
                         </div>
-                    </div>
+                    </motion.div>
                     {courses.length ? <>
-                        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-5">
+                        <motion.div
+                            className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-5"
+                            variants={gridVariants}
+                            initial="hidden"
+                            animate="visible"
+                        >
                             {courses.map((course) => (
-                                <Link to={`/courses/${course.id}`} key={course.id} className="bg-white dark:bg-dark-light rounded-lg overflow-hidden shadow hover:shadow-md transition">
-                                    <div className="relative">
-                                        <img src={course.imageUrl} alt={course.name} className="w-full h-48 object-cover" />
-                                        {!favoritesCourses?.some((fav) => fav.id === course.id) ?
-                                            <button
-                                                onClick={(e) => {
-                                                    e.preventDefault();
-                                                    handleAddFavCourse(course.id);
-                                                }}
-                                                className="absolute top-3 right-3 bg-white dark:bg-dark-light p-2 rounded-full z-10"
-                                            >
-                                                <Heart
-                                                    size="20"
-                                                    variant={"Linear"}
-                                                    color={"#A0A0A0"}
-                                                />
-                                            </button> : <button
-                                                onClick={(e) => {
-                                                    e.preventDefault();
-                                                    handleRemoveFavCourse(course.id);
-                                                }}
-                                                className="absolute top-3 right-3 bg-white dark:bg-dark-light p-2 rounded-full z-10"
-                                            >
-                                                <Heart
-                                                    size="20"
-                                                    variant={"Bold"}
-                                                    color={"#E63946"}
-                                                />
-                                            </button>}
-                                    </div>
+                                <motion.div
+                                    key={course.id}
+                                    // variants={cardVariants}
+                                    // whileHover="hover"
+                                    whileTap="tap"
+                                    className="group bg-white dark:bg-dark-light rounded-lg overflow-hidden shadow hover:shadow-md transition"
+                                >
+                                    <Link to={`/courses/${course.id}`} key={course.id} className="">
+                                        <div className="relative">
+                                            <img src={course.imageUrl} alt={course.name} className="w-full h-48 object-cover" />
+                                            {!favoritesCourses?.some((fav) => fav.id === course.id) ?
+                                                <button
+                                                    onClick={(e) => {
+                                                        e.preventDefault();
+                                                        handleAddFavCourse(course.id);
+                                                    }}
+                                                    className="absolute top-3 right-3 bg-white dark:bg-dark-light p-2 rounded-full z-10"
+                                                >
+                                                    <Heart
+                                                        size="20"
+                                                        variant={"Linear"}
+                                                        color={"#A0A0A0"}
+                                                    />
+                                                </button> : <button
+                                                    onClick={(e) => {
+                                                        e.preventDefault();
+                                                        handleRemoveFavCourse(course.id);
+                                                    }}
+                                                    className="absolute top-3 right-3 bg-white dark:bg-dark-light p-2 rounded-full z-10"
+                                                >
+                                                    <Heart
+                                                        size="20"
+                                                        variant={"Bold"}
+                                                        color={"#E63946"}
+                                                    />
+                                                </button>}
 
-                                    {/* Course Details */}
-                                    <div className="p-4">
-                                        <h3 className="text-lg font-bold truncate">{course.name}</h3>
-                                        <p className="text-sm text-muted-dark dark:text-muted mt-1 truncate">{course.author}</p>
-                                        <p className="text-sm text-muted-dark dark:text-muted mt-2 flex items-center gap-1">
-                                            <Play size="18" color="currentColor" variant="Bold" />
-                                            <span className="text-danger font-bold">{course.courseVideosCount} </span> فيديو
-                                        </p>
-                                        <div className="flex justify-start items-center gap-4">
-                                            <p className="text-sm text-muted-dark dark:text-muted mt-2 flex items-center gap-1">
-                                                <Global size="18" color="currentColor" variant="Bold" />
-                                                <span className="font-semibold">{course.courseLanguage}</span>
-                                            </p>
-                                            <p className="text-sm text-muted-dark dark:text-muted mt-2 flex items-center gap-1">
-                                                <Star1 size="18" color="currentColor" variant="Bold" />
-                                                <span className="font-semibold">{course.rating.toFixed(1)}</span>
-                                            </p>
                                         </div>
-                                        <p className="text-sm text-muted-dark dark:text-muted mt-2 flex items-center gap-1">
-                                            <Calendar size="18" color="currentColor" variant="Bold" />
-                                            تمت الإضافة في
-                                            <span className="text-xs">{formatDateTime(course.createdAt, { isArabic: true, showDate: true })}</span>
-                                        </p>
-                                        {/* Enroll Button */}
-                                        {!enrollmentCourses?.some((enrolled) => enrolled.id === course.id) ?
-                                            <button
-                                                onClick={(e) => {
-                                                    e.preventDefault();
-                                                    handleEnrollCourse(course.id);
-                                                }}
-                                                className="w-full mt-4 bg-primary hover:bg-primary-dark text-white py-2 px-4 rounded-lg transition flex items-center justify-center gap-2"
-                                            >
-                                                <AddSquare color="currentColor" size={20} />
-                                                <span className="">التسجيل في الدورة</span>
-                                            </button> :
-                                            <button
-                                                onClick={(e) => {
-                                                    e.preventDefault();
-                                                    handleUnEnrollCourse(course.id);
-                                                }}
-                                                className="w-full mt-4 bg-danger/90 hover:bg-danger text-white py-2 px-4 rounded-lg transition flex items-center justify-center gap-2"
-                                            >
-                                                <MinusSquare color="currentColor" size={20} />
-                                                <span className=""> الغاء التسجيل في الدورة</span>
-                                            </button>
-                                        }
-                                    </div>
-                                </Link>
+
+                                        {/* Course Details */}
+                                        <div className="p-4">
+                                            <h3 className="text-lg font-bold truncate">{course.name}</h3>
+                                            <p className="text-sm text-muted-dark dark:text-muted mt-1 truncate">{course.author}</p>
+                                            <p className="text-sm text-muted-dark dark:text-muted mt-2 flex items-center gap-1">
+                                                <Play size="18" color="currentColor" variant="Bold" />
+                                                <span className="text-danger font-bold">{course.courseVideosCount} </span> فيديو
+                                            </p>
+                                            <div className="flex justify-start items-center gap-4">
+                                                <p className="text-sm text-muted-dark dark:text-muted mt-2 flex items-center gap-1">
+                                                    <Global size="18" color="currentColor" variant="Bold" />
+                                                    <span className="font-semibold">{course.courseLanguage}</span>
+                                                </p>
+                                                <p className="text-sm text-muted-dark dark:text-muted mt-2 flex items-center gap-1">
+                                                    <Star1 size="18" color="currentColor" variant="Bold" />
+                                                    <span className="font-semibold">{course.rating.toFixed(1)}</span>
+                                                </p>
+                                            </div>
+                                            <p className="text-sm text-muted-dark dark:text-muted mt-2 flex items-center gap-1">
+                                                <Calendar size="18" color="currentColor" variant="Bold" />
+                                                تمت الإضافة في
+                                                <span className="text-xs">{formatDateTime(course.createdAt, { isArabic: true, showDate: true })}</span>
+                                            </p>
+                                            {/* Enroll Button */}
+                                            {!enrollmentCourses?.some((enrolled) => enrolled.id === course.id) ?
+                                                <button
+                                                    onClick={(e) => {
+                                                        e.preventDefault();
+                                                        handleEnrollCourse(course.id);
+                                                    }}
+                                                    className="w-full mt-4 bg-primary hover:bg-primary-dark text-white py-2 px-4 rounded-lg transition flex items-center justify-center gap-2"
+                                                >
+                                                    <AddSquare color="currentColor" size={20} />
+                                                    <span className="">التسجيل في الدورة</span>
+                                                </button> :
+                                                <button
+                                                    onClick={(e) => {
+                                                        e.preventDefault();
+                                                        handleUnEnrollCourse(course.id);
+                                                    }}
+                                                    className="w-full mt-4 bg-danger/90 hover:bg-danger text-white py-2 px-4 rounded-lg transition flex items-center justify-center gap-2"
+                                                >
+                                                    <MinusSquare color="currentColor" size={20} />
+                                                    <span className=""> الغاء التسجيل في الدورة</span>
+                                                </button>
+                                            }
+                                        </div>
+                                    </Link>
+                                </motion.div>
                             ))}
-                        </div>
+                        </motion.div>
                         {metaData && <Pagination metaData={metaData} onPageChange={(page) => setPageNumber(page)} onPageSizeChange={handlePageSizeChange} pageSize={pageSize} />}
                     </> :
-                        <div className=" h-80">
+                        <motion.div
+                            className="h-80 flex items-center justify-center"
+                            initial={{ opacity: 0 }}
+                            animate={{ opacity: 1 }}
+                            transition={{ duration: 0.5, delay: 0.3 }}>
                             <NoData />
-                        </div>
+                        </motion.div>
                     }
-                </div>
+                </motion.div>
             }
         </div>
     )

@@ -8,7 +8,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { AppDispatch, RootState } from "../store/store";
 import { object, string } from "yup";
 import { notify } from "../utils/notify";
-
+import { motion } from "framer-motion"
 const Register = () => {
   const { t } = useTranslation();
   const [showPassword, setShowPassword] = useState(false);
@@ -43,12 +43,35 @@ const Register = () => {
   if (state.token) {
     return <Navigate to="/login" />;
   }
+  // Variants for animating the form container
+  const formVariants = {
+    hidden: { opacity: 0, y: 20 },
+    visible: { opacity: 1, y: 0 },
+  };
+
+  // Shake animation for error messages
+  const shakeAnimation = {
+    x: [0, -5, 5, -5, 5, 0],
+    transition: { duration: 0.4 },
+  };
   return (
     <div className="flex justify-center items-center min-h-screen bg-primary dark:bg-primary-light">
-      <div className="form w-11/12 sm:w-3/4 md:w-1/2 bg-white dark:bg-dark dark:text-white shadow-lg px-8 py-2 rounded-xl">
+      <motion.div
+        variants={formVariants}
+        initial="hidden"
+        animate="visible"
+        transition={{ duration: 0.5 }}
+        className="form w-11/12 sm:w-3/4 md:w-1/2 bg-white dark:bg-dark dark:text-white shadow-lg px-8 py-2 rounded-xl">
         <div className="top mb-10 flex flex-col items-center justify-center">
           <div className="logo">
-            <img src="./logo.png" alt="Logo" className="h-20" />
+            <motion.img
+              src="./logo.png"
+              alt="Logo"
+              className="h-20"
+              initial={{ scale: 0 }}
+              animate={{ scale: 1 }}
+              transition={{ type: "spring", stiffness: 100 }}
+            />
           </div>
           <h1 className="text-2xl font-bold text-center ">{t("auth.register")}</h1>
         </div>
@@ -67,7 +90,10 @@ const Register = () => {
                 onBlur={formik.handleBlur}
               />
               {formik.touched.displayName && formik.errors.displayName && (
-                <p className="text-red-500">{formik.errors.displayName}</p>
+                <motion.p
+                  initial={{ x: 0 }}
+                  animate={formik.errors.displayName ? shakeAnimation : {}}
+                  className="text-danger">{formik.errors.displayName}</motion.p>
               )}
             </div>
             <div className="item space-y-3">
@@ -82,7 +108,10 @@ const Register = () => {
                   ${formik.errors.email && formik.touched.email ? "border-danger placeholder-danger" : "border-primary placeholder:text-muted "}`}
                 placeholder={t("auth.input-email")} />
               {formik.touched.email && formik.errors.email && (
-                <p className="text-red-500">{formik.errors.email}</p>
+                <motion.p
+                  initial={{ x: 0 }}
+                  animate={formik.errors.email ? shakeAnimation : {}}
+                  className="text-danger">{formik.errors.email}</motion.p>
               )}
             </div>
             <div className="item space-y-3">
@@ -98,30 +127,40 @@ const Register = () => {
                   ${formik.errors.password && formik.touched.password ? "border-danger placeholder-danger" : "border-primary placeholder:text-muted "}`}
                   placeholder={t("auth.input-password")}
                 />
-                <button
+                <motion.button
                   type="button"
                   onClick={togglePasswordVisibility}
+                  whileTap={{ rotate: 90 }}
                   className="absolute cursor-pointer end-3 top-1/2 transform -translate-y-1/2 text-primary "
                 >
                   {showPassword ? <EyeSlash size={24} color="currentColor" /> : <Eye size={24} color="currentColor" />}
-                </button>
+                </motion.button>
               </div>
               {formik.touched.password && formik.errors.password && (
-                <p className="text-red-500">{formik.errors.password}</p>
+                <motion.p
+                  initial={{ x: 0 }}
+                  animate={formik.errors.password ? shakeAnimation : {}}
+                  className="text-danger">{formik.errors.password}</motion.p>
               )}
             </div>
             {state.statusCode !== 200 &&
               <div className="item">
-                <p className=" text-danger text-center">{state.message}</p>
+                <motion.p
+                  initial={{ x: 0 }}
+                  animate={state.message ? shakeAnimation : {}}
+                  className=" text-danger text-center">{state.message}</motion.p>
               </div>
             }
             <div className="item flex flex-col items-center justify-center gap-3">
-              <button type="submit" className="bg-primary text-white font-bold py-3 px-16 min-w-64 rounded flex justify-center items-center">{state.loading ? <Driving size={32} className="animate-pulse" color="currentColor" /> : t("auth.register")}</button>
+              <motion.button
+                whileHover={{ scale: 1.02 }}
+                whileTap={{ scale: 0.98 }}
+                type="submit" className="bg-primary text-white font-bold py-3 px-16 min-w-64 rounded flex justify-center items-center">{state.loading ? <Driving size={32} className="animate-pulse" color="currentColor" /> : t("auth.register")}</motion.button>
               <p className="text-lg font-semibold">{t("auth.have-account")} <Link to="/login" className="text-primary ps-1">{t("auth.login")}</Link></p>
             </div>
           </div>
         </form>
-      </div>
+      </motion.div>
     </div>
   )
 }
