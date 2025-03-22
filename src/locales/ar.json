@@ -67,7 +67,8 @@
         "favorites": "المفضلة",
         "search": "بحث",
         "certificates": "الشهادات",
-        "settings": "الإعدادات"
+        "settings": "الإعدادات",
+        "report" : "الإبلاغ"
     },
     "home": {
         "categories": "الاقسام",

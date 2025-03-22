@@ -61,9 +61,10 @@ const Navbar = () => {
 
     const links: Link[] = [
         { name: t("navbar.home"), url: "/home" },
+        { name: t("navbar.about"), url: "/about" },
         { name: t("navbar.courses"), url: "/my-courses" },
         { name: t("navbar.favorites"), url: "/favorites" },
-        { name: t("navbar.certificates"), url: "/certifications" }
+        { name: t("navbar.certificates"), url: "/certifications" },
     ];
     const handleLogout = () => {
         dispatch(logout());
@@ -85,7 +86,7 @@ const Navbar = () => {
     //     },
     // ];
     return (
-        <nav className="navbar h-20 bg-white dark:bg-dark-light shadow">
+        <nav className="navbar h-20 bg-white dark:bg-dark-light shadow border-b border-muted dark:border-muted-dark">
             <div className="container flex justify-between h-full items-center ">
                 <div className="logo h-full">
                     <Link to="/">

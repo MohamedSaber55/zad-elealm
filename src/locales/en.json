@@ -67,7 +67,8 @@
         "favorites": "Favorites",
         "search": "Search",
         "certificates": "Certificates",
-        "settings": "Settings"
+        "settings": "Settings",
+        "report" : "Report"
     },
     "home": {
         "categories": "Categories",

@@ -55,7 +55,7 @@ const Pagination: React.FC<PaginationProps> = ({
 
     return (
         <div className="pagination mt-10 py-10 border-t border-t-muted">
-            <div className="flex gap-5 justify-between items-center">
+            <div className="flex gap-5 flex-col sm:flex-row justify-between items-center">
                 <div className="flex items-center gap-4">
                     <label htmlFor="pageSize" className="text-sm font-medium">
                         العناصر لكل صفحة :
@@ -67,7 +67,7 @@ const Pagination: React.FC<PaginationProps> = ({
                             const newSize = parseInt(e.target.value, 10);
                             if (newSize > 0) onPageSizeChange(newSize);
                         }}
-                        className="w-16 px-2 py-1 border rounded dark:bg-dark-light dark:border-muted-dark dark:text-light"
+                        className="w-16 px-2 py-1 appearance-none focus:outline-0 border rounded dark:bg-dark-light dark:border-muted-dark dark:text-light"
                     >
                         {Object.entries(pageSizeOptions).map(([value, label]) => (
                             <option key={value} value={value}>

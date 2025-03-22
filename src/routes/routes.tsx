@@ -21,6 +21,8 @@ import Profile from "../pages/Profile";
 import EditProfile from "../pages/EditProfile";
 import Quiz from "../pages/Quiz";
 import ResendConfirmationEmail from "../pages/ResendConfirmationEmail";
+import Report from "../pages/Report";
+import AboutPage from "../pages/About";
 
 const routes = createBrowserRouter(
     [
@@ -71,6 +73,14 @@ const routes = createBrowserRouter(
                 {
                     path: "/edit-profile",
                     element: <RouterGuard><EditProfile /></RouterGuard>,
+                },
+                {
+                    path: "/report",
+                    element: <RouterGuard><Report /></RouterGuard>,
+                },
+                {
+                    path: "/about",
+                    element: <RouterGuard><AboutPage /></RouterGuard>,
                 },
             ]
         },

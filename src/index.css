@@ -28,9 +28,12 @@
   --font-cairo: "Cairo", sans-serif;
   --text-normal: 16px;
   --height-main: calc(100vh - 80px);
-  --color-dark: oklch(14% 0.004 49.25);
-  --color-dark-light: oklch(21% 0.006 56.043);
-  --color-dark-lighter: oklch(26% 0.007 34.298);
+  /* --color-dark: oklch(14% 0.004 49.25); */
+  --color-dark: oklch(0.21 0.034 264.665);
+  /* --color-dark-light: oklch(21% 0.006 56.043); */
+  --color-dark-light: oklch(0.23 0.028 261.692);
+  /* --color-dark-lighter: oklch(26% 0.007 34.298); */
+  --color-dark-lighter: oklch(0.33 0.028 261.692);
 }
 
 @layer base {
