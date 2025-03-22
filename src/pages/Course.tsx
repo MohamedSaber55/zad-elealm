@@ -22,7 +22,6 @@ const Course = () => {
     const state = useSelector((state: RootState) => state.courses)
     const videoProgressState = useSelector((state: RootState) => state.videoProgress)
     const course: CourseWithReviews | null = state.course || null;
-    console.log(course?.review);
 
     const { courseProgress } = videoProgressState
     const setVideoUrlAsEmbedded = (url: string) => {

@@ -1,20 +1,38 @@
 import { useFormik } from "formik";
 import * as Yup from "yup";
+import { AppDispatch, RootState } from "../store/store";
+import { useDispatch, useSelector } from "react-redux";
+import { createReport } from "../store/slices/report";
+import { notify } from "../utils/notify";
+import { useNavigate } from "react-router-dom";
 
 const ReportsPage = () => {
+    const dispatch = useDispatch<AppDispatch>();
+    const { token } = useSelector((state: RootState) => state.auth);
+    const navigate = useNavigate()
     const formik = useFormik({
         initialValues: {
             title: "",
             description: "",
-            reportType: "",
+            reportType: 0,
         },
         validationSchema: Yup.object({
             title: Yup.string().required("العنوان مطلوب"),
             description: Yup.string().required("الوصف مطلوب"),
-            reportType: Yup.string().required("يرجى اختيار نوع التقرير"),
+            reportType: Yup.number().required("يرجى اختيار نوع التقرير"),
         }),
         onSubmit: (values) => {
-            console.log(values);
+            dispatch(createReport({
+                body: {
+                    titleOfTheIssue: values.title,
+                    description: values.description,
+                    reportTypes: values.reportType
+                },
+                token: token!
+            })).then(() => {
+                notify(" تم إرسال التقرير بنجاح", "success");
+                navigate("/")
+            })
             // هنا يمكنك إضافة منطق لإرسال التقرير إلى الخادم
         },
     });
@@ -63,9 +81,9 @@ const ReportsPage = () => {
                             value={formik.values.reportType}
                         >
                             <option value="">اختر نوع التقرير</option>
-                            <option value="bug">خطأ</option>
-                            <option value="feature_request">طلب ميزة</option>
-                            <option value="other">أخرى</option>
+                            <option value="0">خطأ</option>
+                            <option value="1">طلب ميزة</option>
+                            <option value="2">أخرى</option>
                         </select>
                         {formik.touched.reportType && formik.errors.reportType ? (
                             <p className="text-danger text-xs mt-1">{formik.errors.reportType}</p>
