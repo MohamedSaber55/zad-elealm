@@ -38,13 +38,12 @@ const Course = () => {
         }
     }, [id, token, dispatch]);
 
-    // Variants for animating the video list
     const videoListVariants = {
         hidden: { opacity: 0 },
         visible: {
             opacity: 1,
             transition: {
-                staggerChildren: 0.1, // Delay between each child animation
+                staggerChildren: 0.1,
             },
         },
     };
@@ -66,7 +65,6 @@ const Course = () => {
                     transition={{ duration: 0.5 }}
                     className="container min-h-main pb-10"
                 >
-                    {/* Page Title Animation */}
                     <motion.div
                         initial={{ opacity: 0, y: -20 }}
                         animate={{ opacity: 1, y: 0 }}
@@ -77,7 +75,6 @@ const Course = () => {
                     </motion.div>
 
                     <div className={`grid grid-cols-3 gap-5`}>
-                        {/* Video Player Section */}
                         {selectedVideo && (
                             <VideoPlayer
                                 selectedVideo={selectedVideo}
@@ -86,7 +83,6 @@ const Course = () => {
                             />
                         )}
 
-                        {/* Video List Section */}
                         <motion.div
                             variants={videoListVariants}
                             initial="hidden"
@@ -102,7 +98,7 @@ const Course = () => {
                                     <motion.div
                                         key={index}
                                         variants={videoItemVariants}
-                                        whileHover={{ scale: 1.02 }} // Slightly enlarge on hover
+                                        whileHover={{ scale: 1.02 }}
                                         transition={{ type: "spring", stiffness: 300 }}
                                         className="flex items-center gap-2"
                                     >
@@ -117,7 +113,7 @@ const Course = () => {
                                         <p
                                             className={`font-bold text-sm ${selectedVideo == video.videoUrl &&
                                                 "text-primary dark:text-primary-light"
-                                                } hover:text-primary cursor-pointer transition`}
+                                                } ${video.isCompleted && "text-primary dark:text-primary-light"} hover:text-primary cursor-pointer transition`}
                                             onClick={() => {
                                                 setVideoUrlAsEmbedded(video.videoUrl);
                                                 setSelectedVideoId(video.id);
@@ -125,6 +121,9 @@ const Course = () => {
                                             }}
                                         >
                                             {index + 1}- {video.title}
+                                            <span className="text-danger">
+                                                {video.isCompleted && " - تمت مشاهدته"}
+                                            </span>
                                         </p>
                                     </motion.div>
                                 ))}
@@ -157,7 +156,7 @@ const Course = () => {
                                         </div>
                                         <p className="font-bold">{course?.author}</p>
                                     </div>
-                                    {/* Number of Videos */}
+                                    
                                     <div className="w-full flex justify-between items-center">
                                         <div className="text-lg font-bold flex items-center flex-wrap gap-1">
                                             <Play
@@ -172,7 +171,7 @@ const Course = () => {
                                             <span className="text-danger">{course?.courseVideosCount}</span> فيديو
                                         </p>
                                     </div>
-                                    {/* Language */}
+                                    
                                     <div className="w-full flex justify-between items-center">
                                         <div className="text-lg font-bold flex items-center flex-wrap gap-1">
                                             <Global
@@ -185,7 +184,7 @@ const Course = () => {
                                         </div>
                                         <p className="font-bold">{course?.courseLanguage}</p>
                                     </div>
-                                    {/* Rating */}
+                                   
                                     <div className="w-full flex justify-between items-center">
                                         <div className="text-lg font-bold flex items-center flex-wrap gap-1">
                                             <Star1
@@ -221,14 +220,13 @@ const Course = () => {
                         </motion.div>
                     </div>
 
-                    {/* Additional Course Details Section */}
+                    
                     <motion.div
                         initial={{ opacity: 0, y: 20 }}
                         animate={{ opacity: 1, y: 0 }}
                         transition={{ delay: 0.5 }}
                         className="mt-5"
                     >
-                        {/* Category Section */}
                         <div className="bg-white dark:bg-dark-light rounded-xl p-5">
                             <h3 className="text-2xl text-primary dark:text-primary-light font-bold mb-5">
                                 التصنيف
@@ -239,13 +237,11 @@ const Course = () => {
                             </p>
                         </div>
 
-                        {/* Progress Section */}
                         <div className="mt-5 bg-white dark:bg-dark-light rounded-xl p-6 shadow-sm">
                             <h3 className="text-2xl text-primary dark:text-primary-light font-bold mb-5">
                                 التقدم
                             </h3>
                             <div className="space-y-4">
-                                {/* Video Progress */}
                                 <div>
                                     <p className="font-semibold text-muted-dark dark:text-muted-dark-alt mb-2">
                                         معدل مشاهدة الفيديو:
@@ -266,7 +262,6 @@ const Course = () => {
                                         {Math.floor(courseProgress?.videoProgress || 0)}%
                                     </p>
                                 </div>
-                                {/* Overall Progress */}
                                 <div>
                                     <p className="font-semibold text-muted-dark dark:text-muted-dark-alt mb-2">
                                         التقدم العام:
@@ -316,7 +311,6 @@ const Course = () => {
                             </div>
                         </div>
 
-                        {/* Quizzes Section */}
                         {courseProgress?.isEligibleForQuiz ? (
                             <div className="mt-5 bg-white dark:bg-dark-light rounded-xl p-5">
                                 <h3 className="text-2xl text-primary dark:text-primary-light font-bold mb-5">
@@ -373,8 +367,6 @@ const Course = () => {
                             </div>
                         )}
                     </motion.div>
-
-                    {/* Reviews Section */}
                     <ReviewsSection reviews={course?.review} />
                 </motion.div>
             )}

@@ -71,12 +71,23 @@ interface GetUserProfileRequest {
 }
 interface UpdateUserProfileRequest {
     token: string;
+    body: FormData
+}
+interface UpdateUserProfileDataRequest {
+    token: string;
     body: {
         displayName: string;
-        imageUrl: string;
         phoneNumber: string;
     }
 }
+// interface UpdateUserProfileRequest {
+//     token: string;
+//     body: {
+//         displayName: string;
+//         imageUrl: string;
+//         phoneNumber: string;
+//     }
+// }
 
 interface LoginRequest {
     body: {
@@ -213,14 +224,31 @@ export const getUserProfileAsync = createAsyncThunk<GetUserProfileResponse, GetU
         }
     }
 )
-export const updateUserProfileAsync = createAsyncThunk<UpdateUserProfileResponse, UpdateUserProfileRequest>(
-    'auth/updateUserProfile',
+export const updateUserProfileImageAsync = createAsyncThunk<UpdateUserProfileResponse, UpdateUserProfileRequest>(
+    'auth/updateUserProfileImage',
     async ({ body, token }, { rejectWithValue }) => {
         try {
-            const response = await axios.put<UpdateUserProfileResponse>(`${baseUrl}/Account/update-User-
-                Profile`, body, {
+            const response = await axios.post<UpdateUserProfileResponse>(`${baseUrl}/Account/update-profile-image`, body, {
                 headers: {
-                    Authorization: `Bearer ${getAuthToken() || token}`
+                    Authorization: `Bearer ${getAuthToken() || token}`,
+                    'Content-Type': 'multipart/formdata',
+                }
+            }
+            );
+            const result = response.data;
+            return result;
+        } catch (err: any) {
+            return rejectWithValue(err.response.data as { message: string, statusCode: number });
+        }
+    }
+)
+export const updateUserProfileDataAsync = createAsyncThunk<UpdateUserProfileResponse, UpdateUserProfileDataRequest>(
+    'auth/updateUserProfileImage',
+    async ({ body, token }, { rejectWithValue }) => {
+        try {
+            const response = await axios.post<UpdateUserProfileResponse>(`${baseUrl}/Account/update-profile`, body, {
+                headers: {
+                    Authorization: `Bearer ${getAuthToken() || token}`,
                 }
             }
             );

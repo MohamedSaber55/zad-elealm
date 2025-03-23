@@ -11,6 +11,7 @@ import { Course } from "../interfaces";
 import ReviewModal from "../components/ReviewModal";
 import RatingModal from "../components/RatingModal";
 import { addRating, addReview } from "../store/slices/reviews";
+// import { checkCourseRated } from "../hooks/checkCourseRated";
 
 const UserCourses = () => {
     const dispatch = useDispatch<AppDispatch>();
@@ -19,6 +20,23 @@ const UserCourses = () => {
     const [selectedCourse, setSelectedCourse] = useState<Course | null>(null);
     const [isReviewOpen, setReviewOpen] = useState(false);
     const [isRatingOpen, setRatingOpen] = useState(false);
+    // const [ratedCourses, setRatedCourses] = useState<{ [key: number]: boolean }>({});
+    // console.log(ratedCourses);
+
+    // // Fetch rated status for all courses
+    // useEffect(() => {
+    //     if (token && courses) {
+    //         const fetchRatedStatus = async () => {
+    //             const ratedStatus: { [key: number]: boolean } = {};
+    //             for (const course of courses) {
+    //                 const res = await checkCourseRated({ courseId: course.id, token: token!, dispatch });
+    //                 ratedStatus[course.id] = res;
+    //             }
+    //             setRatedCourses(ratedStatus);
+    //         };
+    //         fetchRatedStatus();
+    //     }
+    // }, [token, courses, dispatch]);
     useEffect(() => {
         if (token) {
             dispatch(getEnrolledCourses({ token }));
@@ -126,7 +144,7 @@ const UserCourses = () => {
                                                 <MinusSquare color="currentColor" size={18} />
                                                 الغاء التسجيل
                                             </button>
-
+                                            {/* {ratedCourses[course.id] && */}
                                             <button
                                                 onClick={() => handleOpenRating(course)}
                                                 className="flex items-center justify-center sm:justify-start  gap-2 bg-yellow-500 hover:bg-yellow-600 text-white py-2 px-4 rounded-lg transition text-sm font-medium"
@@ -134,6 +152,7 @@ const UserCourses = () => {
                                                 <Star1 color="currentColor" size={18} />
                                                 تقييم الدورة
                                             </button>
+                                            {/* } */}
                                             <button
                                                 onClick={() => handleOpenReview(course)}
                                                 className="flex items-center justify-center sm:justify-start  gap-2 bg-gray-700 hover:bg-gray-800 text-white py-2 px-4 rounded-lg transition text-sm font-medium"

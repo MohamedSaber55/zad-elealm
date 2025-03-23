@@ -38,7 +38,6 @@ const VideoPlayer: React.FC<VideoPlayerProps> = ({ selectedVideo, currentVideoId
     const dispatch = useDispatch<AppDispatch>();
     const { token } = useSelector((state: RootState) => state.auth);
 
-    // Convert video duration to seconds
     const [hours, minutes, seconds] = selectedVideoDuration.split(':').map(Number);
     const timeInSeconds = (hours * 3600) + (minutes * 60) + seconds;
 
@@ -82,9 +81,8 @@ const VideoPlayer: React.FC<VideoPlayerProps> = ({ selectedVideo, currentVideoId
         if (!selectedVideo) return;
 
         const videoId = extractVideoId(selectedVideo);
-        if (!videoId) return; // Prevent errors if videoId is invalid
+        if (!videoId) return;
 
-        // If player already exists, load the new video instead of creating a new instance
         if (playerRef.current) {
             playerRef.current.loadVideoById(videoId);
             return;
@@ -129,7 +127,6 @@ const VideoPlayer: React.FC<VideoPlayerProps> = ({ selectedVideo, currentVideoId
     return (
         <div className="col-span-3 md:col-span-2 bg-white dark:bg-dark-light rounded-xl p-5">
             <div id="youtube-player" className="w-full aspect-video h-full rounded-lg"></div>
-            <p>Watched Seconds: {watchedSeconds}</p>
         </div>
     );
 };

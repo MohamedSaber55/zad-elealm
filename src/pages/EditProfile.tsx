@@ -5,18 +5,22 @@ import { Camera, ArrowLeft } from "iconsax-react";
 import { Link } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { AppDispatch, RootState } from "../store/store";
-import { getUserProfileAsync } from "../store/slices/auth";
+import { getUserProfileAsync, updateUserProfileDataAsync, updateUserProfileImageAsync } from "../store/slices/auth";
 import avatarImage from "../assets/avatar.png";
+import { notify } from "../utils/notify";
+
 const UpdateProfile = () => {
     const dispatch = useDispatch<AppDispatch>();
     const { token, userProfile } = useSelector((state: RootState) => state.auth);
     const [avatar, setAvatar] = useState<string | undefined>(userProfile?.imageUrl || avatarImage);
+    const [isSubmitting, setIsSubmitting] = useState(false);
 
     useEffect(() => {
         if (token) {
             dispatch(getUserProfileAsync({ token }));
         }
     }, [token, dispatch]);
+
     useEffect(() => {
         if (userProfile?.imageUrl) {
             setAvatar(userProfile.imageUrl);
@@ -25,9 +29,47 @@ const UpdateProfile = () => {
 
     const handleAvatarChange = (event: React.ChangeEvent<HTMLInputElement>) => {
         if (event.target.files && event.target.files[0]) {
+            const file = event.target.files[0];
             const reader = new FileReader();
-            reader.onload = (e) => setAvatar(e.target?.result as string);
-            reader.readAsDataURL(event.target.files[0]);
+            reader.onload = (e) => {
+                setAvatar(e.target?.result as string);
+                // Upload the new image
+                const formData = new FormData();
+                formData.append("file", file);
+                dispatch(updateUserProfileImageAsync({ body: formData, token: token! }))
+                    .unwrap()
+                    .then(() => {
+                        console.log("Profile image updated successfully!");
+                    })
+                    .catch((err) => {
+                        console.error("Failed to update profile image:", err);
+                    });
+            };
+            reader.readAsDataURL(file);
+        }
+    };
+
+    const handleSubmit = async (values: {
+        displayName: string;
+        phoneNumber: string;
+    }) => {
+        setIsSubmitting(true);
+        try {
+            await dispatch(
+                updateUserProfileDataAsync({
+                    body: {
+                        displayName: values.displayName,
+                        phoneNumber: values.phoneNumber,
+                    },
+                    token: token!,
+                })
+            ).unwrap();
+            notify("تم تحديث بيانات الحساب بنجاح!", "success");
+            console.log("Profile data updated successfully!");
+        } catch (err) {
+            console.error("Failed to update profile data:", err);
+        } finally {
+            setIsSubmitting(false);
         }
     };
 
@@ -54,7 +96,7 @@ const UpdateProfile = () => {
                         <input
                             type="file"
                             id="avatarUpload"
-                            accept="image/*"
+                            accept=".jpg, .jpeg, image/jpg, image/jpeg"
                             className="hidden"
                             onChange={handleAvatarChange}
                         />
@@ -68,7 +110,6 @@ const UpdateProfile = () => {
                         userName: userProfile?.userName || "",
                         email: userProfile?.email || "",
                         phoneNumber: userProfile?.phoneNumber || "",
-                        imageUrl: userProfile?.imageUrl || "",
                     }}
                     enableReinitialize={true}
                     validationSchema={Yup.object({
@@ -76,11 +117,9 @@ const UpdateProfile = () => {
                         email: Yup.string().email("بريد غير صالح").required("البريد مطلوب"),
                         phoneNumber: Yup.string().matches(/^[0-9]{10,15}$/, "رقم الهاتف غير صالح"),
                     })}
-                    onSubmit={(values) => {
-                        console.log(values);
-                    }}
+                    onSubmit={handleSubmit}
                 >
-                    {({ isSubmitting }) => (
+                    {() => (
                         <Form className="space-y-4">
                             <div className="flex flex-col gap-2">
                                 <label className="block text-sm font-medium mb-1">الاسم الكامل</label>
@@ -89,14 +128,8 @@ const UpdateProfile = () => {
                             </div>
 
                             <div className="flex flex-col gap-2">
-                                <label className="block text-sm font-medium mb-1">اسم المستخدم</label>
-                                <Field type="text" name="userName" className="border border-primary p-2 rounded-lg" />
-                                <ErrorMessage name="userName" component="div" className="text-danger text-xs mt-1" />
-                            </div>
-
-                            <div className="flex flex-col gap-2">
                                 <label className="block text-sm font-medium mb-1">البريد الإلكتروني</label>
-                                <Field type="email" name="email" className="border border-primary p-2 rounded-lg" />
+                                <Field type="email" name="email" className="border border-primary p-2 rounded-lg" disabled />
                                 <ErrorMessage name="email" component="div" className="text-danger text-xs mt-1" />
                             </div>
 
@@ -113,7 +146,7 @@ const UpdateProfile = () => {
                                     disabled={isSubmitting}
                                     className="w-full bg-primary hover:bg-primary-dark text-white py-2 rounded-lg"
                                 >
-                                    حفظ التغييرات
+                                    {isSubmitting ? "جاري الحفظ..." : "حفظ التغييرات"}
                                 </button>
                                 <Link to="/profile" className="w-full text-center bg-muted dark:bg-muted-dark hover:bg-muted-dark-alt py-2 rounded-lg">
                                     إلغاء

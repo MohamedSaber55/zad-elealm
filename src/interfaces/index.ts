@@ -48,6 +48,8 @@ interface Video {
     thumbnailUrl: string;
     videoDuration: string;
     orderInCourse: number;
+    isCompleted: boolean;
+    watchedDuration: string;
 }
 
 export interface Review {

@@ -88,7 +88,6 @@ const AboutPage = () => {
                     <ul className="list-disc list-inside pl-6 text-muted-dark dark:text-muted text-lg">
                         <li>اشترك في الدورات المتاحة واختر ما يناسب مستواك.</li>
                         <li>استمتع بمحتوى غني يتضمن دروسًا مرئية، مواد قراءة، وأسئلة تفاعلية.</li>
-                        <li>قم بإجراء اختبارات قصيرة بعد كل درس لقياس مدى استيعابك.</li>
                         <li>احصل على تقرير مفصل عن أدائك واقتراحات لتحسين مستواك.</li>
                     </ul>
                 </motion.section>

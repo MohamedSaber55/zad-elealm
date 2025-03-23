@@ -81,9 +81,10 @@ const ReportsPage = () => {
                             value={formik.values.reportType}
                         >
                             <option value="">اختر نوع التقرير</option>
-                            <option value="0">خطأ</option>
-                            <option value="1">طلب ميزة</option>
-                            <option value="2">أخرى</option>
+                            <option value="0">فني</option>
+                            <option value="1">خدمة العملاء</option>
+                            <option value="2">مشكلة في المنتج</option>
+                            <option value="3">أخرى</option>
                         </select>
                         {formik.touched.reportType && formik.errors.reportType ? (
                             <p className="text-danger text-xs mt-1">{formik.errors.reportType}</p>
