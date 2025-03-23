@@ -100,7 +100,7 @@ export interface CourseWithReviews {
 interface Question {
     id: number;
     text: string;
-    correctChoice: number;
+    quizId: number;
     choices: {
         id: number;
         text: string;

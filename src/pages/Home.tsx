@@ -48,11 +48,13 @@ const Home = () => {
     return (
         <div className="dark:bg-dark dark:text-white pb-10">
             {/* Here Section */}
-            <div className="h-screen py-14 px-4 sm:px-8 md:px-14 dark:bg-dark border-t border-t-muted dark:border-t-muted-dark">
+            <div className="h-screen py-14 px-4 sm:px-8 md:px-14 dark:bg-dark">
                 <motion.div
-                    initial={{ opacity: 0, y: -20 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    transition={{ delay: 0.2, duration: 0.8 }}
+                    initial={{ opacity: 0, y: 50, scale: 0.9 }}
+                    animate={{ opacity: 1, y: 0, scale: 1 }}
+                    // animate={{ opacity: 1, y: 0 }}
+                    transition={{ type: "keyframes",duration: 0.8 }}
+                    // transition={{ delay: 0.2, duration: 0.8 }}
                     className="h-full rounded-4xl bg-primary bg-cover bg-center border dark:border-muted-green flex flex-col gap-6 justify-center items-center text-center py-20 shadow-2xl"
                     style={{ backgroundImage: `url(${welcomeBg})` }}
                 >                <motion.h1

@@ -14,7 +14,10 @@ const Quiz = () => {
     const { id } = useParams<{ id: string }>();
     const dispatch = useDispatch<AppDispatch>();
     const { token } = useSelector((state: RootState) => state.auth);
-    const { loading, quiz, result } = useSelector((state: RootState) => state.quizzes);
+    const { loading, quiz, result, error } = useSelector((state: RootState) => state.quizzes);
+    console.log('====================================');
+    console.log(error);
+    console.log('====================================');
     const [currentPage, setCurrentPage] = useState(0);
     const [showModal, setShowModal] = useState(false);
     const questionsPerPage = 10;
@@ -45,7 +48,7 @@ const Quiz = () => {
 
         const formattedAnswers = Object.entries(values.studentAnswers).map(([questionId, selectedChoice]) => ({
             questionId: Number(questionId),
-            selectedChoice: selectedChoice as number,
+            choiceId: selectedChoice as number,
         }));
         dispatch(
             submitQuiz({
@@ -104,6 +107,7 @@ const Quiz = () => {
                         </div>
                     )}
                 </div>
+                {error && <div className="mt-5 bg-danger text-white p-2 rounded-md">{error.message}</div>}
                 {result && (
                     (
                         <div className="mt-5 p-5 rounded-xl bg-white dark:bg-dark-light shadow-sm">

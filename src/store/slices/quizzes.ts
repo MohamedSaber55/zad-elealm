@@ -42,7 +42,7 @@ interface SubmitQuizDetailsRequest {
         quizId: number;
         studentAnswers: {
             questionId: number;
-            selectedChoice: number;
+            choiceId: number;
         }[];
     };
 }

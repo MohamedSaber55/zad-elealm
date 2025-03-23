@@ -67,19 +67,19 @@ const Material = () => {
             opacity: 1,
             height: "auto",
             transition: {
-                type: "spring",
-                stiffness: 250,
-                damping: 15,
-                velocity: 2 
+                type: "",
+                // stiffness: 250,
+                // damping: 15,
+                velocity: 2
             }
         },
         closed: {
             opacity: 0,
             height: 0,
             transition: {
-                type: "spring",
-                stiffness: 250,
-                damping: 15
+                type: "",
+                // stiffness: 250,
+                // damping: 15
             }
         }
     };
@@ -95,6 +95,7 @@ const Material = () => {
                 categoryId: id,
                 search,
                 sortBy,
+                sortDirection,
                 author,
                 minRating,
                 fromDate,
@@ -115,7 +116,7 @@ const Material = () => {
             }))
         }
 
-    }, [token, id, search, sortBy, author, minRating, fromDate, toDate, pageNumber, pageSize])
+    }, [token, id, search, sortBy, sortDirection, author, minRating, fromDate, toDate, pageNumber, pageSize])
     useEffect(() => {
         if (token) {
             dispatch(getEnrolledCourses({ token }))
@@ -231,13 +232,14 @@ const Material = () => {
                                             <div className="col-span-2">
                                                 <label className="text-sm font-medium text-gray-700 dark:text-muted">ترتيب حسب</label>
                                                 <select
-                                                    className="w-full p-2 text-sm rounded-md border border-primary bg-white dark:bg-dark-light text-muted-dark dark:text-muted"
+                                                    className="w-full appearance-none p-2 text-sm rounded-md border border-primary bg-white dark:bg-dark-light text-muted-dark dark:text-muted"
                                                     value={sortBy}
                                                     onChange={(e) => setSortBy(e.target.value)}
                                                 >
                                                     <option value="rating">التقييم</option>
                                                     <option value="date">التاريخ</option>
                                                     <option value="name">الاسم</option>
+                                                    <option value="author"> المؤلف</option>
                                                 </select>
                                             </div>
 
@@ -245,7 +247,7 @@ const Material = () => {
                                             <div className="col-span-2">
                                                 <label className="text-sm font-medium text-gray-700 dark:text-muted">اتجاه الترتيب</label>
                                                 <select
-                                                    className="w-full p-2 text-sm rounded-md border border-primary bg-white dark:bg-dark-light text-muted-dark dark:text-muted"
+                                                    className="w-full appearance-none p-2 text-sm rounded-md border border-primary bg-white dark:bg-dark-light text-muted-dark dark:text-muted"
                                                     value={sortDirection}
                                                     onChange={(e) => setSortDirection(e.target.value as "asc" | "desc")}
                                                 >

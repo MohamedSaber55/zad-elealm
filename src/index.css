@@ -51,6 +51,10 @@
     background-color: var(--color-light-bg);
   }
 
+  .dark body {
+    background-color: var(--color-dark);
+  }
+
   input,
   textarea {
     outline: none;

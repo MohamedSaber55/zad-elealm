@@ -9,6 +9,7 @@ import { AppDispatch, RootState } from "../store/store";
 import { logout } from "../store/slices/auth";
 import { getNotifications } from "../store/slices/notifications";
 import logo from "./../assets/logo.png"
+import { motion } from "framer-motion";
 interface Link {
     name: string;
     url: string;
@@ -86,7 +87,12 @@ const Navbar = () => {
     //     },
     // ];
     return (
-        <nav className="navbar h-20 bg-white dark:bg-dark-light shadow border-b border-muted dark:border-muted-dark">
+        <motion.nav
+            initial={{ y: -100, opacity: 0 }}
+            animate={{ y: 0, opacity: 1 }}
+            transition={{ type: "keyframes",duration: 0.5 }}
+            exit={{ y: -100 }}
+            className="navbar h-20 bg-white dark:bg-dark shadow border-b border-muted dark:border-muted-dark">
             <div className="container flex justify-between h-full items-center ">
                 <div className="logo h-full">
                     <Link to="/">
@@ -191,7 +197,7 @@ const Navbar = () => {
                     </div>
                 </div>
             </div>
-        </nav>
+        </motion.nav>
     )
 }
 

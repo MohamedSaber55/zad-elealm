@@ -1,5 +1,12 @@
 import { motion } from "framer-motion"; // Import Framer Motion
-import { Book, Medal, MessageQuestion, DocumentLike, ArrowRight2, Star } from "iconsax-react";
+import {
+    Book,
+    Medal,
+    MessageQuestion,
+    DocumentLike,
+    ArrowRight2,
+    Star,
+} from "iconsax-react";
 import learningImg from "./../assets/welcome.png"; // Replace with an appropriate image
 import whyUsBg from "./../assets/desk.jpg"; // Background image for Why Us section
 import calenderIcon from "./../assets/icons/calendar.png";
@@ -7,13 +14,20 @@ import levelsIcon from "./../assets/icons/levels.png";
 import certificateIcon from "./../assets/icons/certificate.png";
 import mobileIcon from "./../assets/icons/mobile.png";
 
+// New images
+import hadithImage1 from "./../assets/about/1.png";
+import hadithImage2 from "./../assets/about/2.png";
+import hadithImage3 from "./../assets/about/3.png";
+import hadithImage4 from "./../assets/about/4.png";
+import hadithImage5 from "./../assets/about/5.png";
+import hadithImage6 from "./../assets/about/6.png";
+
 const AboutPage = () => {
     // Animation variants
     const fadeInUp = {
         hidden: { opacity: 0, y: 20 },
         visible: { opacity: 1, y: 0, transition: { duration: 0.6 } },
     };
-
     const staggerContainer = {
         hidden: { opacity: 0 },
         visible: {
@@ -23,7 +37,6 @@ const AboutPage = () => {
             },
         },
     };
-
     const fadeIn = {
         hidden: { opacity: 0 },
         visible: { opacity: 1, transition: { duration: 0.6 } },
@@ -124,9 +137,10 @@ const AboutPage = () => {
                                 <div className="w-20 h-20">
                                     <img src={mobileIcon} alt="" />
                                 </div>
-                                <h3 className="text-xl font-semibold mb-2">محفظون متميزون وقادرون على تعليم كل المستويات</h3>
+                                <h3 className="text-xl font-semibold mb-2">
+                                    تعلم من أي مكان على حسب الجدول المناسب لك
+                                </h3>
                             </motion.div>
-
                             {/* Item 2 */}
                             <motion.div
                                 className="my-6 md:my-0 md:w-1/4 flex justify-center items-center flex-col gap-4 text-center border-b md:border-b-0 md:border-e border-warning pb-6 md:pb-0 md:pr-6 last:border-none"
@@ -135,9 +149,10 @@ const AboutPage = () => {
                                 <div className="w-20 h-20">
                                     <img src={calenderIcon} alt="" />
                                 </div>
-                                <h3 className="text-xl font-semibold mb-2">مؤهلون للتعامل مع الأطفال بمختلف الأعمار</h3>
+                                <h3 className="text-xl font-semibold mb-2">
+                                    تفاعلًا مباشرًا مع المدرسين، مما يساعدك على التركيز وتحقيق أقصى استفادة من الدروس.
+                                </h3>
                             </motion.div>
-
                             {/* Item 3 */}
                             <motion.div
                                 className="my-6 md:my-0 md:w-1/4 flex justify-center items-center flex-col gap-4 text-center border-b md:border-b-0 md:border-e border-warning pb-6 md:pb-0 md:pr-6 last:border-none"
@@ -146,9 +161,10 @@ const AboutPage = () => {
                                 <div className="w-20 h-20">
                                     <img src={certificateIcon} alt="" />
                                 </div>
-                                <h3 className="text-xl font-semibold mb-2">حصص فردية تضمن تركيز المدرس معك وحدك</h3>
+                                <h3 className="text-xl font-semibold mb-2">
+                                    امتحانات دورية لتقييم تقدمك، بالإضافة إلى شهادات تقدير
+                                </h3>
                             </motion.div>
-
                             {/* Item 4 */}
                             <motion.div
                                 className="my-6 md:my-0 md:w-1/4 flex justify-center items-center flex-col gap-4 text-center border-b md:border-b-0 md:border-e border-warning pb-6 md:pb-0 md:pr-6 last:border-none"
@@ -157,7 +173,9 @@ const AboutPage = () => {
                                 <div className="w-20 h-20">
                                     <img src={levelsIcon} alt="" />
                                 </div>
-                                <h3 className="text-xl font-semibold mb-2">تعلم من أي مكان على حسب الجدول المناسب لك</h3>
+                                <h3 className="text-xl font-semibold mb-2">
+                                    نقدم تعليمًا دينيًا متكاملًا يناسب جميع الأعمار والمستويات، مع التركيز على تقديم محتوى غني ومفيد.
+                                </h3>
                             </motion.div>
                         </motion.div>
                     </div>
@@ -176,6 +194,70 @@ const AboutPage = () => {
                     <p className="text-muted-dark dark:text-muted text-lg">
                         عند اجتيازك الاختبارات بنجاح، ستتلقى شهادة معتمدة من <strong>زاد العلم</strong> تثبت إنجازاتك. يمكنك استخدام هذه الشهادة لتوثيق مسيرتك التعليمية أو مشاركتها مع الآخرين كدليل على جدك واجتهادك.
                     </p>
+                </motion.section>
+
+                {/* Hadith Quotes Section */}
+                <motion.section
+                    className="mb-10"
+                    initial="hidden"
+                    animate="visible"
+                    variants={fadeInUp}
+                >
+                    <h2 className="text-2xl font-semibold mb-4 flex items-center gap-2">
+                        <MessageQuestion size={24} color="currentColor" className="text-primary" /> أقوال النبي ﷺ
+                    </h2>
+                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                        <motion.div
+                            className="bg-white dark:bg-dark p-4 rounded-lg shadow-md"
+                            variants={fadeInUp}
+                        >
+                            <img src={hadithImage1} alt="Hadith 1" className="w-full h-auto" />
+                        </motion.div>
+                        <motion.div
+                            className="bg-white dark:bg-dark p-4 rounded-lg shadow-md"
+                            variants={fadeInUp}
+                        >
+                            <img src={hadithImage2} alt="Hadith 2" className="w-full h-auto" />
+                        </motion.div>
+                        <motion.div
+                            className="bg-white dark:bg-dark p-4 rounded-lg shadow-md"
+                            variants={fadeInUp}
+                        >
+                            <img src={hadithImage3} alt="Hadith 3" className="w-full h-auto" />
+                        </motion.div>
+                    </div>
+                </motion.section>
+
+                {/* Islamic Sciences Section */}
+                <motion.section
+                    className="mb-10"
+                    initial="hidden"
+                    animate="visible"
+                    variants={fadeInUp}
+                >
+                    <h2 className="text-2xl font-semibold mb-4 flex items-center gap-2">
+                        <Book size={24} color="currentColor" className="text-primary" /> خطة دراسة العلوم الشرعية
+                    </h2>
+                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                        <motion.div
+                            className="bg-white dark:bg-dark p-4 rounded-lg shadow-md"
+                            variants={fadeInUp}
+                        >
+                            <img src={hadithImage4} alt="Islamic Sciences 1" className="w-full h-auto" />
+                        </motion.div>
+                        <motion.div
+                            className="bg-white dark:bg-dark p-4 rounded-lg shadow-md"
+                            variants={fadeInUp}
+                        >
+                            <img src={hadithImage5} alt="Islamic Sciences 2" className="w-full h-auto" />
+                        </motion.div>
+                        <motion.div
+                            className="bg-white dark:bg-dark p-4 rounded-lg shadow-md"
+                            variants={fadeInUp}
+                        >
+                            <img src={hadithImage6} alt="Islamic Sciences 2" className="w-full h-auto" />
+                        </motion.div>
+                    </div>
                 </motion.section>
 
                 {/* Call to Action Section */}
