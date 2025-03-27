@@ -266,7 +266,7 @@ const Profile = () => {
                                                 <StatCard
                                                     icon={<Star1 size="24" color="currentColor" className="text-warning" />}
                                                     title="متوسط الدرجات"
-                                                    value={rankState.rank?.averageQuizScore.toFixed(2) || "0.00"}
+                                                    value={rankState.rank?.averageQuizScore?.toFixed(2) || "0.00"}
                                                     color="text-warning"
                                                 />
                                                 <StatCard
@@ -393,7 +393,7 @@ const Profile = () => {
                                                     variants={itemVariants}
                                                     className="flex items-center gap-1">
                                                     <Star1 size="20" className="text-primary" color="currentColor" variant="Bold" />
-                                                    <span>التقييم: {course.rating.toFixed(1)} ⭐</span>
+                                                    <span>التقييم: {course.rating?.toFixed(1)} ⭐</span>
                                                 </motion.div>
                                             </div>
                                         </div>
