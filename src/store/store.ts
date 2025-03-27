@@ -10,6 +10,7 @@ import notificationsSlice from './slices/notifications';
 import certificatesSlice from './slices/certificates';
 import videoProgressSlice from './slices/videoProgress';
 import reportsSlice from './slices/report';
+import ranksSlice from './slices/rank';
 
 export type RootState = ReturnType<typeof store.getState>;
 export type AppDispatch = typeof store.dispatch;
@@ -27,6 +28,7 @@ const store = configureStore({
         notifications: notificationsSlice,
         videoProgress: videoProgressSlice,
         reports: reportsSlice,
+        ranks: ranksSlice,
     },
 });
 

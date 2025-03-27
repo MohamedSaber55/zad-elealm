@@ -23,6 +23,7 @@ import Quiz from "../pages/Quiz";
 import ResendConfirmationEmail from "../pages/ResendConfirmationEmail";
 import Report from "../pages/Report";
 import AboutPage from "../pages/About";
+import TopUsersPage from "../pages/TopRankedUsers";
 
 const routes = createBrowserRouter(
     [
@@ -81,6 +82,10 @@ const routes = createBrowserRouter(
                 {
                     path: "/about",
                     element: <RouterGuard><AboutPage /></RouterGuard>,
+                },
+                {
+                    path: "/rank",
+                    element: <RouterGuard><TopUsersPage /></RouterGuard>,
                 },
             ]
         },

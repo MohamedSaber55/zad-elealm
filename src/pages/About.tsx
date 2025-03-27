@@ -21,6 +21,7 @@ import hadithImage3 from "./../assets/about/3.png";
 import hadithImage4 from "./../assets/about/4.png";
 import hadithImage5 from "./../assets/about/5.png";
 import hadithImage6 from "./../assets/about/6.png";
+import { Link } from "react-router-dom";
 
 const AboutPage = () => {
     // Animation variants
@@ -271,14 +272,12 @@ const AboutPage = () => {
                     <p className="text-muted-dark dark:text-muted text-lg mb-6">
                         نرحب دائمًا بآرائك وتعليقاتك لتحسين تجربتك معنا. يمكنك إرسال تقرير أو استفسار عبر الرابط أدناه.
                     </p>
-                    <motion.button
+                    <Link
+                        to="/report"
                         className="bg-primary text-white px-6 py-3 rounded-lg font-semibold flex items-center gap-2 hover:bg-primary-dark transition-colors duration-300"
-                        onClick={() => (window.location.href = "/report")}
-                        whileHover={{ scale: 1.05 }}
-                        whileTap={{ scale: 0.95 }}
                     >
                         <ArrowRight2 color="currentColor" size={20} /> توجّه إلى صفحة التقارير
-                    </motion.button>
+                    </Link>
                 </motion.section>
             </div>
         </div>

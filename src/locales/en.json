@@ -68,7 +68,8 @@
         "search": "Search",
         "certificates": "Certificates",
         "settings": "Settings",
-        "report" : "Report"
+        "report" : "Report",
+        "rank" : "Rank"
     },
     "home": {
         "categories": "Categories",

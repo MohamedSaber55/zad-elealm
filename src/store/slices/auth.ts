@@ -462,8 +462,8 @@ const authSlice = createSlice({
             .addCase(getUserProfileAsync.rejected, (state, action) => {
                 state.loading = false;
                 state.error = action.payload;
-                state.message = (action.payload as any).message;
-                state.statusCode = (action.payload as RegisterResponse).statusCode;
+                state.message = (action.payload as any)?.message;
+                state.statusCode = (action.payload as RegisterResponse)?.statusCode;
             })
     }
 });

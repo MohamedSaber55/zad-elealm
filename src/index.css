@@ -18,10 +18,15 @@
   --color-muted-dark: #6a7282;
   --color-gray: #F5F5F5;
   --color-track: #E8F5E9;
-  --color-track-dark: #2F3E36; /* Darker muted green for progress bars in dark mode */
-  --color-primary-dark-hover: #1F332B; /* Darker shade for primary elements */
-  --color-muted-dark-alt: #87938D; /* Slightly lighter muted text for better readability */
-  --color-border-dark: #3E4C45; /* Subtle dark border color */  --color-warning: #FFC107;
+  --color-track-dark: #2F3E36;
+  /* Darker muted green for progress bars in dark mode */
+  --color-primary-dark-hover: #1F332B;
+  /* Darker shade for primary elements */
+  --color-muted-dark-alt: #87938D;
+  /* Slightly lighter muted text for better readability */
+  --color-border-dark: #3E4C45;
+  /* Subtle dark border color */
+  --color-warning: #FFC107;
   --color-danger: #DC3545;
   --color-success: #28A745;
   --color-info: #17A2B8;
@@ -34,6 +39,78 @@
   --color-dark-light: oklch(0.23 0.028 261.692);
   /* --color-dark-lighter: oklch(26% 0.007 34.298); */
   --color-dark-lighter: oklch(0.33 0.028 261.692);
+}
+
+@theme {
+  /* Base Colors (from your theme) */
+  --color-primary: #3C6255;
+  --color-primary-light: #4D7C6A;
+  --color-primary-dark: #2B4A3D;
+  --color-muted-green: #A5C9B7;
+  --color-greenish-gray: #D6E4D9;
+  --color-white: #FFFFFF;
+  --color-black: #000000;
+  --color-light-bg: #F5F5F5;
+  --color-light: #F8F9FA;
+  --color-muted: #9C9C9C;
+  --color-muted-dark: #6a7282;
+  --color-gray: #F5F5F5;
+  --color-track: #E8F5E9;
+  --color-track-dark: #2F3E36;
+  --color-primary-dark-hover: #1F332B;
+  --color-muted-dark-alt: #87938D;
+  --color-border-dark: #3E4C45;
+  --color-warning: #FFC107;
+  --color-danger: #DC3545;
+  --color-success: #28A745;
+  --color-info: #17A2B8;
+
+  /* New Ranking Colors */
+  --color-gold: #FFD700;
+  --color-gold-light: #FFEA8A;
+  --color-gold-dark: #C9B037;
+  --color-silver: #C0C0C0;
+  --color-silver-light: #E5E5E5;
+  --color-silver-dark: #A0A0A0;
+  --color-bronze: #CD7F32;
+  --color-bronze-light: #E8B282;
+  --color-bronze-dark: #A05A2C;
+  --color-platinum: #E5E4E2;
+  --color-platinum-light: #F5F4F2;
+  --color-platinum-dark: #C5C4C2;
+  --color-diamond: #B9F2FF;
+  --color-diamond-light: #E0F7FF;
+  --color-diamond-dark: #7FD1E5;
+
+  /* Enhanced UI Colors */
+  --color-primary-50: rgba(60, 98, 85, 0.05);
+  --color-primary-100: rgba(60, 98, 85, 0.1);
+  --color-primary-200: rgba(60, 98, 85, 0.2);
+  --color-primary-300: rgba(60, 98, 85, 0.3);
+
+  /* Dark Mode Adjustments */
+  --color-dark: oklch(0.21 0.034 264.665);
+  --color-dark-light: oklch(0.23 0.028 261.692);
+  --color-dark-lighter: oklch(0.33 0.028 261.692);
+  --color-dark-border: #3E4C45;
+
+  /* Text Contrast Colors */
+  --color-text-primary: #2B4A3D;
+  --color-text-primary-dark: #E8F5E9;
+  --color-text-muted: #6A7282;
+  --color-text-muted-dark: #A5C9B7;
+
+  /* Status Colors */
+  --color-success-light: #D4EDDA;
+  --color-danger-light: #F8D7DA;
+  --color-warning-light: #FFF3CD;
+  --color-info-light: #D1ECF1;
+
+  /* Gradients */
+  --gradient-primary: linear-gradient(135deg, var(--color-primary) 0%, var(--color-primary-dark) 100%);
+  --gradient-gold: linear-gradient(135deg, var(--color-gold) 0%, var(--color-gold-dark) 100%);
+  --gradient-silver: linear-gradient(135deg, var(--color-silver) 0%, var(--color-silver-dark) 100%);
+  --gradient-bronze: linear-gradient(135deg, var(--color-bronze) 0%, var(--color-bronze-dark) 100%);
 }
 
 @layer base {
@@ -83,7 +160,8 @@
   }
 
   .dark ::-webkit-scrollbar-track {
-    background: var(--color-dark-lighter); /* Dark mode */
+    background: var(--color-dark-lighter);
+    /* Dark mode */
   }
 
   ::-webkit-scrollbar-thumb {

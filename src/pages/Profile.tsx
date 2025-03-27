@@ -1,4 +1,4 @@
-import { Edit, Logout, User, Global, Play, ArrowRight2, MinusSquare, Star1 } from "iconsax-react";
+import { Edit, Logout, User, Global, Play, ArrowRight2, MinusSquare, Star1, DocumentText, Cup, NotificationBing, Clock } from "iconsax-react";
 import { Link } from "react-router-dom";
 import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
@@ -11,10 +11,48 @@ import noDataSVG from "./../assets/svgicons/no-data.svg";
 import avatarImage from "../assets/avatar.png";
 import { Variants } from "framer-motion";
 import { motion } from "framer-motion"
+import { getUserRank, getUserStats } from "../store/slices/rank";
+import { formatDateTime } from "../utils/formatDateTime";
+
+
+
+// Reusable Stat Card Component
+function StatCard({ icon, title, value, color }: { icon: React.ReactNode; title: string; value: string | number; color: string }) {
+    return (
+        <div className="flex items-center gap-3 p-3 hover:bg-gray dark:hover:bg-gray-800 rounded-lg transition">
+            <div className={`p-2 rounded-lg ${color}/10`}>
+                {icon}
+            </div>
+            <div>
+                <p className="text-sm text-muted dark:text-muted-light">{title}</p>
+                <p className={`font-bold ${color}`}>{value}</p>
+            </div>
+        </div>
+    );
+}
+
+// Reusable Achievement Badge Component
+function AchievementBadge({ level, count, icon, colorClass }: { level: string; count: number; icon: React.ReactNode; colorClass: string }) {
+    return (
+        <div className={`flex flex-col items-center p-3 rounded-lg ${colorClass}`}>
+            <div className="mb-2">{icon}</div>
+            <p className="text-sm font-medium">{level}</p>
+            <p className="text-lg font-bold">{count}</p>
+        </div>
+    );
+}
+
 const Profile = () => {
     const dispatch = useDispatch<AppDispatch>();
     const { token, userProfile } = useSelector((state: RootState) => state.auth);
     const { loading, allEnrolledCourses, courses } = useSelector((state: RootState) => state.enrollment);
+    const rankState = useSelector((state: RootState) => state.ranks);
+    useEffect(() => {
+        if (token) {
+            dispatch(getUserRank({ token }));
+            dispatch(getUserStats({ token }));
+        }
+    }, [])
     useEffect(() => {
         if (token) {
             dispatch(getEnrolledCourses({ token }));
@@ -69,7 +107,7 @@ const Profile = () => {
                         variants={containerVariants}
                         initial="hidden"
                         animate="visible"
-                        className="bg-white dark:bg-dark-light border border-primary rounded-lg p-6 flex flex-col gap-2 items-center shadow-sm">
+                        className="bg-white dark:bg-dark-light border border-primary rounded-lg p-6 flex flex-col gap-2 items-center">
                         {!userProfile?.imageUrl ?
                             <motion.div
                                 variants={itemVariants}
@@ -118,8 +156,191 @@ const Profile = () => {
                             </motion.button>
                         </div>
                     </motion.div>
-                    {/* User Courses */}
 
+                    {/* User Rank and Stats Section */}
+                    <motion.div
+                        initial={{ opacity: 0, y: 20 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        transition={{ duration: 0.5 }}
+                        className="space-y-6 mt-10"
+                    >
+                        <div className="flex items-center justify-between">
+                            <h2 className="text-2xl font-bold">
+                                رتبتي وإحصائياتي
+                            </h2>
+                            {!rankState.loading && !rankState.error && (
+                                <div className="text-sm text-muted dark:text-muted-light">
+                                    آخر تحديث: {formatDateTime(rankState.rank?.lastUpdated || "", {
+                                        isArabic: true,
+                                        showDate: true,
+                                        showTime: true
+                                    }) || "غير معروف"}
+                                </div>
+                            )}
+                        </div>
+
+                        <motion.div
+                            variants={containerVariants}
+                            initial="hidden"
+                            animate="visible"
+                            className="bg-white dark:bg-dark-light rounded-xl p-6 border border-muted dark:border-muted-dark"
+                        >
+                            {rankState.loading ? (
+                                <div className="flex justify-center items-center h-40">
+                                    <Loading />
+                                </div>
+                            ) : rankState.error ? (
+                                <div className="text-center py-10">
+                                    <NotificationBing size={48} className="mx-auto text-danger mb-4" color="currentColor" />
+                                    <p className="text-danger text-lg">حدث خطأ أثناء تحميل الرتبة والإحصائيات</p>
+                                    <button className="mt-4 px-6 py-2 bg-primary text-white rounded-lg hover:bg-primary-dark transition">
+                                        إعادة المحاولة
+                                    </button>
+                                </div>
+                            ) : (
+                                <div className="space-y-6">
+                                    {/* User Rank Card */}
+                                    <motion.div
+                                        variants={itemVariants}
+                                        className="bg-gradient-to-r from-primary/10 to-primary/5 dark:from-dark-darker dark:to-dark-darker p-6 rounded-xl border border-muted dark:border-muted-dark"
+                                    >
+                                        <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
+                                            <div className="flex items-center gap-3">
+                                                <div className="p-3 bg-primary/10 dark:bg-primary/20 border border-primary dark:border-muted-green rounded-full">
+                                                    <Star1 size="28" className="text-primary dark:text-muted-green" color="currentColor" />
+                                                </div>
+                                                <div>
+                                                    <p className="text-sm text-muted dark:text-muted-green">الرتبة الحالية</p>
+                                                    <h3 className="text-2xl font-bold text-primary dark:text-primary-light">
+                                                        {rankState.rank?.rankName || "غير معروفة"}
+                                                    </h3>
+                                                </div>
+                                            </div>
+
+                                            <div className="grid grid-cols-2 gap-4">
+                                                <div className="flex items-center gap-3">
+                                                    <div className="p-2 bg-success/10 rounded-full">
+                                                        <Play size="20" color="currentColor" className="text-success" />
+                                                    </div>
+                                                    <div>
+                                                        <p className="text-sm text-muted dark:text-muted-light">النقاط</p>
+                                                        <p className="font-medium">{rankState.rank?.totalPoints || 0}</p>
+                                                    </div>
+                                                </div>
+                                                <div className="flex items-center gap-3">
+                                                    <div className="p-2 bg-info/10 rounded-full">
+                                                        <Global size="20" color="currentColor" className="text-info" />
+                                                    </div>
+                                                    <div>
+                                                        <p className="text-sm text-muted dark:text-muted-light">الترتيب العام</p>
+                                                        <p className="font-medium">{rankState.rank?.rank || "غير معروف"}</p>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </motion.div>
+
+                                    {/* Stats Grid */}
+                                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                                        {/* Learning Stats */}
+                                        <motion.div
+                                            variants={itemVariants}
+                                            className="bg-white dark:bg-dark-lighter p-6 rounded-xl border border-muted dark:border-muted-dark"
+                                        >
+                                            <h4 className="text-xl font-semibold text-primary dark:text-primary-light mb-4 pb-2 border-b border-muted dark:border-muted-dark">
+                                                إحصائيات التعلم
+                                            </h4>
+                                            <div className="grid grid-cols-2 gap-4">
+                                                <StatCard
+                                                    icon={<Play size="24" color="currentColor" className="text-primary" />}
+                                                    title="الكورسات المكتملة"
+                                                    value={rankState.rank?.completedCoursesCount || 0}
+                                                    color="text-primary"
+                                                />
+                                                <StatCard
+                                                    icon={<DocumentText size="24" color="currentColor" className="text-success" />}
+                                                    title="عدد الشهادات"
+                                                    value={rankState.rank?.certificatesCount || 0}
+                                                    color="text-success"
+                                                />
+                                                <StatCard
+                                                    icon={<Star1 size="24" color="currentColor" className="text-warning" />}
+                                                    title="متوسط الدرجات"
+                                                    value={rankState.rank?.averageQuizScore.toFixed(2) || "0.00"}
+                                                    color="text-warning"
+                                                />
+                                                <StatCard
+                                                    icon={<Clock size="24" color="currentColor" className="text-info" />}
+                                                    title="ساعات التعلم"
+                                                    value="24.5"
+                                                    color="text-info"
+                                                />
+                                            </div>
+                                        </motion.div>
+
+                                        {/* Achievements */}
+                                        <motion.div
+                                            variants={itemVariants}
+                                            className="bg-white dark:bg-dark-lighter p-6 rounded-xl border border-muted dark:border-muted-dark"
+                                        >
+                                            <h4 className="text-xl font-semibold text-primary dark:text-primary-light mb-4 pb-2 border-b border-muted dark:border-muted-dark">
+                                                الإنجازات
+                                            </h4>
+                                            <div className="grid grid-cols-3 gap-4">
+                                                <AchievementBadge
+                                                    level="Bronze"
+                                                    count={rankState.stats?.Bronze || 0}
+                                                    icon={<Cup size="20" color="currentColor" className="text-bronze" />}
+                                                    colorClass="bg-bronze/10"
+                                                />
+                                                <AchievementBadge
+                                                    level="Silver"
+                                                    count={rankState.stats?.Silver || 0}
+                                                    icon={<Cup size="20" color="currentColor" className="text-silver" />}
+                                                    colorClass="bg-silver/10"
+                                                />
+                                                <AchievementBadge
+                                                    level="Gold"
+                                                    count={rankState.stats?.Gold || 0}
+                                                    icon={<Cup size="20" color="currentColor" className="text-gold" />}
+                                                    colorClass="bg-gold/10"
+                                                />
+                                                <AchievementBadge
+                                                    level="Platinum"
+                                                    count={rankState.stats?.Platinum || 0}
+                                                    icon={<Cup size="20" color="currentColor" className="text-platinum" />}
+                                                    colorClass="bg-platinum/10"
+                                                />
+                                                <AchievementBadge
+                                                    level="Diamond"
+                                                    count={rankState.stats?.Diamond || 0}
+                                                    icon={<Cup size="20" color="currentColor" className="text-diamond" />}
+                                                    colorClass="bg-diamond/10"
+                                                />
+                                            </div>
+                                        </motion.div>
+                                    </div>
+
+                                    {/* Progress Bar (optional) */}
+                                    <motion.div variants={itemVariants}>
+                                        <div className="mt-4">
+                                            <div className="flex justify-between mb-2">
+                                                <span className="text-sm font-medium">تقدمك للرتبة التالية</span>
+                                                <span className="text-sm font-medium">75%</span>
+                                            </div>
+                                            <div className="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-2.5">
+                                                <div
+                                                    className="bg-gradient-to-r from-primary to-primary-dark h-2.5 rounded-full"
+                                                    style={{ width: '75%' }}
+                                                ></div>
+                                            </div>
+                                        </div>
+                                    </motion.div>
+                                </div>
+                            )}
+                        </motion.div>
+                    </motion.div>
+                    {/* User Courses */}
                     <motion.h2
                         initial={{ opacity: 0, x: -20 }}
                         animate={{ opacity: 1, x: 0 }}

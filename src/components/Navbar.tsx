@@ -66,6 +66,7 @@ const Navbar = () => {
         { name: t("navbar.courses"), url: "/my-courses" },
         { name: t("navbar.favorites"), url: "/favorites" },
         { name: t("navbar.certificates"), url: "/certifications" },
+        { name: t("navbar.rank"), url: "/rank" },
     ];
     const handleLogout = () => {
         dispatch(logout());
@@ -90,7 +91,7 @@ const Navbar = () => {
         <motion.nav
             initial={{ y: -100, opacity: 0 }}
             animate={{ y: 0, opacity: 1 }}
-            transition={{ type: "keyframes",duration: 0.5 }}
+            transition={{ type: "keyframes", duration: 0.5 }}
             exit={{ y: -100 }}
             className="navbar h-20 bg-white dark:bg-dark shadow border-b border-muted dark:border-muted-dark">
             <div className="container flex justify-between h-full items-center ">
@@ -146,7 +147,7 @@ const Navbar = () => {
                             {isProfileDropdownOpen && (
                                 <div className="absolute border border-primary py-1 -end-0 mt-2 w-60 bg-white dark:bg-dark-light shadow-lg rounded-lg overflow-hidden z-50">
                                     {/* Profile Link */}
-                                    <Link to="/profile" className="w-full flex items-center gap-2 px-4 py-2 text-dark dark:text-light hover:bg-gray dark:hover:bg-muted transition-colors duration-200">
+                                    <Link to="/profile" onClick={() => setIsProfileDropdownOpen(false)} className="w-full flex items-center gap-2 px-4 py-2 text-dark dark:text-light hover:bg-gray dark:hover:bg-muted transition-colors duration-200">
                                         <Profile size="20" color="currentColor" variant="Outline" /> {/* Profile icon */}
                                         {t("navbar.profile")}
                                     </Link>
@@ -176,6 +177,8 @@ const Navbar = () => {
                 )}
 
                 {/* Mobile Sidebar */}
+                {/* {isMobileMenuOpen && ( */}
+
                 <div className={` md:hidden fixed top-0 end-0 h-full bg-white dark:bg-dark-light shadow-lg w-64 z-50 transform ${isMobileMenuOpen ? "translate-x-0" : currentLanguage == "ar" ? "-translate-x-full" : "translate-x-full"} transition-transform duration-300`}>
                     <button onClick={toggleMobileMenu} className="absolute top-4 end-4 text-dark dark:text-light">
                         <CloseSquare size="32" color="currentColor" />
@@ -184,18 +187,19 @@ const Navbar = () => {
                     <div className="flex flex-col items-start gap-4 p-6">
                         {state.token && <>
                             {links.map((link, index) => (
-                                <Link key={index} to={link.url} className="text-lg font-semibold text-dark dark:text-light w-full p-2 hover:bg-gray dark:hover:bg-muted rounded-lg">
+                                <Link key={index} onClick={() => setIsMobileMenuOpen(false)} to={link.url} className="text-lg font-semibold text-dark dark:text-light w-full p-2 hover:bg-gray dark:hover:bg-muted rounded-lg">
                                     {link.name}
                                 </Link>
                             ))}
                         </>}
                         {state.token ? null :
-                            <Link to="/login" className="w-full mt-8 text-center bg-primary text-white py-2 rounded-lg">
+                            <Link to="/login" onClick={() => setIsMobileMenuOpen(false)} className="w-full mt-8 text-center bg-primary text-white py-2 rounded-lg">
                                 {t("navbar.login")}
                             </Link>
                         }
                     </div>
                 </div>
+                {/* )} */}
             </div>
         </motion.nav>
     )

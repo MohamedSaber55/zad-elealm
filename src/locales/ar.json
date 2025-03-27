@@ -68,7 +68,8 @@
         "search": "بحث",
         "certificates": "الشهادات",
         "settings": "الإعدادات",
-        "report" : "الإبلاغ"
+        "report" : "الإبلاغ",
+        "rank": "التصنيف"
     },
     "home": {
         "categories": "الاقسام",
