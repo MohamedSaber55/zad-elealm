@@ -184,11 +184,25 @@ const Login = () => {
                         {/* Error Message */}
                         {state.statusCode !== 200 && (
                             <motion.div
-                                className="item"
+                                className="item flex flex-col items-center justify-center gap-2"
                                 initial={{ x: 0 }}
                                 animate={state.message ? shakeAnimation : {}}
                             >
-                                <p className="text-danger text-center">{state.message}</p>
+                                <motion.p
+                                    className="text-danger text-sm"
+                                    initial={{ x: 0 }}
+                                    animate={state.message ? shakeAnimation : {}}
+                                >
+                                    {state.message}
+                                </motion.p>
+                                {state.message === "لم يتم تأكيد البريد الإلكتروني" && (
+                                    <Link
+                                        to="/resend-confirmation"
+                                        className="text-primary text-lg font-semibold"
+                                    >
+                                        {t("auth.resend-confirmation-email")}
+                                    </Link>
+                                )}
                             </motion.div>
                         )}
 
@@ -220,14 +234,6 @@ const Login = () => {
                                     {t("auth.sign-up")}
                                 </Link>
                             </p>
-                            {state.message === "لم يتم تأكيد البريد الإلكتروني" && (
-                                <Link
-                                    to="/resend-confirmation"
-                                    className="text-primary text-lg font-semibold"
-                                >
-                                    {t("auth.resend-confirmation-email")}
-                                </Link>
-                            )}
                         </div>
                     </div>
                 </form>

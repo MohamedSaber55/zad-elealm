@@ -49,6 +49,7 @@ const UpdateProfile = () => {
         }
     };
 
+
     const handleSubmit = async (values: {
         displayName: string;
         phoneNumber: string;
@@ -113,7 +114,13 @@ const UpdateProfile = () => {
                     }}
                     enableReinitialize={true}
                     validationSchema={Yup.object({
-                        displayName: Yup.string().required("الاسم مطلوب"),
+                        displayName: Yup.string()
+                            .required("الاسم مطلوب")
+                            .test(
+                                "is-arabic",
+                                "يجب أن يبدأ الاسم بحرف عربي",
+                                (value) => /^[\u0600-\u06FF]/.test(value)
+                            ),
                         email: Yup.string().email("بريد غير صالح").required("البريد مطلوب"),
                         phoneNumber: Yup.string().matches(/^[0-9]{10,15}$/, "رقم الهاتف غير صالح"),
                     })}

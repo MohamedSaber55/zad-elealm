@@ -20,7 +20,9 @@
         "password-not-match": " Password does not match.",
         "phone-not-match": " Phone does not match.",
         "otp-length": " OTP must be 6 digits.",
-        "password-not-matched": " Password does not match."
+        "password-not-matched": " Password does not match.",
+        "name-arabic": " Name in Arabic is required.",
+        "input-name-arabic": " Enter your name in Arabic"
     },
     "auth": {
         "login": "Login",
@@ -68,8 +70,8 @@
         "search": "Search",
         "certificates": "Certificates",
         "settings": "Settings",
-        "report" : "Report",
-        "rank" : "Rank"
+        "report": "Report",
+        "rank": "Rank"
     },
     "home": {
         "categories": "Categories",

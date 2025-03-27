@@ -20,7 +20,9 @@
         "password-not-match": " كلمة المرور غير صحيحة",
         "phone-not-match": " رقم الهاتف غير صحيح",
         "otp-length": " رمز التحقق يجب أن يكون 6 أرقام",
-        "password-not-matched": " كلمة المرور غير متطابقة"
+        "password-not-matched": " كلمة المرور غير متطابقة",
+        "name-arabic": " الاسم باللغة العربية",
+        "input-name-arabic": " أدخل اسمك باللغة العربية"
     },
     "auth": {
         "login": "تسجيل الدخول",
@@ -50,7 +52,7 @@
         "input-confirmPassword": " أدخل كلمة المرور مرة أخرى",
         "submit": "إرسال",
         "resend-confirmation-email": " إعادة إرسال بريد التحقق",
-        "enter-email-to-resend" : "أدخل بريدك الإلكتروني لإعادة إرسال بريد"
+        "enter-email-to-resend": "أدخل بريدك الإلكتروني لإعادة إرسال بريد"
     },
     "navbar": {
         "home": "الرئيسية",
@@ -68,7 +70,7 @@
         "search": "بحث",
         "certificates": "الشهادات",
         "settings": "الإعدادات",
-        "report" : "الإبلاغ",
+        "report": "الإبلاغ",
         "rank": "التصنيف"
     },
     "home": {

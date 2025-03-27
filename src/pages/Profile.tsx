@@ -11,7 +11,7 @@ import noDataSVG from "./../assets/svgicons/no-data.svg";
 import avatarImage from "../assets/avatar.png";
 import { Variants } from "framer-motion";
 import { motion } from "framer-motion"
-import { getUserRank, getUserStats } from "../store/slices/rank";
+import { getUserRank, getUserStats, updateUserRank } from "../store/slices/rank";
 import { formatDateTime } from "../utils/formatDateTime";
 
 
@@ -73,6 +73,12 @@ const Profile = () => {
     }
     const handleLogout = () => {
         dispatch(logout());
+    };
+    const handleUpdateUserRank = () => {
+        dispatch(updateUserRank({ token: token! })).then(() => {
+            dispatch(getUserRank({ token: token! }));
+        })
+        notify("تم تحديث الرتبة بنجاح", "success")
     };
 
     // Animation Variants
@@ -164,20 +170,31 @@ const Profile = () => {
                         transition={{ duration: 0.5 }}
                         className="space-y-6 mt-10"
                     >
-                        <div className="flex items-center justify-between">
+                        <div className="flex items-center flex-wrap gap-3 justify-between">
                             <h2 className="text-2xl font-bold">
                                 رتبتي وإحصائياتي
                             </h2>
-                            {!rankState.loading && !rankState.error && (
-                                <div className="text-sm text-muted dark:text-muted-light">
-                                    آخر تحديث: {formatDateTime(rankState.rank?.lastUpdated || "", {
-                                        isArabic: true,
-                                        showDate: true,
-                                        showTime: true
-                                    }) || "غير معروف"}
-                                </div>
-                            )}
+                            <div className="flex items-center flex-wrap gap-4">
+                                {!rankState.loading && !rankState.error && (
+                                    <div className="text-sm text-muted dark:text-muted-light">
+                                        آخر تحديث: {formatDateTime(rankState.rank?.lastUpdated || "", {
+                                            isArabic: true,
+                                            showDate: true,
+                                            showTime: true
+                                        }) || "غير معروف"}
+                                    </div>
+                                )}
+                                {!rankState.loading && !rankState.error && (
+                                    <button
+                                        onClick={handleUpdateUserRank}
+                                        className="px-3 py-1 bg-primary text-white rounded-lg hover:bg-primary-dark transition"
+                                    >
+                                        تحديث الرتبة
+                                    </button>
+                                )}
+                            </div>
                         </div>
+
 
                         <motion.div
                             variants={containerVariants}

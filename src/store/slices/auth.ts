@@ -105,10 +105,16 @@ export const loginAsync = createAsyncThunk<LoginResponse, LoginRequest>(
         try {
             const response = await axios.post<LoginResponse>(`${baseUrl}/Account/login`, body);
             const result = response.data;
-            return result;
-        } catch (err) {
+            console.log(result);
+            if (result.statusCode == 200) {
+                return result;
+            }
+            return rejectWithValue(result);
+            // return result;
+        } catch (err: any) {
+            console.log(err.response.data);
             // return rejectWithValue(err.response.data);
-            return rejectWithValue(err);
+            return rejectWithValue(err.response.data as { message: string, statusCode: number });
         }
     }
 );
@@ -348,6 +354,8 @@ const authSlice = createSlice({
             .addCase(loginAsync.rejected, (state, action) => {
                 state.loading = false;
                 state.error = action.payload;
+                state.message = (action.payload as any).message;
+                state.statusCode = (action.payload as RegisterResponse).statusCode;
             })
             // --------------------------------- FORGET PASSWORD ---------------------------------
             .addCase(forgetPasswordAsync.pending, (state) => {

@@ -110,6 +110,18 @@ export const calculateAndGetUserPoints = createAsyncThunk<CalculateAndGetUserPoi
         return rejectWithValue(error.response.data as { message: string, statusCode: number });
     }
 });
+export const updateUserRank = createAsyncThunk("rank/updateUserRank", async ({ token }: GetTopUsersRanksRequest, { rejectWithValue }) => {
+    try {
+        const response = await axios.get(`${baseUrl}/Rank/update`, {
+            headers: {
+                Authorization: `Bearer ${token}`,
+            },
+        });
+        return response.data ;
+    } catch (error: any) {
+        return rejectWithValue(error.response.data as { message: string, statusCode: number });
+    }
+});
 
 
 

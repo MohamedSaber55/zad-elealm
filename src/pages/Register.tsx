@@ -16,7 +16,13 @@ const Register = () => {
   const state = useSelector((state: RootState) => state.auth)
 
   const validationSchema = object().shape({
-    displayName: string().required(t("validations.name-required")),
+    displayName: string()
+      .required(t("validations.name-required"))
+      .test(
+        "is-arabic",
+        t("validations.name-arabic"),
+        (value) => /^[\u0600-\u06FF]/.test(value)
+      ),
     email: string().email(t("email")).required(t("validations.email-required")),
     password: string().required(t("validations.password-required")),
   });
@@ -30,7 +36,10 @@ const Register = () => {
     onSubmit: (values) => {
       dispatch(registerAsync({ body: values })).then((res) => {
         if ((res.payload as { statusCode: number })?.statusCode === 200) {
-          notify("تم التسجيل بنجاح, يرجى متابعة البريد الإلكتروني لتفعيل الحساب", "success");
+          notify(
+            "تم التسجيل بنجاح، يرجى متابعة البريد الإلكتروني (البريد الوارد أو مجلد الرسائل غير المرغوب فيها) لتفعيل الحساب",
+            "success"
+          );
           return <Navigate to="/login" />;
         }
       })
